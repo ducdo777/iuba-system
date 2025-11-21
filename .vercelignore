@@ -1,0 +1,11 @@
+node_modules
+frontend/node_modules
+iuba.db
+*.db
+.env.local
+.env
+dist
+coverage
+.git
+.vscode
+.idea
