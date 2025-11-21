@@ -59,20 +59,31 @@ export const AdminUsers: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Đang tải...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-muted-foreground">Đang tải...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="admin-users">
-      <div className="page-header">
-        <h2>Quản lý Tài khoản</h2>
-        <button className="btn btn-primary" onClick={handleCreate}>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <h2 className="text-3xl font-bold text-foreground">Quản lý Tài khoản</h2>
+        <button 
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2"
+          onClick={handleCreate}
+        >
           <i className="fas fa-plus"></i> Thêm tài khoản
         </button>
       </div>
 
-      <div className="table-container">
-        <table>
+      <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
           <thead>
             <tr>
               <th>Username</th>
