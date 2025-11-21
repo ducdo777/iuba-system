@@ -40,3 +40,4 @@ export class StatisticsController {
     return this.statisticsService.getByTeam(teamId, startDate, endDate);
   }
 }
+

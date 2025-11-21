@@ -78,3 +78,4 @@ else
     echo "❌ Redeploy thất bại!"
     echo "Chạy 'vercel --prod' để redeploy thủ công"
 fi
+

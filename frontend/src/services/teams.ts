@@ -40,3 +40,4 @@ export const teamsService = {
     await api.delete(`/teams/${id}`);
   },
 };
+

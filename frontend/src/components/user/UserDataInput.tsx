@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { activityDataService, ActivityData, CreateActivityDataDto } from '../../services/activityData';
 import { statisticsService, TeamStatistics } from '../../services/statistics';
-import './UserDataInput.css';
+
 
 interface EditableRow extends CreateActivityDataDto {
   id?: string;

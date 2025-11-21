@@ -147,3 +147,4 @@ Sau khi deploy:
 **Status**: ✅ vercel.json đã được xóa  
 **Action**: Cấu hình trong Vercel Dashboard  
 **Expected**: Build sẽ thành công với auto-detection
+

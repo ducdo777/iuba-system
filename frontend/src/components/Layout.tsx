@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
-import './Layout.css';
+
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,17 +13,17 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   const { user, logout } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    router.push('/login');
   };
 
   const isActive = (path: string) => {
-    return location.pathname === path ? 'active' : '';
+    return pathname === path ? 'active' : '';
   };
 
   const adminMenu = [
@@ -61,7 +64,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
             {menu.map((item) => (
               <Link
                 key={item.path}
-                to={item.path}
+                href={item.path}
                 className={`nav-item ${isActive(item.path)}`}
                 onClick={() => setSidebarOpen(false)}
               >

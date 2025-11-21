@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { statisticsService, StatisticsOverview } from '../../services/statistics';
-import './AdminDashboard.css';
+
 
 export const AdminDashboard: React.FC = () => {
   const [overview, setOverview] = useState<StatisticsOverview | null>(null);

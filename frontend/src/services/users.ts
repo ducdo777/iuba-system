@@ -55,3 +55,4 @@ export const usersService = {
     await api.delete(`/users/${id}`);
   },
 };
+

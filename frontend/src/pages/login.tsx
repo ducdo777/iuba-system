@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
-import './LoginPage.css';
 
-export const LoginPage: React.FC = () => {
+export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -80,5 +79,5 @@ export const LoginPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 

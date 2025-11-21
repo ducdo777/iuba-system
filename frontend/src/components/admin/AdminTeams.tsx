@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { teamsService, Team } from '../../services/teams';
 import { TeamModal } from '../../components/admin/TeamModal';
-import './AdminTeams.css';
+
 
 export const AdminTeams: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -115,3 +115,4 @@ export const AdminTeams: React.FC = () => {
     </div>
   );
 };
+

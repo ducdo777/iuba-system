@@ -1,12 +1,12 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "npm install && cd frontend && npm install",
+  "framework": "nextjs",
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/index.ts"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ],
   "headers": [

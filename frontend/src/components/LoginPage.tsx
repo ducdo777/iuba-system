@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
-import './LoginPage.css';
+
 
 export const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');

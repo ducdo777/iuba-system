@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { statisticsService, TeamStatistics } from '../../services/statistics';
 import { teamsService, Team } from '../../services/teams';
-import './AdminStatistics.css';
+
 
 export const AdminStatistics: React.FC = () => {
   const [stats, setStats] = useState<TeamStatistics[]>([]);

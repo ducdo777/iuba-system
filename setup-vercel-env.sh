@@ -91,3 +91,4 @@ echo "✅ Hoàn thành setup environment variables!"
 echo ""
 echo "📋 Environment variables hiện tại:"
 vercel env ls
+

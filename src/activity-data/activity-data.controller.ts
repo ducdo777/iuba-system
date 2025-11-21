@@ -71,3 +71,4 @@ export class ActivityDataController {
     return this.activityDataService.remove(id);
   }
 }
+

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usersService, User, CreateUserDto } from '../../services/users';
 import { Team } from '../../services/teams';
-import './Modal.css';
+
 
 interface UserModalProps {
   user: User | null;
@@ -174,3 +174,4 @@ export const UserModal: React.FC<UserModalProps> = ({ user, teams, onClose }) =>
     </div>
   );
 };
+

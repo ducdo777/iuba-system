@@ -10,3 +10,4 @@ export class AppController {
     return { status: 'ok', message: 'IUBA System API' };
   }
 }
+

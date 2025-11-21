@@ -12,3 +12,4 @@ import { UsersModule } from '../users/users.module';
   exports: [StatisticsService],
 })
 export class StatisticsModule {}
+

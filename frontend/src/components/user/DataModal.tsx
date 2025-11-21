@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { activityDataService, ActivityData, CreateActivityDataDto } from '../../services/activityData';
-import './Modal.css';
+
 
 interface DataModalProps {
   data: ActivityData | null;

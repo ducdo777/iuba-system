@@ -11,3 +11,4 @@ import { ActivityData } from './entities/activity-data.entity';
   exports: [ActivityDataService],
 })
 export class ActivityDataModule {}
+

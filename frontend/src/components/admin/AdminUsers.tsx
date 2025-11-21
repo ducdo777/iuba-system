@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { usersService, User } from '../../services/users';
 import { teamsService, Team } from '../../services/teams';
 import { UserModal } from '../../components/admin/UserModal';
-import './AdminUsers.css';
+
 
 export const AdminUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -135,3 +135,4 @@ export const AdminUsers: React.FC = () => {
     </div>
   );
 };
+

@@ -1,5 +1,7 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+'use client';
+
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
@@ -9,13 +11,26 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
   const { isAuthenticated, user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+
+    if (requiredRole && user?.role !== requiredRole) {
+      router.push(user?.role === 'admin' ? '/admin' : '/user');
+      return;
+    }
+  }, [isAuthenticated, user, requiredRole, router]);
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return null;
   }
 
   if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to={user?.role === 'admin' ? '/admin' : '/user'} replace />;
+    return null;
   }
 
   return <>{children}</>;

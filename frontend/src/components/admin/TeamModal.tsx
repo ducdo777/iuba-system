@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { teamsService, Team, CreateTeamDto } from '../../services/teams';
-import './Modal.css';
+
 
 interface TeamModalProps {
   team: Team | null;
@@ -112,3 +112,4 @@ export const TeamModal: React.FC<TeamModalProps> = ({ team, onClose }) => {
     </div>
   );
 };
+
