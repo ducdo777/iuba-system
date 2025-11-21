@@ -4,6 +4,8 @@ import React from 'react';
 import { AuthProvider } from '../contexts/AuthContext';
 import '../index.css';
 import '../App.css';
+// Responsive design system
+import '../styles/responsive.css';
 // Global CSS imports
 import '../components/Layout.css';
 import '../components/LoginPage.css';
