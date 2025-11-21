@@ -11,7 +11,7 @@ import { UsersModule } from '../users/users.module';
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: 'iuba-secret-key-2024',
+      secret: process.env.JWT_SECRET || 'iuba-secret-key-2024',
       signOptions: { expiresIn: '24h' },
     }),
   ],

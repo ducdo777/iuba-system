@@ -8,7 +8,12 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: { username: string; password: string }) {
-    return this.authService.login(loginDto.username, loginDto.password);
+    try {
+      return await this.authService.login(loginDto.username, loginDto.password);
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   }
 
   @Get('profile')

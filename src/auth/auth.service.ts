@@ -20,21 +20,29 @@ export class AuthService {
   }
 
   async login(username: string, password: string) {
-    const user = await this.validateUser(username, password);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+    try {
+      const user = await this.validateUser(username, password);
+      if (!user) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      const payload = { username: user.username, sub: user.id, role: user.role };
+      return {
+        access_token: this.jwtService.sign(payload),
+        user: {
+          id: user.id,
+          username: user.username,
+          role: user.role,
+          fullName: user.fullName,
+          teamId: user.teamId,
+        },
+      };
+    } catch (error) {
+      console.error('AuthService login error:', error);
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Login failed');
     }
-    const payload = { username: user.username, sub: user.id, role: user.role };
-    return {
-      access_token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-        fullName: user.fullName,
-        teamId: user.teamId,
-      },
-    };
   }
 }
 

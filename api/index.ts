@@ -36,6 +36,15 @@ async function createNestApp() {
 }
 
 export default async function handler(req: Request, res: Response) {
-  const app = await createNestApp();
-  return app(req, res);
+  try {
+    const app = await createNestApp();
+    return app(req, res);
+  } catch (error) {
+    console.error('Error in API handler:', error);
+    res.status(500).json({
+      statusCode: 500,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
 }
