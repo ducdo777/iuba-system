@@ -96,7 +96,7 @@ export const AdminTeams: React.FC = () => {
                 </tr>
               ) : (
                 teams.map((team) => (
-                  <tr key={team.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                  <tr key={team.id} className="border-b border-gray-200 hover:bg-muted/50 transition-colors">
                     <td className="py-3 px-4 text-sm text-foreground font-medium">{team.teamCode}</td>
                     <td className="py-3 px-4 text-sm text-foreground">{team.teamName}</td>
                     <td className="py-3 px-4 text-sm text-foreground">{team.description || '-'}</td>

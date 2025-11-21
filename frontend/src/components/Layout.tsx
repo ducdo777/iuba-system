@@ -74,7 +74,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
         <aside
           className={`
             fixed md:static top-16 md:top-0 left-0 h-[calc(100vh-4rem)] md:h-full
-            w-64 bg-card border-r border-border
+            w-64 bg-card border-r border-gray-200
             transform transition-transform duration-300 ease-in-out z-40
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
           `}

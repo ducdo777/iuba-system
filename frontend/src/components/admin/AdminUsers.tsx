@@ -104,7 +104,7 @@ export const AdminUsers: React.FC = () => {
                 </tr>
               ) : (
                 users.map((user) => (
-                  <tr key={user.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                  <tr key={user.id} className="border-b border-gray-200 hover:bg-muted/50 transition-colors">
                     <td className="py-3 px-4 text-sm text-foreground font-medium">{user.username}</td>
                     <td className="py-3 px-4 text-sm text-foreground">{user.fullName}</td>
                     <td className="py-3 px-4 text-sm text-foreground">{user.team?.teamName || '-'}</td>

@@ -56,6 +56,7 @@ module.exports = {
         muted: '#f1f5f9',
         'muted-foreground': '#64748b',
         border: '#e2e8f0',
+        'border-border': '#e2e8f0',
         input: '#e2e8f0',
         ring: '#2563eb',
       },

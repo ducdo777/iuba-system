@@ -157,7 +157,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="overflow-x-auto -mx-6 px-6">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-border">
+              <tr className="border-b border-gray-200">
                 <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Team</th>
                 <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Số thành viên</th>
                 <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Đơn thuần</th>
@@ -171,7 +171,7 @@ export const AdminDashboard: React.FC = () => {
             </thead>
             <tbody>
               {overview.byTeam.map((team) => (
-                <tr key={team.teamId} className="border-b border-border hover:bg-muted/50 transition-colors">
+                <tr key={team.teamId} className="border-b border-gray-200 hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-4 text-sm text-foreground font-medium">{team.teamName}</td>
                   <td className="py-3 px-4 text-sm text-foreground">{team.totalMembers}</td>
                   <td className="py-3 px-4 text-sm text-foreground">{team.donThuan}</td>

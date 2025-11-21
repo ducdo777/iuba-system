@@ -138,7 +138,7 @@ export const AdminPoints: React.FC = () => {
 
           return (
             <div key={activity.type} className="bg-card rounded-xl border shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
+              <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{activity.icon}</span>
                   <h3 className="font-semibold text-foreground">{activity.name}</h3>
