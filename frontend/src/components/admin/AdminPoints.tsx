@@ -239,8 +239,8 @@ export const AdminPoints: React.FC = () => {
         <h3>ℹ️ Hướng dẫn</h3>
         <ul>
           <li>Điểm số sẽ được tính: <strong>Số lượng × Điểm mỗi đơn vị</strong></li>
-          <li>Ví dụ: Nếu "Đơn thuần" = 1 điểm/đơn vị, và có 10 đơn vị → Tổng điểm = 10 điểm</li>
-          <li>Bạn có thể tạm dừng một loại hoạt động bằng cách đặt trạng thái "Tạm dừng"</li>
+          <li>Ví dụ: Nếu &quot;Đơn thuần&quot; = 1 điểm/đơn vị, và có 10 đơn vị → Tổng điểm = 10 điểm</li>
+          <li>Bạn có thể tạm dừng một loại hoạt động bằng cách đặt trạng thái &quot;Tạm dừng&quot;</li>
           <li>Dùng nút +1/-1 để điều chỉnh nhanh điểm số</li>
         </ul>
       </div>
