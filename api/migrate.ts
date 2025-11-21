@@ -8,17 +8,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 // This endpoint can be called to initialize the database
 // Usage: POST /api/migrate (with secret key in header)
+// Or set AUTO_MIGRATE=true to run automatically on first request
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Security: Only allow POST and check for secret key
   const secretKey = process.env.MIGRATION_SECRET || 'migration-secret-key';
   const providedKey = req.headers['x-migration-secret'] || req.body?.secret;
+  const autoMigrate = process.env.AUTO_MIGRATE === 'true';
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (providedKey !== secretKey) {
+  // Allow auto-migrate if enabled (for first-time setup)
+  if (!autoMigrate && providedKey !== secretKey) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
