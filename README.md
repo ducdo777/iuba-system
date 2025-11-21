@@ -1,128 +1,156 @@
-# Hệ Thống IUBA với SQLite
+# 🎯 Hệ Thống Quản Lý IUBA
 
-Hệ thống quản lý IUBA với SQLite database, có trang admin riêng và trang user riêng.
+Hệ thống quản lý IUBA với React frontend, NestJS backend, và hỗ trợ triển khai lên Vercel.
 
-## Tính năng
+## ✨ Tính Năng
 
-### Trang Admin (admin.html)
-- ✅ Quản lý tài khoản (User/Admin)
-- ✅ Quản lý Team IUBA
-- ✅ Thống kê kết quả theo Team và User
-- ✅ Dashboard tổng quan
+### Frontend (React + TypeScript)
+- ✅ Responsive design (mobile-first)
+- ✅ Inline editing cho nhập dữ liệu nhanh
+- ✅ Authentication với JWT
+- ✅ Protected routes
+- ✅ Modern UI với CSS
 
-### Trang User (user.html)
+### Backend (NestJS + TypeORM)
+- ✅ RESTful API
+- ✅ JWT Authentication
+- ✅ Role-based access control (Admin/User)
+- ✅ Database: PostgreSQL (Vercel) / SQLite (Local)
+- ✅ Serverless functions support
+
+### Dữ Liệu Quản Lý
+- ✅ Quản lý Users (Admin/User roles)
+- ✅ Quản lý Teams
 - ✅ Nhập dữ liệu hoạt động:
   - Đơn thuần
   - Hữu hiệu
   - Baptem
   - Thờ phượng
-  - Laxaro
-- ✅ Xem thống kê của Team mình
-- ✅ Sửa/Xóa dữ liệu của mình
+  - Lập CLB
+  - Lên giai đoạn
+- ✅ Thống kê chi tiết theo Team và User
 
-## Yêu cầu
+## 🚀 Quick Start
 
-- Node.js (v18 trở lên)
-- npm hoặc yarn
+### Local Development
 
-## Cài đặt
-
-1. Cài đặt dependencies:
 ```bash
-cd iuba-system
+# Cài đặt dependencies
 npm install
-```
+cd frontend && npm install && cd ..
 
-2. Khởi động server:
-```bash
+# Chạy backend (port 3002)
 npm run start:dev
+
+# Chạy frontend (port 3003)
+cd frontend && npm run dev
 ```
 
-3. Truy cập:
-   - **Trang Admin:** http://localhost:3002/admin.html
-   - **Trang User:** http://localhost:3002/user.html
+### Truy Cập
 
-## Đăng nhập mặc định
+- **Frontend:** http://localhost:3003
+- **Backend API:** http://localhost:3002/api
+- **Admin Login:** `admin` / `admin123`
+
+## 📦 Deployment
+
+### Vercel Deployment
+
+Xem file `DEPLOY_VERCEL.md` hoặc `DEPLOY_QUICK_START.md` để biết chi tiết.
+
+### GitHub Upload
+
+Xem file `GITHUB_DEPLOY.md` để upload code lên GitHub private repository.
+
+## 📁 Cấu Trúc Project
+
+```
+iuba-system/
+├── api/                    # Serverless functions (Vercel)
+│   └── index.ts
+├── frontend/               # React frontend
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── pages/         # Pages (Admin/User)
+│   │   ├── services/      # API services
+│   │   └── contexts/      # React contexts
+│   └── dist/              # Build output
+├── src/                    # NestJS backend
+│   ├── auth/              # Authentication
+│   ├── users/             # User management
+│   ├── teams/             # Team management
+│   ├── activity-data/     # Activity data CRUD
+│   └── statistics/        # Statistics service
+├── vercel.json            # Vercel configuration
+└── package.json           # Root dependencies
+```
+
+## 🔧 Cấu Hình
+
+### Environment Variables
+
+#### Local Development
+Tạo file `.env.local`:
+```env
+POSTGRES_URL=postgresql://user:password@host:port/database
+JWT_SECRET=your-secret-key
+NODE_ENV=development
+```
+
+#### Vercel Production
+Set trong Vercel Dashboard:
+- `POSTGRES_URL`: Từ Vercel Postgres
+- `JWT_SECRET`: Secret key cho JWT
+- `NODE_ENV`: production
+
+### Database
+
+- **Local:** SQLite (`iuba.db`) - tự động tạo
+- **Vercel:** PostgreSQL - cần tạo Vercel Postgres database
+
+## 👥 Đăng Nhập
 
 ### Admin
 - **Username:** `admin`
 - **Password:** `admin123`
+- **Quyền:** Full access (Users, Teams, Statistics)
 
-Admin user sẽ được tự động tạo khi server khởi động lần đầu.
+### User
+- Tạo user trong Admin panel
+- **Quyền:** Chỉ xem/sửa dữ liệu của team mình
 
-## Database
+## 📚 Documentation
 
-Hệ thống sử dụng SQLite, database file `iuba.db` sẽ được tạo tự động trong thư mục gốc dự án.
+- `DEPLOY_VERCEL.md` - Hướng dẫn deploy lên Vercel
+- `DEPLOY_QUICK_START.md` - Quick start deployment
+- `GITHUB_DEPLOY.md` - Hướng dẫn upload lên GitHub
+- `frontend/README.md` - Frontend documentation
 
-## Cấu trúc
+## 🛠️ Tech Stack
 
-```
-iuba-system/
-├── src/
-│   ├── users/              # Module quản lý tài khoản
-│   ├── teams/              # Module quản lý team
-│   ├── activity-data/      # Module quản lý dữ liệu hoạt động
-│   ├── statistics/         # Module thống kê
-│   └── auth/               # Module xác thực
-├── public/
-│   ├── admin.html          # Trang admin
-│   ├── user.html           # Trang user
-│   ├── admin.js            # JavaScript cho admin
-│   ├── user.js             # JavaScript cho user
-│   └── styles.css          # CSS chung
-└── iuba.db                 # SQLite database (tự động tạo)
-```
+### Backend
+- NestJS 11
+- TypeORM
+- PostgreSQL / SQLite
+- JWT Authentication
+- bcryptjs
 
-## Sử dụng
+### Frontend
+- React 19
+- TypeScript
+- Vite
+- React Router DOM
+- Axios
+- CSS (Responsive)
 
-### 1. Tạo Team và User (Admin)
-
-1. Đăng nhập vào trang admin
-2. Vào "Quản lý Team" → Tạo team mới
-3. Vào "Quản lý Tài khoản" → Tạo user mới và gán vào team
-
-### 2. Nhập dữ liệu (User)
-
-1. Đăng nhập vào trang user
-2. Click "Thêm dữ liệu"
-3. Nhập các giá trị: Đơn thuần, Hữu hiệu, Baptem, Thờ phượng, Laxaro
-4. Chọn ngày và lưu
-
-### 3. Xem thống kê (Admin)
-
-1. Vào "Thống kê"
-2. Chọn khoảng thời gian (tùy chọn)
-3. Chọn Team cụ thể hoặc "Tất cả Teams"
-4. Xem bảng thống kê chi tiết
-
-## API Endpoints
-
-### Auth
-- `POST /api/auth/login` - Đăng nhập
-
-### Users (Admin only)
-- `GET /api/users` - Lấy danh sách users
-- `POST /api/users` - Tạo user mới
-- `PUT /api/users/:id` - Cập nhật user
-- `DELETE /api/users/:id` - Xóa user
-
-### Teams (Admin only)
-- `GET /api/teams` - Lấy danh sách teams
-- `POST /api/teams` - Tạo team mới
-- `PUT /api/teams/:id` - Cập nhật team
-- `DELETE /api/teams/:id` - Xóa team
-
-### Activity Data
-- `GET /api/activity-data` - Lấy dữ liệu (user chỉ thấy team của mình)
-- `POST /api/activity-data` - Tạo dữ liệu mới
-- `PUT /api/activity-data/:id` - Cập nhật (user chỉ sửa được của mình)
-- `DELETE /api/activity-data/:id` - Xóa (user chỉ xóa được của mình)
-
-### Statistics
-- `GET /api/statistics/overview` - Tổng quan (Admin only)
-- `GET /api/statistics/by-team` - Theo team (Admin only)
-- `GET /api/statistics/my-team` - Thống kê team của user (User)
-
-## License
+## 📝 License
 
 UNLICENSED
+
+## 👨‍💻 Author
+
+Hệ thống IUBA Management System
+
+---
+
+**Chúc bạn sử dụng vui vẻ! 🎉**
