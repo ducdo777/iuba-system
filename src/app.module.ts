@@ -18,6 +18,8 @@ import * as bcrypt from 'bcryptjs';
 const isProduction = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
 const databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 const usePostgres = isProduction || !!databaseUrl;
+// Enable synchronize for initial setup or if INIT_DB is set
+const shouldSync = !isProduction || process.env.INIT_DB === 'true' || process.env.ENABLE_SYNC === 'true';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ const usePostgres = isProduction || !!databaseUrl;
             url: databaseUrl,
             ssl: isProduction ? { rejectUnauthorized: false } : false,
             entities: [User, Team, ActivityData],
-            synchronize: !isProduction, // Chỉ sync trong dev
+            synchronize: shouldSync, // Enable for initial setup
             logging: process.env.NODE_ENV === 'development',
             extra: {
               connectionLimit: 5,
