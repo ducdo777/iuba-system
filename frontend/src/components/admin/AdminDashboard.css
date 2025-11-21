@@ -89,6 +89,7 @@
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
 }
 
 .team-stats-table h3 {
@@ -97,9 +98,63 @@
   font-size: 1.25rem;
 }
 
+.team-stats-table .table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.team-stats-table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.team-stats-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  background: #f8fafc;
+}
+
+.team-stats-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 0.875rem;
+}
+
+.team-stats-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .admin-dashboard {
+    padding: 1.5rem;
+  }
+
+  .team-stats-table {
+    padding: 1.25rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 1rem;
+  }
+
+  .admin-dashboard h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .stat-card {
@@ -114,6 +169,30 @@
 
   .stat-info h3 {
     font-size: 1.5rem;
+  }
+
+  .stats-summary h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .team-stats-table {
+    padding: 1rem;
+  }
+
+  .team-stats-table h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .team-stats-table table {
+    font-size: 0.8rem;
+    min-width: 500px;
+  }
+
+  .team-stats-table th,
+  .team-stats-table td {
+    padding: 0.5rem 0.75rem;
   }
 }
 

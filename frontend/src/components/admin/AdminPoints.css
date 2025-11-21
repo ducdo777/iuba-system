@@ -312,13 +312,127 @@
   }
 }
 
+/* Tablet */
+@media (max-width: 1024px) {
+  .points-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .admin-points {
+    padding: 16px;
+  }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
+  .admin-points {
+    padding: 12px;
+  }
+
+  .admin-points-header h2 {
+    font-size: 24px;
+  }
+
+  .admin-points-header .subtitle {
+    font-size: 14px;
+  }
+
   .points-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
   
+  .point-card {
+    padding: 16px;
+  }
+
   .point-number {
     font-size: 36px;
+  }
+
+  .point-icon {
+    font-size: 28px;
+  }
+
+  .point-card-header h3 {
+    font-size: 16px;
+  }
+
+  .points-info {
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  .points-info h3 {
+    font-size: 18px;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .admin-points {
+    padding: 10px;
+  }
+
+  .admin-points-header h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .point-card {
+    padding: 12px;
+  }
+
+  .point-number {
+    font-size: 32px;
+  }
+
+  .point-icon {
+    font-size: 24px;
+  }
+
+  .point-card-header {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .point-card-header h3 {
+    font-size: 15px;
+  }
+
+  .status-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+
+  .btn-edit,
+  .btn-create,
+  .btn-save,
+  .btn-cancel {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .btn-quick {
+    padding: 6px;
+    font-size: 14px;
+  }
+
+  .points-info {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .points-info li {
+    padding: 6px 0;
+    padding-left: 20px;
+    font-size: 13px;
   }
 }
 

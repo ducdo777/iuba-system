@@ -1,0 +1,122 @@
+/* Responsive table styles for admin pages */
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px; /* Minimum width for table */
+}
+
+.table-container thead {
+  background: #f8fafc;
+}
+
+.table-container th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+.table-container td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 0.875rem;
+}
+
+.table-container tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table-container tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Mobile: Stack table as cards */
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: visible;
+    margin: 0;
+  }
+
+  .table-container table,
+  .table-container thead,
+  .table-container tbody,
+  .table-container th,
+  .table-container td,
+  .table-container tr {
+    display: block;
+  }
+
+  .table-container thead {
+    display: none;
+  }
+
+  .table-container tr {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .table-container td {
+    border: none;
+    padding: 0.5rem 0;
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .table-container td:last-child {
+    border-bottom: none;
+  }
+
+  .table-container td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.8rem;
+  }
+
+  .table-container td:last-child:before {
+    content: 'Thao tác';
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .table-container tr {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .table-container td {
+    padding: 0.4rem 0;
+    padding-left: 45%;
+    font-size: 0.8rem;
+  }
+
+  .table-container td:before {
+    font-size: 0.75rem;
+    width: 40%;
+  }
+}
+
