@@ -9,6 +9,10 @@
       "destination": "/api/migrate.ts"
     },
     {
+      "source": "/api/reset-admin",
+      "destination": "/api/reset-admin.ts"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/index.ts"
     },

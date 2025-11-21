@@ -67,11 +67,13 @@ export class AppModule implements OnModuleInit {
     // Wait a bit for database connection to be ready
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Create default admin user if not exists
+    // Create or update default admin user
     try {
       const admin = await this.userRepository.findOne({ where: { username: 'admin' } });
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      
       if (!admin) {
-        const hashedPassword = await bcrypt.hash('admin123', 10);
+        // Create new admin user
         const newAdmin = this.userRepository.create({
           username: 'admin',
           password: hashedPassword,
@@ -82,10 +84,16 @@ export class AppModule implements OnModuleInit {
         await this.userRepository.save(newAdmin);
         console.log('Default admin user created: admin/admin123');
       } else {
-        console.log('Admin user already exists');
+        // Update existing admin password to ensure it's correct
+        admin.password = hashedPassword;
+        admin.fullName = admin.fullName || 'Administrator';
+        admin.role = 'admin';
+        admin.status = 'active';
+        await this.userRepository.save(admin);
+        console.log('Admin user password reset: admin/admin123');
       }
     } catch (error) {
-      console.error('Error creating admin user:', error);
+      console.error('Error creating/updating admin user:', error);
       // If tables don't exist, log a helpful message
       if (error.message && error.message.includes('does not exist')) {
         console.error('Database tables not found. Please set INIT_DB=true or ENABLE_SYNC=true to create tables.');

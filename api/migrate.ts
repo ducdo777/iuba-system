@@ -72,7 +72,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await userRepository.save(admin);
       console.log('✅ Default admin user created');
     } else {
-      console.log('ℹ️  Admin user already exists');
+      // Reset password to ensure it's correct
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      existingAdmin.password = hashedPassword;
+      existingAdmin.fullName = existingAdmin.fullName || 'Administrator';
+      existingAdmin.role = 'admin';
+      existingAdmin.status = 'active';
+      await userRepository.save(existingAdmin);
+      console.log('✅ Admin user password reset');
     }
 
     await dataSource.destroy();
