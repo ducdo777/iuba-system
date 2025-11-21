@@ -11,6 +11,7 @@ import '../components/admin/AdminDashboard.css';
 import '../components/admin/AdminUsers.css';
 import '../components/admin/AdminTeams.css';
 import '../components/admin/AdminStatistics.css';
+import '../components/admin/AdminPoints.css';
 import '../components/user/UserDataInput.css';
 import '../components/admin/Modal.css';
 import '../components/user/Modal.css';

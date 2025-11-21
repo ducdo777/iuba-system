@@ -31,6 +31,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
     { path: '/admin/users', icon: 'fas fa-users', label: 'Tài khoản' },
     { path: '/admin/teams', icon: 'fas fa-user-friends', label: 'Teams' },
     { path: '/admin/statistics', icon: 'fas fa-chart-bar', label: 'Thống kê' },
+    { path: '/admin/points', icon: 'fas fa-cog', label: 'Cấu hình Điểm' },
   ];
 
   const userMenu = [

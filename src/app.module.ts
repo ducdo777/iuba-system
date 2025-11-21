@@ -9,9 +9,11 @@ import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { ActivityDataModule } from './activity-data/activity-data.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { ActivityPointsModule } from './activity-points/activity-points.module';
 import { User } from './users/entities/user.entity';
 import { Team } from './teams/entities/team.entity';
 import { ActivityData } from './activity-data/entities/activity-data.entity';
+import { ActivityPointConfig } from './activity-points/entities/activity-point-config.entity';
 import * as bcrypt from 'bcryptjs';
 
 // Determine database type based on environment
@@ -29,7 +31,7 @@ const shouldSync = !isProduction || process.env.INIT_DB === 'true' || process.en
             type: 'postgres',
             url: databaseUrl,
             ssl: isProduction ? { rejectUnauthorized: false } : false,
-            entities: [User, Team, ActivityData],
+            entities: [User, Team, ActivityData, ActivityPointConfig],
             synchronize: shouldSync, // Enable for initial setup
             logging: process.env.NODE_ENV === 'development',
             extra: {
@@ -42,7 +44,7 @@ const shouldSync = !isProduction || process.env.INIT_DB === 'true' || process.en
         : {
             type: 'sqlite',
             database: 'iuba.db',
-            entities: [User, Team, ActivityData],
+            entities: [User, Team, ActivityData, ActivityPointConfig],
             synchronize: true,
             logging: false,
           },
@@ -53,6 +55,7 @@ const shouldSync = !isProduction || process.env.INIT_DB === 'true' || process.en
     TeamsModule,
     ActivityDataModule,
     StatisticsModule,
+    ActivityPointsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
