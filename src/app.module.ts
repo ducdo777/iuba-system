@@ -64,6 +64,9 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    // Wait a bit for database connection to be ready
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     // Create default admin user if not exists
     try {
       const admin = await this.userRepository.findOne({ where: { username: 'admin' } });
@@ -78,9 +81,15 @@ export class AppModule implements OnModuleInit {
         });
         await this.userRepository.save(newAdmin);
         console.log('Default admin user created: admin/admin123');
+      } else {
+        console.log('Admin user already exists');
       }
     } catch (error) {
       console.error('Error creating admin user:', error);
+      // If tables don't exist, log a helpful message
+      if (error.message && error.message.includes('does not exist')) {
+        console.error('Database tables not found. Please set INIT_DB=true or ENABLE_SYNC=true to create tables.');
+      }
     }
   }
 }
