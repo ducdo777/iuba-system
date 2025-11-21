@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { User } from '../src/users/entities/user.entity';
 import { Team } from '../src/teams/entities/team.entity';
 import { ActivityData } from '../src/activity-data/entities/activity-data.entity';
+import { ActivityPointConfig } from '../src/activity-points/entities/activity-point-config.entity';
 import * as bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -36,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     type: 'postgres',
     url: databaseUrl,
     ssl: isProduction ? { rejectUnauthorized: false } : false,
-    entities: [User, Team, ActivityData],
+    entities: [User, Team, ActivityData, ActivityPointConfig],
     synchronize: true,
     logging: false,
     extra: {
@@ -80,6 +81,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       existingAdmin.status = 'active';
       await userRepository.save(existingAdmin);
       console.log('✅ Admin user password reset');
+    }
+
+    // Initialize default activity point configs
+    const pointConfigRepository = dataSource.getRepository(ActivityPointConfig);
+    const defaultConfigs = [
+      { activityType: 'donThuan', activityName: 'Đơn thuần', pointPerUnit: 1 },
+      { activityType: 'huuHieu', activityName: 'Hữu hiệu', pointPerUnit: 2 },
+      { activityType: 'baptem', activityName: 'Baptem', pointPerUnit: 5 },
+      { activityType: 'thoPhuong', activityName: 'Thờ phượng', pointPerUnit: 3 },
+      { activityType: 'lapCLB', activityName: 'Lập CLB', pointPerUnit: 10 },
+      { activityType: 'lenGiaiDoan', activityName: 'Lên giai đoạn', pointPerUnit: 15 },
+    ];
+
+    for (const config of defaultConfigs) {
+      const existing = await pointConfigRepository.findOne({
+        where: { activityType: config.activityType as any },
+      });
+      if (!existing) {
+        const newConfig = pointConfigRepository.create({
+          id: uuidv4(),
+          ...config,
+          status: 'active',
+        });
+        await pointConfigRepository.save(newConfig);
+        console.log(`✅ Created point config for ${config.activityName}`);
+      }
     }
 
     await dataSource.destroy();
