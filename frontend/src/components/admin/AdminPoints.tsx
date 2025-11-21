@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { activityPointsService, ActivityPointConfig, CreateActivityPointConfigDto } from '../../services/activityPoints';
-import './AdminPoints.css';
 
 const ACTIVITY_TYPES = [
   { type: 'donThuan', name: 'Đơn thuần', icon: '📋' },
