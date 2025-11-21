@@ -84,56 +84,71 @@ export const AdminUsers: React.FC = () => {
       <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Họ tên</th>
-              <th>Team</th>
-              <th>Vai trò</th>
-              <th>Email</th>
-              <th>Trạng thái</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length === 0 ? (
+            <thead className="bg-muted">
               <tr>
-                <td colSpan={7} style={{ textAlign: 'center' }}>
-                  Không có tài khoản nào
-                </td>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Username</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Họ tên</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Team</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Vai trò</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Email</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Trạng thái</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Thao tác</th>
               </tr>
-            ) : (
-              users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.username}</td>
-                  <td>{user.fullName}</td>
-                  <td>{user.team?.teamName || '-'}</td>
-                  <td>
-                    <span className={`badge ${user.role === 'admin' ? 'badge-info' : 'badge-success'}`}>
-                      {user.role === 'admin' ? 'Admin' : 'User'}
-                    </span>
-                  </td>
-                  <td>{user.email || '-'}</td>
-                  <td>
-                    <span className={`badge ${user.status === 'active' ? 'badge-success' : 'badge-danger'}`}>
-                      {user.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="btn-group">
-                      <button className="btn btn-sm btn-primary" onClick={() => handleEdit(user)}>
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(user.id)}>
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-8 text-muted-foreground">
+                    Không có tài khoản nào
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                users.map((user) => (
+                  <tr key={user.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                    <td className="py-3 px-4 text-sm text-foreground font-medium">{user.username}</td>
+                    <td className="py-3 px-4 text-sm text-foreground">{user.fullName}</td>
+                    <td className="py-3 px-4 text-sm text-foreground">{user.team?.teamName || '-'}</td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-1 rounded-md text-xs font-medium ${
+                        user.role === 'admin' 
+                          ? 'bg-info/10 text-info' 
+                          : 'bg-success/10 text-success'
+                      }`}>
+                        {user.role === 'admin' ? 'Admin' : 'User'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-sm text-foreground">{user.email || '-'}</td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-1 rounded-md text-xs font-medium ${
+                        user.status === 'active' 
+                          ? 'bg-success/10 text-success' 
+                          : 'bg-error/10 text-error'
+                      }`}>
+                        {user.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex items-center gap-2">
+                        <button 
+                          className="px-3 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+                          onClick={() => handleEdit(user)}
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button 
+                          className="px-3 py-1 text-sm bg-error text-white rounded-md hover:bg-error-dark transition-colors"
+                          onClick={() => handleDelete(user.id)}
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {modalOpen && (
