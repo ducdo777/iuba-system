@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Team } from './entities/team.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class TeamsService {
@@ -28,7 +29,10 @@ export class TeamsService {
   }
 
   async create(createTeamDto: any): Promise<Team> {
-    const team = this.teamsRepository.create(createTeamDto);
+    const team = this.teamsRepository.create({
+      id: uuidv4(), // Generate UUID manually for PostgreSQL
+      ...createTeamDto,
+    });
     const saved = await this.teamsRepository.save(team);
     return saved as unknown as Team;
   }

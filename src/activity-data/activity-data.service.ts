@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { ActivityData } from './entities/activity-data.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ActivityDataService {
@@ -44,7 +45,10 @@ export class ActivityDataService {
   }
 
   async create(createDto: any): Promise<ActivityData> {
-    const data = this.activityDataRepository.create(createDto);
+    const data = this.activityDataRepository.create({
+      id: uuidv4(), // Generate UUID manually for PostgreSQL
+      ...createDto,
+    });
     const saved = await this.activityDataRepository.save(data);
     return saved as unknown as ActivityData;
   }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +43,7 @@ export class UsersService {
   async create(createUserDto: any): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password || '123456', 10);
     const user = this.usersRepository.create({
+      id: uuidv4(), // Generate UUID manually for PostgreSQL
       ...createUserDto,
       password: hashedPassword,
     });
