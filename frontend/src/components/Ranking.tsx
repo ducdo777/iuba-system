@@ -33,6 +33,7 @@ interface TeamRanking {
   lapCLB: number;
   lenGiaiDoan: number;
   totalPoints: number;
+  averagePoints: number;
   rank: number;
 }
 
@@ -90,20 +91,25 @@ export const Ranking: React.FC = () => {
   useEffect(() => {
     if (overview && pointConfigs.length > 0) {
       const teamRankings: TeamRanking[] = overview.byTeam
-        .map((team) => ({
-          teamId: team.teamId,
-          teamCode: team.teamCode,
-          teamName: team.teamName,
-          totalMembers: team.totalMembers,
-          donThuan: team.donThuan,
-          huuHieu: team.huuHieu,
-          baptem: team.baptem,
-          thoPhuong: team.thoPhuong,
-          lapCLB: team.lapCLB,
-          lenGiaiDoan: team.lenGiaiDoan,
-          totalPoints: calculateTeamPoints(team),
-          rank: 0,
-        }))
+        .map((team) => {
+          const totalPoints = calculateTeamPoints(team);
+          const averagePoints = team.totalMembers > 0 ? totalPoints / team.totalMembers : 0;
+          return {
+            teamId: team.teamId,
+            teamCode: team.teamCode,
+            teamName: team.teamName,
+            totalMembers: team.totalMembers,
+            donThuan: team.donThuan,
+            huuHieu: team.huuHieu,
+            baptem: team.baptem,
+            thoPhuong: team.thoPhuong,
+            lapCLB: team.lapCLB,
+            lenGiaiDoan: team.lenGiaiDoan,
+            totalPoints,
+            averagePoints,
+            rank: 0,
+          };
+        })
         .sort((a, b) => b.totalPoints - a.totalPoints)
         .slice(0, 10)
         .map((team, index) => ({
@@ -148,7 +154,7 @@ export const Ranking: React.FC = () => {
             Bảng xếp hạng
           </Heading>
           <Text color="gray.600" fontSize={{ base: 'sm', md: 'md' }}>
-            Top 10 Teams có tổng điểm cao nhất
+            Top 10 Teams có tổng điểm cao nhất (Điểm TB = Tổng điểm / Số thành viên)
           </Text>
         </Box>
 
@@ -204,12 +210,15 @@ export const Ranking: React.FC = () => {
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     Tổng
                   </Th>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    Điểm TB
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {rankings.length === 0 ? (
                   <Tr>
-                    <Td colSpan={11} textAlign="center" py={8} color="gray.500">
+                    <Td colSpan={12} textAlign="center" py={8} color="gray.500">
                       Chưa có dữ liệu xếp hạng
                     </Td>
                   </Tr>
@@ -267,6 +276,9 @@ export const Ranking: React.FC = () => {
                       </Td>
                       <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }}>
                         {team.totalPoints.toLocaleString('vi-VN')}
+                      </Td>
+                      <Td fontWeight="semibold" color="green.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }}>
+                        {team.averagePoints > 0 ? team.averagePoints.toLocaleString('vi-VN', { maximumFractionDigits: 2 }) : '-'}
                       </Td>
                     </Tr>
                   ))

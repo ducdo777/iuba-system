@@ -299,6 +299,9 @@ export const AdminDashboard: React.FC = () => {
                   <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Tổng điểm
                   </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                    Điểm TB
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -310,6 +313,7 @@ export const AdminDashboard: React.FC = () => {
                     calculateActivityPoints('thoPhuong', team.thoPhuong) +
                     calculateActivityPoints('lapCLB', team.lapCLB) +
                     calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan);
+                  const averagePoints = team.totalMembers > 0 ? teamTotalPoints / team.totalMembers : 0;
                   
                   return (
                     <Tr
@@ -330,6 +334,9 @@ export const AdminDashboard: React.FC = () => {
                       <Td color="gray.700">{team.lenGiaiDoan}</Td>
                       <Td fontWeight="bold" color="primary.600">
                         {teamTotalPoints.toLocaleString('vi-VN')}
+                      </Td>
+                      <Td fontWeight="semibold" color="green.600">
+                        {averagePoints > 0 ? averagePoints.toLocaleString('vi-VN', { maximumFractionDigits: 2 }) : '-'}
                       </Td>
                     </Tr>
                   );
