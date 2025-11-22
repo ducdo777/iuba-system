@@ -319,34 +319,34 @@ export const UserDataInput: React.FC = () => {
         </Flex>
 
         <TableContainer bg="white" borderRadius="xl" boxShadow="sm" overflow="hidden" ref={tableRef} w="full" maxW="100%">
-          <Table variant="simple" size="sm" whiteSpace="nowrap" w="full" layout="fixed">
+          <Table variant="simple" size="sm" whiteSpace="nowrap" w="full">
             <Thead bg="gray.50">
               <Tr>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} textAlign="left" width={{ base: '90px', md: '110px' }}>
                   Ngày
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   Đơn
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   Hữu
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   Bap
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   Thờ
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   CLB
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   GĐ
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '70px', md: '90px' }}>
                   Tổng
                 </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} textAlign="center" width={{ base: '100px', md: '120px' }}>
                   Tác
                 </Th>
               </Tr>
@@ -364,9 +364,11 @@ export const UserDataInput: React.FC = () => {
                       autoFocus
                       required
                       fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
                     />
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
                     <Input
                       type="number"
                       size="sm"
@@ -375,9 +377,12 @@ export const UserDataInput: React.FC = () => {
                       onChange={(e) => handleFieldChange('donThuan', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
+                      textAlign="right"
                     />
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
                     <Input
                       type="number"
                       size="sm"
@@ -386,9 +391,12 @@ export const UserDataInput: React.FC = () => {
                       onChange={(e) => handleFieldChange('huuHieu', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
+                      textAlign="right"
                     />
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
                     <Input
                       type="number"
                       size="sm"
@@ -397,9 +405,12 @@ export const UserDataInput: React.FC = () => {
                       onChange={(e) => handleFieldChange('baptem', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
+                      textAlign="right"
                     />
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
                     <Input
                       type="number"
                       size="sm"
@@ -408,9 +419,12 @@ export const UserDataInput: React.FC = () => {
                       onChange={(e) => handleFieldChange('thoPhuong', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
+                      textAlign="right"
                     />
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
                     <Input
                       type="number"
                       size="sm"
@@ -419,9 +433,12 @@ export const UserDataInput: React.FC = () => {
                       onChange={(e) => handleFieldChange('lapCLB', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
+                      textAlign="right"
                     />
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
                     <Input
                       type="number"
                       size="sm"
@@ -430,15 +447,18 @@ export const UserDataInput: React.FC = () => {
                       onChange={(e) => handleFieldChange('lenGiaiDoan', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
+                      textAlign="right"
                     />
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
-                    <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }}>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
+                    <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} textAlign="right">
                       {calculateTotalPoints(editingRow).toLocaleString('vi-VN')}
                     </Text>
                   </Td>
-                  <Td px={{ base: 1, md: 2 }}>
-                    <HStack spacing={{ base: 1, md: 2 }}>
+                  <Td px={{ base: 1, md: 2 }} textAlign="center">
+                    <HStack spacing={{ base: 1, md: 2 }} justify="center">
                       <Button
                         size={{ base: 'xs', md: 'sm' }}
                         colorScheme="green"
@@ -472,20 +492,20 @@ export const UserDataInput: React.FC = () => {
               ) : (
                 data.map((item) => (
                   <Tr key={item.id} display={isEditing(item) ? 'none' : 'table-row'} _hover={{ bg: 'gray.50' }}>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{formatDate(item.date)}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.donThuan || 0}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.huuHieu || 0}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.baptem || 0}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.thoPhuong || 0}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.lapCLB || 0}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.lenGiaiDoan || 0}</Td>
-                    <Td px={{ base: 1, md: 2 }}>
-                      <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }}>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} textAlign="left">{formatDate(item.date)}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.donThuan || 0).toLocaleString('vi-VN')}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.huuHieu || 0).toLocaleString('vi-VN')}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.baptem || 0).toLocaleString('vi-VN')}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.thoPhuong || 0).toLocaleString('vi-VN')}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.lapCLB || 0).toLocaleString('vi-VN')}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.lenGiaiDoan || 0).toLocaleString('vi-VN')}</Td>
+                    <Td px={{ base: 1, md: 2 }} isNumeric>
+                      <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} textAlign="right">
                         {calculateTotalPoints(item).toLocaleString('vi-VN')}
                       </Text>
                     </Td>
-                    <Td px={{ base: 1, md: 2 }}>
-                      <HStack spacing={{ base: 1, md: 2 }}>
+                    <Td px={{ base: 1, md: 2 }} textAlign="center">
+                      <HStack spacing={{ base: 1, md: 2 }} justify="center">
                         <Button
                           size={{ base: 'xs', md: 'sm' }}
                           colorScheme="blue"
@@ -515,28 +535,28 @@ export const UserDataInput: React.FC = () => {
               return (
                 <Tfoot bg="gray.100">
                   <Tr>
-                    <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }}>
+                    <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} textAlign="left">
                       TỔNG KẾT
                     </Th>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
                       {totals.donThuan.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
                       {totals.huuHieu.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
                       {totals.baptem.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
                       {totals.thoPhuong.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
                       {totals.lapCLB.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
                       {totals.lenGiaiDoan.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} px={{ base: 1, md: 2 }}>
+                    <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} px={{ base: 1, md: 2 }} isNumeric>
                       {totals.totalPoints.toLocaleString('vi-VN')}
                     </Td>
                     <Td px={{ base: 1, md: 2 }}></Td>
