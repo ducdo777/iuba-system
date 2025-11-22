@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Box,
   Flex,
@@ -42,11 +42,7 @@ export const Ranking: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [rankings, setRankings] = useState<TeamRanking[]>([]);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [overviewData, configs] = await Promise.all([
@@ -60,7 +56,11 @@ export const Ranking: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const getDefaultConfigs = (): ActivityPointConfig[] => [
     { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
@@ -71,12 +71,12 @@ export const Ranking: React.FC = () => {
     { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
   ];
 
-  const getPointPerUnit = (activityType: string): number => {
+  const getPointPerUnit = useCallback((activityType: string): number => {
     const config = pointConfigs.find(c => c.activityType === activityType);
     return config?.pointPerUnit || 0;
-  };
+  }, [pointConfigs]);
 
-  const calculateTeamPoints = (team: StatisticsOverview['byTeam'][0]): number => {
+  const calculateTeamPoints = useCallback((team: StatisticsOverview['byTeam'][0]): number => {
     const donThuan = team.donThuan * getPointPerUnit('donThuan');
     const huuHieu = team.huuHieu * getPointPerUnit('huuHieu');
     const baptem = team.baptem * getPointPerUnit('baptem');
@@ -85,7 +85,7 @@ export const Ranking: React.FC = () => {
     const lenGiaiDoan = team.lenGiaiDoan * getPointPerUnit('lenGiaiDoan');
 
     return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
-  };
+  }, [getPointPerUnit]);
 
   useEffect(() => {
     if (overview && pointConfigs.length > 0) {
@@ -113,7 +113,7 @@ export const Ranking: React.FC = () => {
 
       setRankings(teamRankings);
     }
-  }, [overview, pointConfigs]);
+  }, [overview, pointConfigs, calculateTeamPoints]);
 
   const getRankBadgeColor = (rank: number) => {
     if (rank === 1) return 'yellow';
@@ -209,7 +209,7 @@ export const Ranking: React.FC = () => {
               <Tbody>
                 {rankings.length === 0 ? (
                   <Tr>
-                    <Td colSpan={{ base: 10, md: 11 }} textAlign="center" py={8} color="gray.500">
+                    <Td colSpan={11} textAlign="center" py={8} color="gray.500">
                       Chưa có dữ liệu xếp hạng
                     </Td>
                   </Tr>
