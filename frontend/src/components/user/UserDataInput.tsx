@@ -264,6 +264,17 @@ export const UserDataInput: React.FC = () => {
     }
   };
 
+  const handleNumberChange = (field: keyof EditableRow, value: string) => {
+    // Parse the value properly
+    // If empty string, set to 0
+    // Otherwise parse as integer
+    const numValue = value === '' ? 0 : parseInt(value, 10);
+    // Only update if it's a valid number (or 0 for empty)
+    if (!isNaN(numValue) && numValue >= 0) {
+      handleFieldChange(field, numValue);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent, row: EditableRow) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -373,8 +384,8 @@ export const UserDataInput: React.FC = () => {
                       type="number"
                       size="sm"
                       min="0"
-                      value={editingRow.donThuan}
-                      onChange={(e) => handleFieldChange('donThuan', parseInt(e.target.value) || 0)}
+                      value={editingRow.donThuan ?? 0}
+                      onChange={(e) => handleNumberChange('donThuan', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
@@ -387,8 +398,8 @@ export const UserDataInput: React.FC = () => {
                       type="number"
                       size="sm"
                       min="0"
-                      value={editingRow.huuHieu}
-                      onChange={(e) => handleFieldChange('huuHieu', parseInt(e.target.value) || 0)}
+                      value={editingRow.huuHieu ?? 0}
+                      onChange={(e) => handleNumberChange('huuHieu', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
@@ -401,8 +412,8 @@ export const UserDataInput: React.FC = () => {
                       type="number"
                       size="sm"
                       min="0"
-                      value={editingRow.baptem}
-                      onChange={(e) => handleFieldChange('baptem', parseInt(e.target.value) || 0)}
+                      value={editingRow.baptem ?? 0}
+                      onChange={(e) => handleNumberChange('baptem', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
@@ -415,8 +426,8 @@ export const UserDataInput: React.FC = () => {
                       type="number"
                       size="sm"
                       min="0"
-                      value={editingRow.thoPhuong}
-                      onChange={(e) => handleFieldChange('thoPhuong', parseInt(e.target.value) || 0)}
+                      value={editingRow.thoPhuong ?? 0}
+                      onChange={(e) => handleNumberChange('thoPhuong', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
@@ -429,8 +440,8 @@ export const UserDataInput: React.FC = () => {
                       type="number"
                       size="sm"
                       min="0"
-                      value={editingRow.lapCLB}
-                      onChange={(e) => handleFieldChange('lapCLB', parseInt(e.target.value) || 0)}
+                      value={editingRow.lapCLB ?? 0}
+                      onChange={(e) => handleNumberChange('lapCLB', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
@@ -443,8 +454,8 @@ export const UserDataInput: React.FC = () => {
                       type="number"
                       size="sm"
                       min="0"
-                      value={editingRow.lenGiaiDoan}
-                      onChange={(e) => handleFieldChange('lenGiaiDoan', parseInt(e.target.value) || 0)}
+                      value={editingRow.lenGiaiDoan ?? 0}
+                      onChange={(e) => handleNumberChange('lenGiaiDoan', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
