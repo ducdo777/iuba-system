@@ -33,26 +33,31 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
 }
 
 .page-header h2 {
   color: #1e293b;
-  font-size: 1.75rem;
+  font-size: var(--font-heading-1);
+  font-weight: 700;
+  margin: 0;
 }
 
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 5px;
-  font-size: 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-base);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-base);
   font-weight: 500;
   text-decoration: none;
+  min-height: 44px;
 }
 
 .btn-primary {
@@ -96,9 +101,10 @@ code {
 
 .table-container {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 table {
@@ -111,17 +117,20 @@ thead {
 }
 
 th {
-  padding: 1rem;
+  padding: var(--spacing-md);
   text-align: left;
   font-weight: 600;
   color: #1e293b;
   border-bottom: 2px solid #e2e8f0;
+  font-size: var(--font-sm);
+  white-space: nowrap;
 }
 
 td {
-  padding: 1rem;
+  padding: var(--spacing-md);
   border-bottom: 1px solid #e2e8f0;
   color: #475569;
+  font-size: var(--font-sm);
 }
 
 tbody tr:hover {
@@ -156,23 +165,45 @@ tbody tr:hover {
   gap: 0.5rem;
 }
 
-@media (max-width: 768px) {
+/* Tablet (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-header h2 {
+    font-size: var(--font-heading-1);
+  }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 767px) {
   .page-header {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: stretch;
+    margin-bottom: var(--spacing-lg);
   }
 
   .page-header h2 {
-    font-size: 1.5rem;
+    font-size: var(--font-heading-1);
+  }
+
+  .page-header .btn {
+    width: 100%;
+    min-height: 44px;
   }
 
   .table-container {
-    font-size: 0.875rem;
+    font-size: var(--font-sm);
   }
 
   th,
   td {
-    padding: 0.75rem 0.5rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-xs);
+  }
+}
+
+/* Small Mobile (< 480px) */
+@media (max-width: 480px) {
+  th,
+  td {
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 }

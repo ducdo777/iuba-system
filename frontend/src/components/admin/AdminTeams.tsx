@@ -53,62 +53,84 @@ export const AdminTeams: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Đang tải...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-muted-foreground">Đang tải...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="admin-teams">
-      <div className="page-header">
-        <h2>Quản lý Team</h2>
-        <button className="btn btn-primary" onClick={handleCreate}>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <h2 className="text-3xl font-bold text-foreground">Quản lý Team</h2>
+        <button 
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2"
+          onClick={handleCreate}
+        >
           <i className="fas fa-plus"></i> Thêm Team
         </button>
       </div>
 
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Mã Team</th>
-              <th>Tên Team</th>
-              <th>Mô tả</th>
-              <th>Trạng thái</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teams.length === 0 ? (
+      <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead className="bg-muted">
               <tr>
-                <td colSpan={5} style={{ textAlign: 'center' }}>
-                  Không có team nào
-                </td>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Mã Team</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Tên Team</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Mô tả</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Trạng thái</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Thao tác</th>
               </tr>
-            ) : (
-              teams.map((team) => (
-                <tr key={team.id}>
-                  <td>{team.teamCode}</td>
-                  <td>{team.teamName}</td>
-                  <td>{team.description || '-'}</td>
-                  <td>
-                    <span className={`badge ${team.status === 'active' ? 'badge-success' : 'badge-danger'}`}>
-                      {team.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="btn-group">
-                      <button className="btn btn-sm btn-primary" onClick={() => handleEdit(team)}>
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(team.id)}>
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {teams.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center py-8 text-muted-foreground">
+                    Không có team nào
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                teams.map((team) => (
+                  <tr key={team.id} className="border-b border-gray-200 hover:bg-muted/50 transition-colors">
+                    <td className="py-3 px-4 text-sm text-foreground font-medium">{team.teamCode}</td>
+                    <td className="py-3 px-4 text-sm text-foreground">{team.teamName}</td>
+                    <td className="py-3 px-4 text-sm text-foreground">{team.description || '-'}</td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-1 rounded-md text-xs font-medium ${
+                        team.status === 'active' 
+                          ? 'bg-success/10 text-success' 
+                          : 'bg-error/10 text-error'
+                      }`}>
+                        {team.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex items-center gap-2">
+                        <button 
+                          className="px-3 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+                          onClick={() => handleEdit(team)}
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button 
+                          className="px-3 py-1 text-sm bg-error text-white rounded-md hover:bg-error-dark transition-colors"
+                          onClick={() => handleDelete(team.id)}
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {modalOpen && <TeamModal team={editingTeam} onClose={handleModalClose} />}
