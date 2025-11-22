@@ -82,9 +82,10 @@ export class AppModule implements OnModuleInit {
       await new Promise(resolve => setTimeout(resolve, 100));
       
       const admin = await this.userRepository.findOne({ where: { username: 'admin' } });
-      const hashedPassword = await bcrypt.hash('admin123', 10);
       
       if (!admin) {
+        // Chỉ tạo admin mới nếu chưa tồn tại với password mặc định
+        const hashedPassword = await bcrypt.hash('animo2025@', 10);
         const newAdmin = this.userRepository.create({
           username: 'admin',
           password: hashedPassword,
@@ -93,14 +94,14 @@ export class AppModule implements OnModuleInit {
           status: 'active',
         });
         await this.userRepository.save(newAdmin);
-        console.log('Default admin user created: admin/admin123');
+        console.log('Default admin user created: admin/animo2025@');
       } else {
-        admin.password = hashedPassword;
+        // Chỉ cập nhật các field khác, KHÔNG reset password để giữ nguyên password đã đổi
         admin.fullName = admin.fullName || 'Administrator';
         admin.role = 'admin';
         admin.status = 'active';
         await this.userRepository.save(admin);
-        console.log('Admin user password reset: admin/admin123');
+        console.log('Admin user exists - password preserved');
       }
     } catch (error) {
       console.error('Error creating/updating admin user:', error);

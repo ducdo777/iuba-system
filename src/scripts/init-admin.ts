@@ -18,7 +18,8 @@ async function createAdmin() {
   const existingAdmin = await userRepository.findOne({ where: { username: 'admin' } });
 
   if (!existingAdmin) {
-    const hashedPassword = await bcrypt.hash('admin123', 10);
+    // Chỉ tạo admin mới nếu chưa tồn tại với password mặc định
+    const hashedPassword = await bcrypt.hash('animo2025@', 10);
     const admin = userRepository.create({
       username: 'admin',
       password: hashedPassword,
@@ -29,9 +30,9 @@ async function createAdmin() {
     await userRepository.save(admin);
     console.log('Admin user created successfully!');
     console.log('Username: admin');
-    console.log('Password: admin123');
+    console.log('Password: animo2025@');
   } else {
-    console.log('Admin user already exists');
+    console.log('Admin user already exists - password preserved');
   }
 
   await dataSource.destroy();

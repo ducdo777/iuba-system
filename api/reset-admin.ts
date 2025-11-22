@@ -50,8 +50,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(404).json({ error: 'Admin user not found' });
     }
 
-    // Reset password
-    const hashedPassword = await bcrypt.hash('admin123', 10);
+    // Reset password về mặc định
+    const hashedPassword = await bcrypt.hash('animo2025@', 10);
     admin.password = hashedPassword;
     admin.fullName = admin.fullName || 'Administrator';
     admin.role = 'admin';
@@ -65,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Admin password reset successfully',
       adminUser: {
         username: 'admin',
-        password: 'admin123',
+        password: 'animo2025@',
       },
     });
   } catch (error: any) {

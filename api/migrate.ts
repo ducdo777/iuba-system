@@ -61,7 +61,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const existingAdmin = await userRepository.findOne({ where: { username: 'admin' } });
 
     if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      // Chỉ tạo admin mới nếu chưa tồn tại với password mặc định
+      const hashedPassword = await bcrypt.hash('animo2025@', 10);
       const admin = userRepository.create({
         id: uuidv4(),
         username: 'admin',
@@ -72,15 +73,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
       await userRepository.save(admin);
       console.log('✅ Default admin user created');
+      console.log('   Username: admin');
+      console.log('   Password: animo2025@');
     } else {
-      // Reset password to ensure it's correct
-      const hashedPassword = await bcrypt.hash('admin123', 10);
-      existingAdmin.password = hashedPassword;
+      // Chỉ cập nhật các field khác, KHÔNG reset password để giữ nguyên password đã đổi
       existingAdmin.fullName = existingAdmin.fullName || 'Administrator';
       existingAdmin.role = 'admin';
       existingAdmin.status = 'active';
       await userRepository.save(existingAdmin);
-      console.log('✅ Admin user password reset');
+      console.log('ℹ️  Admin user already exists - password preserved');
     }
 
     // Initialize default activity point configs

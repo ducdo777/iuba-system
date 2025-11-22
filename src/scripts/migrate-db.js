@@ -51,7 +51,8 @@ async function migrate() {
     const existingAdmin = await userRepository.findOne({ where: { username: 'admin' } });
 
     if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      // Chỉ tạo admin mới nếu chưa tồn tại với password mặc định
+      const hashedPassword = await bcrypt.hash('animo2025@', 10);
       const admin = userRepository.create({
         id: uuidv4(),
         username: 'admin',
@@ -63,9 +64,9 @@ async function migrate() {
       await userRepository.save(admin);
       console.log('✅ Default admin user created');
       console.log('   Username: admin');
-      console.log('   Password: admin123');
+      console.log('   Password: animo2025@');
     } else {
-      console.log('ℹ️  Admin user already exists');
+      console.log('ℹ️  Admin user already exists - password preserved');
     }
 
     console.log('🎉 Migration completed successfully!');
