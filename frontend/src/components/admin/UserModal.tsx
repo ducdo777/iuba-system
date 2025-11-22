@@ -15,6 +15,7 @@ import {
   VStack,
   Grid,
   Alert,
+  AlertIcon,
   useToast,
 } from '@chakra-ui/react';
 import { usersService, User, CreateUserDto } from '../../services/users';
@@ -114,9 +115,10 @@ export const UserModal: React.FC<UserModalProps> = ({ user, teams, onClose }) =>
         <ModalCloseButton />
         <form onSubmit={handleSubmit}>
           <ModalBody>
-            <VStack gap={4} align="stretch">
+            <VStack spacing={4} align="stretch">
               {error && (
                 <Alert status="error" borderRadius="md">
+                  <AlertIcon />
                   {error}
                 </Alert>
               )}

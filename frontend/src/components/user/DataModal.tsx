@@ -14,6 +14,7 @@ import {
   VStack,
   Grid,
   Alert,
+  AlertIcon,
   useToast,
 } from '@chakra-ui/react';
 import { activityDataService, ActivityData, CreateActivityDataDto } from '../../services/activityData';
@@ -99,9 +100,10 @@ export const DataModal: React.FC<DataModalProps> = ({ data, onClose }) => {
         <ModalCloseButton />
         <form onSubmit={handleSubmit}>
           <ModalBody>
-            <VStack gap={4} align="stretch">
+            <VStack spacing={4} align="stretch">
               {error && (
                 <Alert status="error" borderRadius="md">
+                  <AlertIcon />
                   {error}
                 </Alert>
               )}

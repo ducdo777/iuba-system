@@ -35,7 +35,7 @@ export const AdminUsers: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
-  const { open, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
 
@@ -138,12 +138,10 @@ export const AdminUsers: React.FC = () => {
         </Heading>
         <Button
           colorScheme="primary"
+          leftIcon={<i className="fas fa-plus" />}
           onClick={handleCreate}
         >
-          <HStack gap={2}>
-            <i className="fas fa-plus" />
-            <Text>Thêm tài khoản</Text>
-          </HStack>
+          Thêm tài khoản
         </Button>
       </Flex>
 
@@ -207,26 +205,22 @@ export const AdminUsers: React.FC = () => {
                     </Badge>
                   </Td>
                   <Td>
-                    <HStack gap={2}>
+                    <HStack spacing={2}>
                       <Button
                         size="sm"
                         colorScheme="primary"
+                        leftIcon={<i className="fas fa-edit" />}
                         onClick={() => handleEdit(user)}
                       >
-                        <HStack gap={1}>
-                          <i className="fas fa-edit" />
-                          <Text>Sửa</Text>
-                        </HStack>
+                        Sửa
                       </Button>
                       <Button
                         size="sm"
                         colorScheme="red"
+                        leftIcon={<i className="fas fa-trash" />}
                         onClick={() => handleDeleteClick(user.id)}
                       >
-                        <HStack gap={1}>
-                          <i className="fas fa-trash" />
-                          <Text>Xóa</Text>
-                        </HStack>
+                        Xóa
                       </Button>
                     </HStack>
                   </Td>
@@ -242,7 +236,7 @@ export const AdminUsers: React.FC = () => {
       )}
 
       <AlertDialog
-        isOpen={open}
+        isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >

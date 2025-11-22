@@ -165,7 +165,7 @@ export const AdminPoints: React.FC = () => {
 
   return (
     <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack gap={6} align="stretch">
+      <VStack spacing={6} align="stretch">
         <Box>
           <Heading size="lg" color="gray.900" mb={2}>
             ⚙️ Cấu hình Điểm Hoạt động
@@ -184,9 +184,9 @@ export const AdminPoints: React.FC = () => {
             return (
               <Card key={activity.type} _hover={{ boxShadow: 'md' }} transition="all 0.3s">
                 <CardBody>
-                  <VStack gap={4} align="stretch">
+                  <VStack spacing={4} align="stretch">
                     <Flex justify="space-between" align="center" pb={4} borderBottom="1px" borderColor="gray.200">
-                      <HStack gap={3}>
+                      <HStack spacing={3}>
                         <Text fontSize="2xl">{activity.icon}</Text>
                         <Text fontWeight="semibold" color="gray.900">
                           {activity.name}
@@ -203,7 +203,7 @@ export const AdminPoints: React.FC = () => {
                     </Flex>
 
                     {isEditing ? (
-                      <VStack gap={4} align="stretch">
+                      <VStack spacing={4} align="stretch">
                         <Box>
                           <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={2}>
                             Tên hoạt động:
@@ -243,7 +243,7 @@ export const AdminPoints: React.FC = () => {
                             <option value="inactive">Tạm dừng</option>
                           </Select>
                         </Box>
-                        <HStack gap={2}>
+                        <HStack spacing={2}>
                           <Button flex={1} colorScheme="primary" onClick={handleSave}>
                             💾 Lưu
                           </Button>
@@ -253,14 +253,14 @@ export const AdminPoints: React.FC = () => {
                         </HStack>
                       </VStack>
                     ) : config ? (
-                      <VStack gap={4} align="stretch">
+                      <VStack spacing={4} align="stretch">
                         <Box
                           textAlign="center"
                           py={6}
                           bgGradient="linear(to-br, primary.50, primary.100)"
                           borderRadius="lg"
                         >
-                          <VStack gap={1}>
+                          <VStack spacing={1}>
                             <Text fontSize="4xl" fontWeight="bold" color="primary.600">
                               {config.pointPerUnit}
                             </Text>
@@ -271,14 +271,12 @@ export const AdminPoints: React.FC = () => {
                         </Box>
                         <Button
                           colorScheme="primary"
+                          leftIcon={<i className="fas fa-edit" />}
                           onClick={() => handleEdit(config)}
                         >
-                          <HStack gap={2}>
-                            <i className="fas fa-edit" />
-                            <Text>✏️ Chỉnh sửa</Text>
-                          </HStack>
+                          ✏️ Chỉnh sửa
                         </Button>
-                        <HStack gap={2}>
+                        <HStack spacing={2}>
                           <Button
                             flex={1}
                             variant="outline"
@@ -302,7 +300,7 @@ export const AdminPoints: React.FC = () => {
                         </HStack>
                       </VStack>
                     ) : (
-                      <VStack gap={4} py={8}>
+                      <VStack spacing={4} py={8}>
                         <Text color="gray.500">Chưa có cấu hình</Text>
                         <Button
                           colorScheme="primary"
@@ -329,12 +327,12 @@ export const AdminPoints: React.FC = () => {
 
         <Card bg="gray.50" border="1px" borderColor="gray.200">
           <CardBody>
-            <VStack gap={3} align="stretch">
+            <VStack spacing={3} align="stretch">
               <Heading size="sm" color="gray.900">
                 ℹ️ Hướng dẫn
               </Heading>
-              <VStack gap={2} align="stretch" fontSize="sm" color="gray.600">
-                <HStack align="start" gap={2}>
+              <VStack spacing={2} align="stretch" fontSize="sm" color="gray.600">
+                <HStack align="start" spacing={2}>
                   <Text color="primary.600" fontWeight="bold">
                     •
                   </Text>
@@ -342,7 +340,7 @@ export const AdminPoints: React.FC = () => {
                     Điểm số sẽ được tính: <strong color="gray.900">Số lượng × Điểm mỗi đơn vị</strong>
                   </Text>
                 </HStack>
-                <HStack align="start" gap={2}>
+                <HStack align="start" spacing={2}>
                   <Text color="primary.600" fontWeight="bold">
                     •
                   </Text>
@@ -350,7 +348,7 @@ export const AdminPoints: React.FC = () => {
                     Ví dụ: Nếu &quot;Đơn thuần&quot; = 1 điểm/đơn vị, và có 10 đơn vị → Tổng điểm = 10 điểm
                   </Text>
                 </HStack>
-                <HStack align="start" gap={2}>
+                <HStack align="start" spacing={2}>
                   <Text color="primary.600" fontWeight="bold">
                     •
                   </Text>
@@ -358,7 +356,7 @@ export const AdminPoints: React.FC = () => {
                     Bạn có thể tạm dừng một loại hoạt động bằng cách đặt trạng thái &quot;Tạm dừng&quot;
                   </Text>
                 </HStack>
-                <HStack align="start" gap={2}>
+                <HStack align="start" spacing={2}>
                   <Text color="primary.600" fontWeight="bold">
                     •
                   </Text>

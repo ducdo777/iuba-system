@@ -79,7 +79,7 @@ export const AdminStatistics: React.FC = () => {
 
   return (
     <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack gap={6} align="stretch">
+      <VStack spacing={6} align="stretch">
         <Heading size="lg" color="gray.900">
           Thống kê
         </Heading>
@@ -115,22 +115,20 @@ export const AdminStatistics: React.FC = () => {
               </Select>
               <Button
                 colorScheme="primary"
+                leftIcon={<i className="fas fa-search" />}
                 onClick={handleFilter}
               >
-                <HStack gap={2}>
-                  <i className="fas fa-search" />
-                  <Text>Xem thống kê</Text>
-                </HStack>
+                Xem thống kê
               </Button>
             </Grid>
           </CardBody>
         </Card>
 
-        <VStack gap={6} align="stretch">
+        <VStack spacing={6} align="stretch">
           {stats.map((teamStat) => (
             <Card key={teamStat.teamId}>
               <CardBody>
-                <VStack gap={4} align="stretch">
+                <VStack spacing={4} align="stretch">
                   <Box>
                     <Heading size="md" color="gray.900" mb={2}>
                       {teamStat.teamName} ({teamStat.teamCode})

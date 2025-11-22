@@ -46,7 +46,7 @@ export const UserDataInput: React.FC = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
-  const { open, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -252,7 +252,7 @@ export const UserDataInput: React.FC = () => {
 
   return (
     <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack gap={6} align="stretch">
+      <VStack spacing={6} align="stretch">
         <Flex
           direction={{ base: 'column', sm: 'row' }}
           justify="space-between"
@@ -264,13 +264,11 @@ export const UserDataInput: React.FC = () => {
           </Heading>
           <Button
             colorScheme="primary"
+            leftIcon={<i className="fas fa-plus" />}
             onClick={handleAddNew}
             isDisabled={!!editingRow}
           >
-            <HStack gap={2}>
-              <i className="fas fa-plus" />
-              <Text>Thêm dữ liệu</Text>
-            </HStack>
+            Thêm dữ liệu
           </Button>
         </Flex>
 
@@ -379,7 +377,7 @@ export const UserDataInput: React.FC = () => {
                     />
                   </Td>
                   <Td>
-                    <HStack gap={2}>
+                    <HStack spacing={2}>
                       <Button
                         size="sm"
                         colorScheme="green"
@@ -421,7 +419,7 @@ export const UserDataInput: React.FC = () => {
                     <Td>{item.lapCLB || 0}</Td>
                     <Td>{item.lenGiaiDoan || 0}</Td>
                     <Td>
-                      <HStack gap={2}>
+                      <HStack spacing={2}>
                         <Button
                           size="sm"
                           colorScheme="primary"
@@ -507,7 +505,7 @@ export const UserDataInput: React.FC = () => {
           </Box>
         )}
 
-        <AlertDialog isOpen={open} leastDestructiveRef={cancelRef} onClose={onClose}>
+        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader fontSize="lg" fontWeight="bold">

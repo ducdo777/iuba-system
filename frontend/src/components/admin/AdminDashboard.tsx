@@ -8,7 +8,15 @@ import {
   Card,
   CardBody,
   Spinner,
+  Alert,
+  AlertIcon,
   Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
   HStack,
   VStack,
 } from '@chakra-ui/react';
@@ -38,7 +46,7 @@ export const AdminDashboard: React.FC = () => {
     return (
       <Flex minH="400px" align="center" justify="center">
         <Box textAlign="center">
-          <Spinner size="xl" color="primary.600" mb={4} />
+          <Spinner size="xl" color="primary.600" thickness="4px" mb={4} />
           <Text color="gray.600">Đang tải...</Text>
         </Box>
       </Flex>
@@ -48,9 +56,10 @@ export const AdminDashboard: React.FC = () => {
   if (!overview) {
     return (
       <Flex minH="400px" align="center" justify="center">
-        <Box bg="red.50" border="1px" borderColor="red.200" borderRadius="md" p={4} maxW="md">
-          <Text fontWeight="medium" color="red.700">Không thể tải dữ liệu</Text>
-        </Box>
+        <Alert status="error" borderRadius="md" maxW="md">
+          <AlertIcon />
+          <Text fontWeight="medium">Không thể tải dữ liệu</Text>
+        </Alert>
       </Flex>
     );
   }
@@ -59,7 +68,7 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack gap={8} align="stretch">
+      <VStack spacing={8} align="stretch">
         {/* Header */}
         <Box mb={8}>
           <Heading size="2xl" color="gray.900" mb={2}>
@@ -179,8 +188,8 @@ export const AdminDashboard: React.FC = () => {
         </Grid>
 
         {/* Data Summary */}
-        <VStack gap={6} align="stretch">
-          <HStack gap={3}>
+        <VStack spacing={6} align="stretch">
+          <HStack spacing={3}>
             <Box h={1} w={12} bgGradient="linear(to-r, primary.600, primary.400)" borderRadius="full" />
             <Heading size="lg" color="gray.800">
               Tổng kết dữ liệu
@@ -278,73 +287,72 @@ export const AdminDashboard: React.FC = () => {
             borderBottom="1px"
             borderColor="gray.200"
           >
-            <HStack gap={3}>
+            <HStack spacing={3}>
               <Box h={1} w={12} bgGradient="linear(to-r, primary.600, primary.400)" borderRadius="full" />
               <Heading size="md" color="gray.800">
                 Thống kê theo Team
               </Heading>
             </HStack>
           </Box>
-          <Box overflowX="auto">
+          <TableContainer>
             <Table variant="simple">
-              <Box as="thead" bg="gray.50">
-                <Box as="tr">
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+              <Thead bg="gray.50">
+                <Tr>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Team
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Số thành viên
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Đơn thuần
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Hữu hiệu
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Baptem
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Thờ phượng
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Lập CLB
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Lên giai đoạn
-                  </Box>
-                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
+                  </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Tổng
-                  </Box>
-                </Box>
-              </Box>
-              <Box as="tbody">
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
                 {overview.byTeam.map((team, index) => (
-                  <Box
-                    as="tr"
+                  <Tr
                     key={team.teamId}
                     bg={index % 2 === 0 ? 'white' : 'gray.50'}
                     _hover={{ bg: 'gray.100' }}
                     transition="background 0.2s"
                   >
-                    <Box as="td" fontWeight="semibold" color="gray.900" py={4} px={6}>
+                    <Td fontWeight="semibold" color="gray.900">
                       {team.teamName}
-                    </Box>
-                    <Box as="td" color="gray.700" py={4} px={6}>{team.totalMembers || '-'}</Box>
-                    <Box as="td" color="gray.700" py={4} px={6}>{team.donThuan}</Box>
-                    <Box as="td" color="gray.700" py={4} px={6}>{team.huuHieu}</Box>
-                    <Box as="td" color="gray.700" py={4} px={6}>{team.baptem}</Box>
-                    <Box as="td" color="gray.700" py={4} px={6}>{team.thoPhuong}</Box>
-                    <Box as="td" color="gray.700" py={4} px={6}>{team.lapCLB}</Box>
-                    <Box as="td" color="gray.700" py={4} px={6}>{team.lenGiaiDoan}</Box>
-                    <Box as="td" fontWeight="bold" color="primary.600" py={4} px={6}>
+                    </Td>
+                    <Td color="gray.700">{team.totalMembers || '-'}</Td>
+                    <Td color="gray.700">{team.donThuan}</Td>
+                    <Td color="gray.700">{team.huuHieu}</Td>
+                    <Td color="gray.700">{team.baptem}</Td>
+                    <Td color="gray.700">{team.thoPhuong}</Td>
+                    <Td color="gray.700">{team.lapCLB}</Td>
+                    <Td color="gray.700">{team.lenGiaiDoan}</Td>
+                    <Td fontWeight="bold" color="primary.600">
                       {team.total}
-                    </Box>
-                  </Box>
+                    </Td>
+                  </Tr>
                 ))}
-              </Box>
+              </Tbody>
             </Table>
-          </Box>
+          </TableContainer>
         </Card>
       </VStack>
     </Box>

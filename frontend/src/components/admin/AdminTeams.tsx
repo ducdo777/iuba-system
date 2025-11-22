@@ -33,7 +33,7 @@ export const AdminTeams: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
   const [deleteTeamId, setDeleteTeamId] = useState<string | null>(null);
-  const { open, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
 
@@ -132,12 +132,10 @@ export const AdminTeams: React.FC = () => {
         </Heading>
         <Button
           colorScheme="primary"
+          leftIcon={<i className="fas fa-plus" />}
           onClick={handleCreate}
         >
-          <HStack gap={2}>
-            <i className="fas fa-plus" />
-            <Text>Thêm Team</Text>
-          </HStack>
+          Thêm Team
         </Button>
       </Flex>
 
@@ -186,26 +184,22 @@ export const AdminTeams: React.FC = () => {
                     </Badge>
                   </Td>
                   <Td>
-                    <HStack gap={2}>
+                    <HStack spacing={2}>
                       <Button
                         size="sm"
                         colorScheme="primary"
+                        leftIcon={<i className="fas fa-edit" />}
                         onClick={() => handleEdit(team)}
                       >
-                        <HStack gap={1}>
-                          <i className="fas fa-edit" />
-                          <Text>Sửa</Text>
-                        </HStack>
+                        Sửa
                       </Button>
                       <Button
                         size="sm"
                         colorScheme="red"
+                        leftIcon={<i className="fas fa-trash" />}
                         onClick={() => handleDeleteClick(team.id)}
                       >
-                        <HStack gap={1}>
-                          <i className="fas fa-trash" />
-                          <Text>Xóa</Text>
-                        </HStack>
+                        Xóa
                       </Button>
                     </HStack>
                   </Td>
@@ -219,7 +213,7 @@ export const AdminTeams: React.FC = () => {
       {modalOpen && <TeamModal team={editingTeam} onClose={handleModalClose} />}
 
       <AlertDialog
-        isOpen={open}
+        isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >

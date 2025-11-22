@@ -16,6 +16,7 @@ import {
   VStack,
   Grid,
   Alert,
+  AlertIcon,
   useToast,
 } from '@chakra-ui/react';
 import { teamsService, Team, CreateTeamDto } from '../../services/teams';
@@ -95,9 +96,10 @@ export const TeamModal: React.FC<TeamModalProps> = ({ team, onClose }) => {
         <ModalCloseButton />
         <form onSubmit={handleSubmit}>
           <ModalBody>
-            <VStack gap={4} align="stretch">
+            <VStack spacing={4} align="stretch">
               {error && (
                 <Alert status="error" borderRadius="md">
+                  <AlertIcon />
                   {error}
                 </Alert>
               )}
