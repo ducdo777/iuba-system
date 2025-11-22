@@ -9,6 +9,7 @@ import {
   Table,
   Thead,
   Tbody,
+  Tfoot,
   Tr,
   Th,
   Td,
@@ -16,8 +17,6 @@ import {
   Input,
   HStack,
   VStack,
-  Card,
-  CardBody,
   useToast,
   useDisclosure,
   AlertDialog,
@@ -28,7 +27,6 @@ import {
   AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { activityDataService, ActivityData, CreateActivityDataDto } from '../../services/activityData';
-import { statisticsService, TeamStatistics } from '../../services/statistics';
 import { activityPointsService, ActivityPointConfig } from '../../services/activityPoints';
 
 interface EditableRow extends CreateActivityDataDto {
@@ -39,7 +37,6 @@ interface EditableRow extends CreateActivityDataDto {
 
 export const UserDataInput: React.FC = () => {
   const [data, setData] = useState<ActivityData[]>([]);
-  const [teamStats, setTeamStats] = useState<TeamStatistics | null>(null);
   const [pointConfigs, setPointConfigs] = useState<ActivityPointConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingRow, setEditingRow] = useState<EditableRow | null>(null);
@@ -52,7 +49,6 @@ export const UserDataInput: React.FC = () => {
 
   useEffect(() => {
     loadData();
-    loadTeamStats();
     loadPointConfigs();
   }, []);
 
@@ -72,15 +68,6 @@ export const UserDataInput: React.FC = () => {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadTeamStats = async () => {
-    try {
-      const stats = await statisticsService.getMyTeam();
-      setTeamStats(stats);
-    } catch (error) {
-      console.error('Error loading stats:', error);
     }
   };
 
@@ -116,6 +103,30 @@ export const UserDataInput: React.FC = () => {
     const lenGiaiDoan = (item.lenGiaiDoan || 0) * getPointPerUnit('lenGiaiDoan');
 
     return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
+  };
+
+  const calculateTotals = () => {
+    const totals = {
+      donThuan: 0,
+      huuHieu: 0,
+      baptem: 0,
+      thoPhuong: 0,
+      lapCLB: 0,
+      lenGiaiDoan: 0,
+      totalPoints: 0,
+    };
+
+    data.forEach((item) => {
+      totals.donThuan += item.donThuan || 0;
+      totals.huuHieu += item.huuHieu || 0;
+      totals.baptem += item.baptem || 0;
+      totals.thoPhuong += item.thoPhuong || 0;
+      totals.lapCLB += item.lapCLB || 0;
+      totals.lenGiaiDoan += item.lenGiaiDoan || 0;
+      totals.totalPoints += calculateTotalPoints(item);
+    });
+
+    return totals;
   };
 
   const handleAddNew = () => {
@@ -200,7 +211,6 @@ export const UserDataInput: React.FC = () => {
 
       setEditingRow(null);
       loadData();
-      loadTeamStats();
     } catch (error: any) {
       toast({
         title: 'Lỗi',
@@ -231,7 +241,6 @@ export const UserDataInput: React.FC = () => {
         isClosable: true,
       });
       loadData();
-      loadTeamStats();
     } catch (error) {
       toast({
         title: 'Lỗi',
@@ -493,91 +502,42 @@ export const UserDataInput: React.FC = () => {
                 ))
               )}
             </Tbody>
+            {data.length > 0 && (() => {
+              const totals = calculateTotals();
+              return (
+                <Tfoot bg="gray.100">
+                  <Tr>
+                    <Th fontSize="xs" fontWeight="bold" color="gray.900">
+                      TỔNG KẾT
+                    </Th>
+                    <Td fontWeight="bold" color="gray.900">
+                      {totals.donThuan.toLocaleString('vi-VN')}
+                    </Td>
+                    <Td fontWeight="bold" color="gray.900">
+                      {totals.huuHieu.toLocaleString('vi-VN')}
+                    </Td>
+                    <Td fontWeight="bold" color="gray.900">
+                      {totals.baptem.toLocaleString('vi-VN')}
+                    </Td>
+                    <Td fontWeight="bold" color="gray.900">
+                      {totals.thoPhuong.toLocaleString('vi-VN')}
+                    </Td>
+                    <Td fontWeight="bold" color="gray.900">
+                      {totals.lapCLB.toLocaleString('vi-VN')}
+                    </Td>
+                    <Td fontWeight="bold" color="gray.900">
+                      {totals.lenGiaiDoan.toLocaleString('vi-VN')}
+                    </Td>
+                    <Td fontWeight="bold" color="primary.600" fontSize="md">
+                      {totals.totalPoints.toLocaleString('vi-VN')}
+                    </Td>
+                    <Td></Td>
+                  </Tr>
+                </Tfoot>
+              );
+            })()}
           </Table>
         </TableContainer>
-
-        {teamStats && (
-          <Box>
-            <Heading size="md" color="gray.900" mb={4}>
-              Thống kê của Team {teamStats.teamName}
-            </Heading>
-            <Box
-              overflowX="auto"
-              css={{
-                '&::-webkit-scrollbar': {
-                  height: '8px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  background: '#f1f1f1',
-                  borderRadius: '4px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: '#888',
-                  borderRadius: '4px',
-                },
-                '&::-webkit-scrollbar-thumb:hover': {
-                  background: '#555',
-                },
-              }}
-            >
-              <Flex
-                direction="row"
-                gap={4}
-                minW="max-content"
-                pb={2}
-              >
-                {[
-                  { value: teamStats.summary.donThuan, label: 'Đơn thuần', icon: 'fas fa-hand-holding-heart', color: 'pink' },
-                  { value: teamStats.summary.huuHieu, label: 'Hữu hiệu', icon: 'fas fa-check-circle', color: 'green' },
-                  { value: teamStats.summary.baptem, label: 'Baptem', icon: 'fas fa-water', color: 'blue' },
-                  { value: teamStats.summary.thoPhuong, label: 'Thờ phượng', icon: 'fas fa-praying-hands', color: 'purple' },
-                  { value: teamStats.summary.lapCLB, label: 'Lập CLB', icon: 'fas fa-users', color: 'indigo' },
-                  { value: teamStats.summary.lenGiaiDoan, label: 'Lên giai đoạn', icon: 'fas fa-arrow-up', color: 'orange' },
-                  { value: teamStats.summary.total, label: 'Tổng cộng', icon: 'fas fa-list', color: 'primary' },
-                ].map((stat) => (
-                  <Card
-                    key={stat.label}
-                    minW={{ base: '140px', md: '180px' }}
-                    flexShrink={0}
-                    bgGradient={
-                      stat.color === 'primary'
-                        ? 'linear(to-br, primary.500, primary.600)'
-                        : undefined
-                    }
-                    bg={stat.color !== 'primary' ? 'white' : undefined}
-                    color={stat.color === 'primary' ? 'white' : undefined}
-                    boxShadow="md"
-                  >
-                    <CardBody p={4}>
-                      <Flex direction="column" align="center" gap={3}>
-                        <Box
-                          w={14}
-                          h={14}
-                          borderRadius="lg"
-                          bg={stat.color === 'primary' ? 'whiteAlpha.200' : `${stat.color}.100`}
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          color={stat.color === 'primary' ? 'white' : `${stat.color}.600`}
-                        >
-                          <i className={stat.icon} style={{ fontSize: '1.75rem' }} />
-                        </Box>
-                        <Box textAlign="center">
-                          <Heading size="xl" color={stat.color === 'primary' ? 'white' : 'gray.900'} mb={1}>
-                            {stat.value.toLocaleString('vi-VN')}
-                          </Heading>
-                          <Text fontSize="sm" fontWeight="medium" color={stat.color === 'primary' ? 'primary.100' : 'gray.600'}>
-                            {stat.label}
-                          </Text>
-                        </Box>
-                      </Flex>
-                    </CardBody>
-                  </Card>
-                ))}
-              </Flex>
-            </Box>
-          </Box>
-        )}
 
         <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
           <AlertDialogOverlay>
