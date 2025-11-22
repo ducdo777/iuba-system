@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         primary: {
+          DEFAULT: '#2563eb',
           50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',
@@ -20,6 +21,15 @@ module.exports = {
           800: '#1e40af',
           900: '#1e3a8a',
         },
+        foreground: '#1e293b',
+        'muted-foreground': '#64748b',
+        muted: '#f1f5f9',
+        error: '#ef4444',
+        success: '#10b981',
+        warning: '#f59e0b',
+        info: '#3b82f6',
+        background: '#ffffff',
+        card: '#ffffff',
       },
     },
   },
