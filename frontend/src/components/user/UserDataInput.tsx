@@ -325,40 +325,74 @@ export const UserDataInput: React.FC = () => {
     }
 
     setSaving(row.id || 'new');
-    try {
-      const saveData: CreateActivityDataDto = {
-        date: row.date,
-        donThuan: row.donThuan || 0,
-        huuHieu: row.huuHieu || 0,
-        baptem: row.baptem || 0,
-        thoPhuong: row.thoPhuong || 0,
-        lapCLB: row.lapCLB || 0,
-        lenGiaiDoan: row.lenGiaiDoan || 0,
-      };
+    
+    // Optimistic update: Update UI immediately
+    const saveData: CreateActivityDataDto = {
+      date: row.date,
+      donThuan: row.donThuan || 0,
+      huuHieu: row.huuHieu || 0,
+      baptem: row.baptem || 0,
+      thoPhuong: row.thoPhuong || 0,
+      lapCLB: row.lapCLB || 0,
+      lenGiaiDoan: row.lenGiaiDoan || 0,
+    };
 
+    // Create optimistic data entry
+    const optimisticEntry: ActivityData = {
+      id: row.id || `temp-${Date.now()}`,
+      ...saveData,
+      team: undefined,
+      user: undefined,
+    };
+
+    try {
       if (row.isNew && !row.id) {
-        await activityDataService.create(saveData);
+        // Optimistic: Add to list immediately
+        setData(prev => [...prev, optimisticEntry]);
+        setEditingRow(null);
+        
+        // Then save to server
+        const saved = await activityDataService.create(saveData);
+        
+        // Replace temp with real data
+        setData(prev => prev.map(item => 
+          item.id === optimisticEntry.id ? saved : item
+        ));
+        
         toast({
           title: 'Thành công',
           description: 'Đã thêm dữ liệu',
           status: 'success',
-          duration: 3000,
+          duration: 2000,
           isClosable: true,
         });
       } else if (row.id) {
+        // Optimistic: Update in list immediately
+        setData(prev => prev.map(item => 
+          item.id === row.id ? { ...item, ...saveData } : item
+        ));
+        setEditingRow(null);
+        
+        // Then save to server
         await activityDataService.update(row.id, saveData);
+        
         toast({
           title: 'Thành công',
           description: 'Đã cập nhật dữ liệu',
           status: 'success',
-          duration: 3000,
+          duration: 2000,
           isClosable: true,
         });
       }
-
-      setEditingRow(null);
-      loadData();
+      
+      // Reload to ensure consistency (in background)
+      loadData().catch(() => {
+        // Silent fail - optimistic update already shown
+      });
     } catch (error: any) {
+      // Rollback optimistic update on error
+      loadData();
+      
       toast({
         title: 'Lỗi',
         description: error.response?.data?.message || 'Lỗi khi lưu dữ liệu',
@@ -378,17 +412,35 @@ export const UserDataInput: React.FC = () => {
 
   const handleDeleteConfirm = async () => {
     if (!deleteId) return;
+    
+    // Optimistic update: Remove from UI immediately
+    const deletedItem = data.find(item => item.id === deleteId);
+    setData(prev => prev.filter(item => item.id !== deleteId));
+    onClose();
+    setDeleteId(null);
+    
     try {
       await activityDataService.delete(deleteId);
       toast({
         title: 'Thành công',
         description: 'Đã xóa dữ liệu',
         status: 'success',
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       });
-      loadData();
+      
+      // Reload to ensure consistency (in background)
+      loadData().catch(() => {
+        // Silent fail - optimistic update already shown
+      });
     } catch (error) {
+      // Rollback optimistic update on error
+      if (deletedItem) {
+        setData(prev => [...prev, deletedItem].sort((a, b) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        ));
+      }
+      
       toast({
         title: 'Lỗi',
         description: 'Không thể xóa dữ liệu',
@@ -396,9 +448,6 @@ export const UserDataInput: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-    } finally {
-      onClose();
-      setDeleteId(null);
     }
   };
 

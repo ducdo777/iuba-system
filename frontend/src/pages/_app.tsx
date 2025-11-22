@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { AuthProvider } from '../contexts/AuthContext';
 
@@ -26,6 +26,20 @@ const theme = extendTheme({
 });
 
 export default function App({ Component, pageProps }: { Component: any; pageProps: any }) {
+  // Preconnect to API domain for faster connections
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '/api';
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = apiUrl;
+    document.head.appendChild(link);
+    
+    const dnsLink = document.createElement('link');
+    dnsLink.rel = 'dns-prefetch';
+    dnsLink.href = apiUrl;
+    document.head.appendChild(dnsLink);
+  }, []);
+
   return (
     <ChakraProvider theme={theme}>
       <AuthProvider>
