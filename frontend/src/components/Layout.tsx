@@ -28,7 +28,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { open, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const handleLogout = () => {
@@ -136,7 +136,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
         </Box>
 
         {/* Mobile Drawer */}
-        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+        <Drawer open={open} placement="left" onClose={onClose}>
           <DrawerContent>
             <DrawerBody p={0}>
               <SidebarContent />

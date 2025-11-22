@@ -33,7 +33,7 @@ export const AdminTeams: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
   const [deleteTeamId, setDeleteTeamId] = useState<string | null>(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { open, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
 
@@ -213,7 +213,7 @@ export const AdminTeams: React.FC = () => {
       {modalOpen && <TeamModal team={editingTeam} onClose={handleModalClose} />}
 
       <AlertDialog
-        isOpen={isOpen}
+        isOpen={open}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >

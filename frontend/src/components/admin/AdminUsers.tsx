@@ -35,7 +35,7 @@ export const AdminUsers: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { open, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
 
@@ -236,7 +236,7 @@ export const AdminUsers: React.FC = () => {
       )}
 
       <AlertDialog
-        isOpen={isOpen}
+        isOpen={open}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >

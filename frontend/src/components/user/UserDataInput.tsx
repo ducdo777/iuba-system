@@ -46,7 +46,7 @@ export const UserDataInput: React.FC = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { open, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -505,7 +505,7 @@ export const UserDataInput: React.FC = () => {
           </Box>
         )}
 
-        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+        <AlertDialog isOpen={open} leastDestructiveRef={cancelRef} onClose={onClose}>
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader fontSize="lg" fontWeight="bold">
