@@ -86,7 +86,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Initialize default activity point configs
     const pointConfigRepository = dataSource.getRepository(ActivityPointConfig);
-    const defaultConfigs = [
+    const defaultConfigs: Array<{
+      activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan';
+      activityName: string;
+      pointPerUnit: number;
+    }> = [
       { activityType: 'donThuan', activityName: 'Đơn thuần', pointPerUnit: 1 },
       { activityType: 'huuHieu', activityName: 'Hữu hiệu', pointPerUnit: 2 },
       { activityType: 'baptem', activityName: 'Baptem', pointPerUnit: 5 },
@@ -97,13 +101,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     for (const config of defaultConfigs) {
       const existing = await pointConfigRepository.findOne({
-        where: { activityType: config.activityType as any },
+        where: { activityType: config.activityType },
       });
       if (!existing) {
         const newConfig = pointConfigRepository.create({
           id: uuidv4(),
-          ...config,
-          status: 'active',
+          activityType: config.activityType,
+          activityName: config.activityName,
+          pointPerUnit: config.pointPerUnit,
+          status: 'active' as const,
         });
         await pointConfigRepository.save(newConfig);
         console.log(`✅ Created point config for ${config.activityName}`);
