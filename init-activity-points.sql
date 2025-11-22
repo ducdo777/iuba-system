@@ -21,11 +21,11 @@ CREATE INDEX IF NOT EXISTS "IDX_activity_point_config_activityType" ON "activity
 INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "pointPerUnit", "status", "createdAt", "updatedAt")
 VALUES 
     (gen_random_uuid(), 'donThuan', 'Đơn thuần', 1.00, 'active', now(), now()),
-    (gen_random_uuid(), 'huuHieu', 'Hữu hiệu', 2.00, 'active', now(), now()),
-    (gen_random_uuid(), 'baptem', 'Baptem', 5.00, 'active', now(), now()),
-    (gen_random_uuid(), 'thoPhuong', 'Thờ phượng', 3.00, 'active', now(), now()),
-    (gen_random_uuid(), 'lapCLB', 'Lập CLB', 10.00, 'active', now(), now()),
-    (gen_random_uuid(), 'lenGiaiDoan', 'Lên giai đoạn', 15.00, 'active', now(), now())
+    (gen_random_uuid(), 'huuHieu', 'Hữu hiệu', 10.00, 'active', now(), now()),
+    (gen_random_uuid(), 'baptem', 'Baptem', 500.00, 'active', now(), now()),
+    (gen_random_uuid(), 'thoPhuong', 'Thờ phượng', 1000.00, 'active', now(), now()),
+    (gen_random_uuid(), 'lapCLB', 'Lập CLB', 500.00, 'active', now(), now()),
+    (gen_random_uuid(), 'lenGiaiDoan', 'Lên giai đoạn', 1000.00, 'active', now(), now())
 ON CONFLICT ("activityType") DO NOTHING;
 
 -- Kiểm tra dữ liệu đã được chèn

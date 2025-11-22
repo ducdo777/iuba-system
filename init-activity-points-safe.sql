@@ -28,27 +28,27 @@ WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = '
 
 -- Hữu hiệu
 INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "pointPerUnit", "status", "createdAt", "updatedAt")
-SELECT gen_random_uuid(), 'huuHieu', 'Hữu hiệu', 2.00, 'active', now(), now()
+SELECT gen_random_uuid(), 'huuHieu', 'Hữu hiệu', 10.00, 'active', now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = 'huuHieu');
 
 -- Baptem
 INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "pointPerUnit", "status", "createdAt", "updatedAt")
-SELECT gen_random_uuid(), 'baptem', 'Baptem', 5.00, 'active', now(), now()
+SELECT gen_random_uuid(), 'baptem', 'Baptem', 500.00, 'active', now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = 'baptem');
 
 -- Thờ phượng
 INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "pointPerUnit", "status", "createdAt", "updatedAt")
-SELECT gen_random_uuid(), 'thoPhuong', 'Thờ phượng', 3.00, 'active', now(), now()
+SELECT gen_random_uuid(), 'thoPhuong', 'Thờ phượng', 1000.00, 'active', now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = 'thoPhuong');
 
 -- Lập CLB
 INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "pointPerUnit", "status", "createdAt", "updatedAt")
-SELECT gen_random_uuid(), 'lapCLB', 'Lập CLB', 10.00, 'active', now(), now()
+SELECT gen_random_uuid(), 'lapCLB', 'Lập CLB', 500.00, 'active', now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = 'lapCLB');
 
 -- Lên giai đoạn
 INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "pointPerUnit", "status", "createdAt", "updatedAt")
-SELECT gen_random_uuid(), 'lenGiaiDoan', 'Lên giai đoạn', 15.00, 'active', now(), now()
+SELECT gen_random_uuid(), 'lenGiaiDoan', 'Lên giai đoạn', 1000.00, 'active', now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = 'lenGiaiDoan');
 
 -- Hiển thị kết quả

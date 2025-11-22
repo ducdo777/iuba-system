@@ -18,7 +18,6 @@ import {
   VStack,
   Card,
   CardBody,
-  Grid,
   useToast,
   useDisclosure,
   AlertDialog,
@@ -30,6 +29,7 @@ import {
 } from '@chakra-ui/react';
 import { activityDataService, ActivityData, CreateActivityDataDto } from '../../services/activityData';
 import { statisticsService, TeamStatistics } from '../../services/statistics';
+import { activityPointsService, ActivityPointConfig } from '../../services/activityPoints';
 
 interface EditableRow extends CreateActivityDataDto {
   id?: string;
@@ -40,6 +40,7 @@ interface EditableRow extends CreateActivityDataDto {
 export const UserDataInput: React.FC = () => {
   const [data, setData] = useState<ActivityData[]>([]);
   const [teamStats, setTeamStats] = useState<TeamStatistics | null>(null);
+  const [pointConfigs, setPointConfigs] = useState<ActivityPointConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingRow, setEditingRow] = useState<EditableRow | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
@@ -52,6 +53,7 @@ export const UserDataInput: React.FC = () => {
   useEffect(() => {
     loadData();
     loadTeamStats();
+    loadPointConfigs();
   }, []);
 
   const loadData = async () => {
@@ -80,6 +82,40 @@ export const UserDataInput: React.FC = () => {
     } catch (error) {
       console.error('Error loading stats:', error);
     }
+  };
+
+  const loadPointConfigs = async () => {
+    try {
+      const configs = await activityPointsService.getAll();
+      setPointConfigs(configs);
+    } catch (error) {
+      console.error('Error loading point configs:', error);
+      // Use default values if API fails
+      setPointConfigs([
+        { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
+        { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
+        { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
+        { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
+        { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
+        { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
+      ]);
+    }
+  };
+
+  const calculateTotalPoints = (item: ActivityData | EditableRow): number => {
+    const getPointPerUnit = (activityType: string): number => {
+      const config = pointConfigs.find(c => c.activityType === activityType);
+      return config?.pointPerUnit || 0;
+    };
+
+    const donThuan = (item.donThuan || 0) * getPointPerUnit('donThuan');
+    const huuHieu = (item.huuHieu || 0) * getPointPerUnit('huuHieu');
+    const baptem = (item.baptem || 0) * getPointPerUnit('baptem');
+    const thoPhuong = (item.thoPhuong || 0) * getPointPerUnit('thoPhuong');
+    const lapCLB = (item.lapCLB || 0) * getPointPerUnit('lapCLB');
+    const lenGiaiDoan = (item.lenGiaiDoan || 0) * getPointPerUnit('lenGiaiDoan');
+
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
   };
 
   const handleAddNew = () => {
@@ -298,6 +334,9 @@ export const UserDataInput: React.FC = () => {
                   Lên giai đoạn
                 </Th>
                 <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Tổng điểm
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
                   Thao tác
                 </Th>
               </Tr>
@@ -377,6 +416,11 @@ export const UserDataInput: React.FC = () => {
                     />
                   </Td>
                   <Td>
+                    <Text fontWeight="semibold" color="primary.600">
+                      {calculateTotalPoints(editingRow).toLocaleString('vi-VN')}
+                    </Text>
+                  </Td>
+                  <Td>
                     <HStack spacing={2}>
                       <Button
                         size="sm"
@@ -404,7 +448,7 @@ export const UserDataInput: React.FC = () => {
 
               {data.length === 0 && !editingRow ? (
                 <Tr>
-                  <Td colSpan={8} textAlign="center" py={8} color="gray.500">
+                  <Td colSpan={9} textAlign="center" py={8} color="gray.500">
                     Chưa có dữ liệu. Click &quot;Thêm dữ liệu&quot; để bắt đầu nhập.
                   </Td>
                 </Tr>
@@ -418,6 +462,11 @@ export const UserDataInput: React.FC = () => {
                     <Td>{item.thoPhuong || 0}</Td>
                     <Td>{item.lapCLB || 0}</Td>
                     <Td>{item.lenGiaiDoan || 0}</Td>
+                    <Td>
+                      <Text fontWeight="semibold" color="primary.600">
+                        {calculateTotalPoints(item).toLocaleString('vi-VN')}
+                      </Text>
+                    </Td>
                     <Td>
                       <HStack spacing={2}>
                         <Button
@@ -452,56 +501,81 @@ export const UserDataInput: React.FC = () => {
             <Heading size="md" color="gray.900" mb={4}>
               Thống kê của Team {teamStats.teamName}
             </Heading>
-            <Grid
-              templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
-              gap={4}
+            <Box
+              overflowX="auto"
+              css={{
+                '&::-webkit-scrollbar': {
+                  height: '8px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: '#f1f1f1',
+                  borderRadius: '4px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: '#888',
+                  borderRadius: '4px',
+                },
+                '&::-webkit-scrollbar-thumb:hover': {
+                  background: '#555',
+                },
+              }}
             >
-              {[
-                { value: teamStats.summary.donThuan, label: 'Đơn thuần', icon: 'fas fa-hand-holding-heart', color: 'pink' },
-                { value: teamStats.summary.huuHieu, label: 'Hữu hiệu', icon: 'fas fa-check-circle', color: 'green' },
-                { value: teamStats.summary.baptem, label: 'Baptem', icon: 'fas fa-water', color: 'blue' },
-                { value: teamStats.summary.thoPhuong, label: 'Thờ phượng', icon: 'fas fa-praying-hands', color: 'purple' },
-                { value: teamStats.summary.lapCLB, label: 'Lập CLB', icon: 'fas fa-users', color: 'indigo' },
-                { value: teamStats.summary.lenGiaiDoan, label: 'Lên giai đoạn', icon: 'fas fa-arrow-up', color: 'orange' },
-                { value: teamStats.summary.total, label: 'Tổng cộng', icon: 'fas fa-list', color: 'primary', colSpan: { base: 1, sm: 2, lg: 2 } },
-              ].map((stat) => (
-                <Card
-                  key={stat.label}
-                  gridColumn={stat.colSpan}
-                  bgGradient={
-                    stat.color === 'primary'
-                      ? 'linear(to-br, primary.500, primary.600)'
-                      : undefined
-                  }
-                  color={stat.color === 'primary' ? 'white' : undefined}
-                >
-                  <CardBody>
-                    <Flex align="center" gap={4}>
-                      <Box
-                        w={12}
-                        h={12}
-                        borderRadius="lg"
-                        bg={stat.color === 'primary' ? 'whiteAlpha.200' : `${stat.color}.100`}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        color={stat.color === 'primary' ? 'white' : `${stat.color}.600`}
-                      >
-                        <i className={stat.icon} style={{ fontSize: '1.5rem' }} />
-                      </Box>
-                      <Box>
-                        <Heading size="lg" color={stat.color === 'primary' ? 'white' : 'gray.900'}>
-                          {stat.value}
-                        </Heading>
-                        <Text fontSize="sm" color={stat.color === 'primary' ? 'primary.100' : 'gray.600'}>
-                          {stat.label}
-                        </Text>
-                      </Box>
-                    </Flex>
-                  </CardBody>
-                </Card>
-              ))}
-            </Grid>
+              <Flex
+                direction="row"
+                gap={4}
+                minW="max-content"
+                pb={2}
+              >
+                {[
+                  { value: teamStats.summary.donThuan, label: 'Đơn thuần', icon: 'fas fa-hand-holding-heart', color: 'pink' },
+                  { value: teamStats.summary.huuHieu, label: 'Hữu hiệu', icon: 'fas fa-check-circle', color: 'green' },
+                  { value: teamStats.summary.baptem, label: 'Baptem', icon: 'fas fa-water', color: 'blue' },
+                  { value: teamStats.summary.thoPhuong, label: 'Thờ phượng', icon: 'fas fa-praying-hands', color: 'purple' },
+                  { value: teamStats.summary.lapCLB, label: 'Lập CLB', icon: 'fas fa-users', color: 'indigo' },
+                  { value: teamStats.summary.lenGiaiDoan, label: 'Lên giai đoạn', icon: 'fas fa-arrow-up', color: 'orange' },
+                  { value: teamStats.summary.total, label: 'Tổng cộng', icon: 'fas fa-list', color: 'primary' },
+                ].map((stat) => (
+                  <Card
+                    key={stat.label}
+                    minW={{ base: '140px', md: '180px' }}
+                    flexShrink={0}
+                    bgGradient={
+                      stat.color === 'primary'
+                        ? 'linear(to-br, primary.500, primary.600)'
+                        : undefined
+                    }
+                    bg={stat.color !== 'primary' ? 'white' : undefined}
+                    color={stat.color === 'primary' ? 'white' : undefined}
+                    boxShadow="md"
+                  >
+                    <CardBody p={4}>
+                      <Flex direction="column" align="center" gap={3}>
+                        <Box
+                          w={14}
+                          h={14}
+                          borderRadius="lg"
+                          bg={stat.color === 'primary' ? 'whiteAlpha.200' : `${stat.color}.100`}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          color={stat.color === 'primary' ? 'white' : `${stat.color}.600`}
+                        >
+                          <i className={stat.icon} style={{ fontSize: '1.75rem' }} />
+                        </Box>
+                        <Box textAlign="center">
+                          <Heading size="xl" color={stat.color === 'primary' ? 'white' : 'gray.900'} mb={1}>
+                            {stat.value.toLocaleString('vi-VN')}
+                          </Heading>
+                          <Text fontSize="sm" fontWeight="medium" color={stat.color === 'primary' ? 'primary.100' : 'gray.600'}>
+                            {stat.label}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    </CardBody>
+                  </Card>
+                ))}
+              </Flex>
+            </Box>
           </Box>
         )}
 

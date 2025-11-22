@@ -76,11 +76,11 @@ export class ActivityPointsService {
   async initializeDefaults(): Promise<void> {
     const defaults = [
       { activityType: 'donThuan', activityName: 'Đơn thuần', pointPerUnit: 1 },
-      { activityType: 'huuHieu', activityName: 'Hữu hiệu', pointPerUnit: 2 },
-      { activityType: 'baptem', activityName: 'Baptem', pointPerUnit: 5 },
-      { activityType: 'thoPhuong', activityName: 'Thờ phượng', pointPerUnit: 3 },
-      { activityType: 'lapCLB', activityName: 'Lập CLB', pointPerUnit: 10 },
-      { activityType: 'lenGiaiDoan', activityName: 'Lên giai đoạn', pointPerUnit: 15 },
+      { activityType: 'huuHieu', activityName: 'Hữu hiệu', pointPerUnit: 10 },
+      { activityType: 'baptem', activityName: 'Baptem', pointPerUnit: 500 },
+      { activityType: 'thoPhuong', activityName: 'Thờ phượng', pointPerUnit: 1000 },
+      { activityType: 'lapCLB', activityName: 'Lập CLB', pointPerUnit: 500 },
+      { activityType: 'lenGiaiDoan', activityName: 'Lên giai đoạn', pointPerUnit: 1000 },
     ];
 
     for (const defaultConfig of defaults) {
