@@ -47,11 +47,13 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
     { path: '/admin/users', icon: 'fas fa-users', label: 'Tài khoản' },
     { path: '/admin/teams', icon: 'fas fa-user-friends', label: 'Teams' },
     { path: '/admin/statistics', icon: 'fas fa-chart-bar', label: 'Thống kê' },
+    { path: '/admin/ranking', icon: 'fas fa-trophy', label: 'Bảng xếp hạng' },
     { path: '/admin/points', icon: 'fas fa-cog', label: 'Cấu hình Điểm' },
   ];
 
   const userMenu = [
     { path: '/user', icon: 'fas fa-plus', label: 'Nhập dữ liệu' },
+    { path: '/user/ranking', icon: 'fas fa-trophy', label: 'Bảng xếp hạng' },
   ];
 
   const menu = role === 'admin' ? adminMenu : userMenu;
