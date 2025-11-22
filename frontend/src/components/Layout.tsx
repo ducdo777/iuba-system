@@ -98,13 +98,17 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
         <Flex justify="space-between" align="center">
           <HStack spacing={4}>
             <Button
-              display={{ base: 'block', md: 'none' }}
+              display={{ base: 'flex', md: 'none' }}
               variant="ghost"
               colorScheme="whiteAlpha"
               onClick={onOpen}
               aria-label="Toggle menu"
+              size={{ base: 'sm', md: 'md' }}
+              fontSize={{ base: 'xs', sm: 'sm' }}
+              px={{ base: 2, sm: 3 }}
+              borderRadius="md"
             >
-              <i className="fas fa-bars" />
+              Menu
             </Button>
             <Heading size="md">IUBA System</Heading>
           </HStack>
