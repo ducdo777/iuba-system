@@ -436,11 +436,18 @@ export const UserDataInput: React.FC = () => {
     return new Date(dateString).toLocaleDateString('vi-VN');
   };
 
-  const isEditing = (item: ActivityData | EditableRow) => {
+  const isEditing = (item: ActivityData | EditableRow): boolean => {
     if ('isEditing' in item && item.isEditing) return true;
     if ('id' in item && editingRow?.id === item.id) return true;
-    return editingRow?.isNew && !item.id;
+    return !!(editingRow?.isNew && !item.id);
   };
+
+  // Wrapper function for DataRow that only accepts ActivityData
+  const isEditingDataRow = useCallback((item: ActivityData): boolean => {
+    if ('isEditing' in item && item.isEditing) return true;
+    if ('id' in item && editingRow?.id === item.id) return true;
+    return !!(editingRow?.isNew && !item.id);
+  }, [editingRow]);
 
   if (loading) {
     return (
@@ -672,7 +679,7 @@ export const UserDataInput: React.FC = () => {
                     onEdit={handleEdit}
                     onDelete={handleDeleteClick}
                     calculateTotalPoints={calculateTotalPoints}
-                    isEditing={isEditing}
+                    isEditing={isEditingDataRow}
                     editingRow={editingRow}
                     formatDate={formatDate}
                   />
