@@ -32,6 +32,7 @@ export const TeamModal: React.FC<TeamModalProps> = ({ team, onClose }) => {
     teamName: '',
     description: '',
     status: 'active',
+    totalMembers: 0,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -44,6 +45,7 @@ export const TeamModal: React.FC<TeamModalProps> = ({ team, onClose }) => {
         teamName: team.teamName,
         description: team.description || '',
         status: team.status,
+        totalMembers: team.totalMembers || 0,
       });
     }
   }, [team]);
@@ -142,6 +144,17 @@ export const TeamModal: React.FC<TeamModalProps> = ({ team, onClose }) => {
                     <option value="active">Hoạt động</option>
                     <option value="inactive">Không hoạt động</option>
                   </Select>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Số lượng thành viên</FormLabel>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={formData.totalMembers || 0}
+                    onChange={(e) => setFormData({ ...formData, totalMembers: parseInt(e.target.value) || 0 })}
+                    placeholder="0"
+                  />
                 </FormControl>
               </Grid>
             </VStack>

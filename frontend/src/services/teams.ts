@@ -6,6 +6,7 @@ export interface Team {
   teamName: string;
   description?: string;
   status: 'active' | 'inactive';
+  totalMembers?: number;
 }
 
 export interface CreateTeamDto {
@@ -13,6 +14,7 @@ export interface CreateTeamDto {
   teamName: string;
   description?: string;
   status: 'active' | 'inactive';
+  totalMembers?: number;
 }
 
 export const teamsService = {

@@ -152,6 +152,9 @@ export const AdminTeams: React.FC = () => {
               <Th fontSize="sm" fontWeight="semibold" color="gray.700">
                 Mô tả
               </Th>
+              <Th fontSize="sm" fontWeight="semibold" color="gray.700" isNumeric>
+                Số thành viên
+              </Th>
               <Th fontSize="sm" fontWeight="semibold" color="gray.700">
                 Trạng thái
               </Th>
@@ -163,7 +166,7 @@ export const AdminTeams: React.FC = () => {
           <Tbody>
             {teams.length === 0 ? (
               <Tr>
-                <Td colSpan={5} textAlign="center" py={8} color="gray.500">
+                <Td colSpan={6} textAlign="center" py={8} color="gray.500">
                   Không có team nào
                 </Td>
               </Tr>
@@ -175,6 +178,9 @@ export const AdminTeams: React.FC = () => {
                   </Td>
                   <Td color="gray.700">{team.teamName}</Td>
                   <Td color="gray.700">{team.description || '-'}</Td>
+                  <Td isNumeric color="gray.700" fontWeight="medium">
+                    {team.totalMembers !== undefined && team.totalMembers !== null ? team.totalMembers : '-'}
+                  </Td>
                   <Td>
                     <Badge
                       colorScheme={team.status === 'active' ? 'green' : 'red'}
