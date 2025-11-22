@@ -51,13 +51,14 @@ export class UsersService {
       password: hashedPassword,
     });
     const saved = await this.usersRepository.save(user);
+    const savedUser = Array.isArray(saved) ? saved[0] : saved;
     
     // Update team totalMembers if teamId is provided
-    if (saved.teamId) {
-      await this.updateTeamMemberCount(saved.teamId);
+    if (savedUser && savedUser.teamId) {
+      await this.updateTeamMemberCount(savedUser.teamId);
     }
     
-    return saved as unknown as User;
+    return savedUser as User;
   }
 
   async update(id: string, updateUserDto: any): Promise<User> {
@@ -69,18 +70,19 @@ export class UsersService {
     }
     Object.assign(user, updateUserDto);
     const saved = await this.usersRepository.save(user);
+    const savedUser = Array.isArray(saved) ? saved[0] : saved;
     
     // Update team member counts if team changed
-    if (oldTeamId !== saved.teamId) {
+    if (oldTeamId !== savedUser.teamId) {
       if (oldTeamId) {
         await this.updateTeamMemberCount(oldTeamId);
       }
-      if (saved.teamId) {
-        await this.updateTeamMemberCount(saved.teamId);
+      if (savedUser.teamId) {
+        await this.updateTeamMemberCount(savedUser.teamId);
       }
     }
     
-    return saved;
+    return savedUser as User;
   }
 
   async remove(id: string): Promise<void> {
