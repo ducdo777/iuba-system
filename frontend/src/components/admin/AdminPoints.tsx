@@ -272,10 +272,12 @@ export const AdminPoints: React.FC = () => {
                         </Box>
                         <Button
                           colorScheme="primary"
-                          leftIcon={<i className="fas fa-edit" />}
                           onClick={() => handleEdit(config)}
                         >
-                          ✏️ Chỉnh sửa
+                          <HStack gap={2}>
+                            <i className="fas fa-edit" />
+                            <Text>✏️ Chỉnh sửa</Text>
+                          </HStack>
                         </Button>
                         <HStack gap={2}>
                           <Button

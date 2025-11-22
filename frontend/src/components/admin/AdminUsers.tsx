@@ -138,10 +138,12 @@ export const AdminUsers: React.FC = () => {
         </Heading>
         <Button
           colorScheme="primary"
-          leftIcon={<i className="fas fa-plus" />}
           onClick={handleCreate}
         >
-          Thêm tài khoản
+          <HStack gap={2}>
+            <i className="fas fa-plus" />
+            <Text>Thêm tài khoản</Text>
+          </HStack>
         </Button>
       </Flex>
 
@@ -209,18 +211,22 @@ export const AdminUsers: React.FC = () => {
                       <Button
                         size="sm"
                         colorScheme="primary"
-                        leftIcon={<i className="fas fa-edit" />}
                         onClick={() => handleEdit(user)}
                       >
-                        Sửa
+                        <HStack gap={1}>
+                          <i className="fas fa-edit" />
+                          <Text>Sửa</Text>
+                        </HStack>
                       </Button>
                       <Button
                         size="sm"
                         colorScheme="red"
-                        leftIcon={<i className="fas fa-trash" />}
                         onClick={() => handleDeleteClick(user.id)}
                       >
-                        Xóa
+                        <HStack gap={1}>
+                          <i className="fas fa-trash" />
+                          <Text>Xóa</Text>
+                        </HStack>
                       </Button>
                     </HStack>
                   </Td>

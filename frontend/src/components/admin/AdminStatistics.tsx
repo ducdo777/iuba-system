@@ -115,10 +115,12 @@ export const AdminStatistics: React.FC = () => {
               </Select>
               <Button
                 colorScheme="primary"
-                leftIcon={<i className="fas fa-search" />}
                 onClick={handleFilter}
               >
-                Xem thống kê
+                <HStack gap={2}>
+                  <i className="fas fa-search" />
+                  <Text>Xem thống kê</Text>
+                </HStack>
               </Button>
             </Grid>
           </CardBody>

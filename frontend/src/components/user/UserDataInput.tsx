@@ -264,11 +264,13 @@ export const UserDataInput: React.FC = () => {
           </Heading>
           <Button
             colorScheme="primary"
-            leftIcon={<i className="fas fa-plus" />}
             onClick={handleAddNew}
             isDisabled={!!editingRow}
           >
-            Thêm dữ liệu
+            <HStack gap={2}>
+              <i className="fas fa-plus" />
+              <Text>Thêm dữ liệu</Text>
+            </HStack>
           </Button>
         </Flex>
 

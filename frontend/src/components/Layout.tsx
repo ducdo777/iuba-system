@@ -59,7 +59,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
       {menu.map((item) => (
         <Link key={item.path} href={item.path} onClick={onClose}>
           <Button
-            leftIcon={<i className={item.icon} />}
             justifyContent="flex-start"
             w="full"
             variant={isActive(item.path) ? 'solid' : 'ghost'}
@@ -70,7 +69,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
               bg: isActive(item.path) ? 'primary.700' : 'gray.100',
             }}
           >
-            {item.label}
+            <HStack gap={2} w="full">
+              <i className={item.icon} />
+              <Text>{item.label}</Text>
+            </HStack>
           </Button>
         </Link>
       ))}
@@ -113,10 +115,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
               size="sm"
               variant="ghost"
               colorScheme="whiteAlpha"
-              leftIcon={<i className="fas fa-sign-out-alt" />}
               onClick={handleLogout}
             >
-              <Text display={{ base: 'none', sm: 'inline' }}>Đăng xuất</Text>
+              <HStack gap={2}>
+                <i className="fas fa-sign-out-alt" />
+                <Text display={{ base: 'none', sm: 'inline' }}>Đăng xuất</Text>
+              </HStack>
             </Button>
           </HStack>
         </Flex>

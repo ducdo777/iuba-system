@@ -132,10 +132,12 @@ export const AdminTeams: React.FC = () => {
         </Heading>
         <Button
           colorScheme="primary"
-          leftIcon={<i className="fas fa-plus" />}
           onClick={handleCreate}
         >
-          Thêm Team
+          <HStack gap={2}>
+            <i className="fas fa-plus" />
+            <Text>Thêm Team</Text>
+          </HStack>
         </Button>
       </Flex>
 
@@ -188,18 +190,22 @@ export const AdminTeams: React.FC = () => {
                       <Button
                         size="sm"
                         colorScheme="primary"
-                        leftIcon={<i className="fas fa-edit" />}
                         onClick={() => handleEdit(team)}
                       >
-                        Sửa
+                        <HStack gap={1}>
+                          <i className="fas fa-edit" />
+                          <Text>Sửa</Text>
+                        </HStack>
                       </Button>
                       <Button
                         size="sm"
                         colorScheme="red"
-                        leftIcon={<i className="fas fa-trash" />}
                         onClick={() => handleDeleteClick(team.id)}
                       >
-                        Xóa
+                        <HStack gap={1}>
+                          <i className="fas fa-trash" />
+                          <Text>Xóa</Text>
+                        </HStack>
                       </Button>
                     </HStack>
                   </Td>
