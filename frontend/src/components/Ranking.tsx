@@ -174,16 +174,16 @@ export const Ranking: React.FC = () => {
             </HStack>
           </Box>
           <TableContainer overflowX="visible" w="full" maxW="100%">
-            <Table variant="simple" size="sm" whiteSpace="nowrap" w="full" layout="fixed">
+            <Table variant="simple" size="sm" w="full" layout="fixed">
               <Thead bg="gray.50">
                 <Tr>
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" width={{ base: '50px', md: '70px' }} px={{ base: 1, md: 2 }}>
                     Hạng
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }} whiteSpace="normal">
                     Team
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
                     TV
                   </Th>
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
@@ -244,10 +244,10 @@ export const Ranking: React.FC = () => {
                           </Badge>
                         </Flex>
                       </Td>
-                      <Td fontWeight="semibold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                      <Td fontWeight="semibold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} whiteSpace="normal" wordBreak="break-word">
                         {team.teamName}
                       </Td>
-                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
                         {team.totalMembers || '-'}
                       </Td>
                       <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
