@@ -19,6 +19,9 @@ export class Team {
   @Column({ type: 'varchar', default: 'active' })
   status: 'active' | 'inactive';
 
+  @Column({ type: 'int', default: 0 })
+  totalMembers: number;
+
   @OneToMany(() => User, user => user.team)
   users: User[];
 

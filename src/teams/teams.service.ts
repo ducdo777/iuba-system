@@ -31,6 +31,7 @@ export class TeamsService {
   async create(createTeamDto: any): Promise<Team> {
     const team = this.teamsRepository.create({
       id: uuidv4(), // Generate UUID manually for PostgreSQL
+      totalMembers: 0, // Initialize with 0, will be updated when users are added
       ...createTeamDto,
     });
     const saved = await this.teamsRepository.save(team);

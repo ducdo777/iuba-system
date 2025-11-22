@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { Team } from '../teams/entities/team.entity';
 import * as bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,6 +11,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Team)
+    private teamsRepository: Repository<Team>,
   ) {}
 
   async findAll(teamId?: string, role?: string): Promise<User[]> {
@@ -48,20 +51,56 @@ export class UsersService {
       password: hashedPassword,
     });
     const saved = await this.usersRepository.save(user);
+    
+    // Update team totalMembers if teamId is provided
+    if (saved.teamId) {
+      await this.updateTeamMemberCount(saved.teamId);
+    }
+    
     return saved as unknown as User;
   }
 
   async update(id: string, updateUserDto: any): Promise<User> {
     const user = await this.findOne(id);
+    const oldTeamId = user.teamId;
+    
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
     Object.assign(user, updateUserDto);
-    return this.usersRepository.save(user);
+    const saved = await this.usersRepository.save(user);
+    
+    // Update team member counts if team changed
+    if (oldTeamId !== saved.teamId) {
+      if (oldTeamId) {
+        await this.updateTeamMemberCount(oldTeamId);
+      }
+      if (saved.teamId) {
+        await this.updateTeamMemberCount(saved.teamId);
+      }
+    }
+    
+    return saved;
   }
 
   async remove(id: string): Promise<void> {
     const user = await this.findOne(id);
+    const teamId = user.teamId;
     await this.usersRepository.remove(user);
+    
+    // Update team totalMembers if user had a team
+    if (teamId) {
+      await this.updateTeamMemberCount(teamId);
+    }
+  }
+
+  private async updateTeamMemberCount(teamId: string): Promise<void> {
+    const memberCount = await this.usersRepository.count({
+      where: { teamId, status: 'active' },
+    });
+    
+    await this.teamsRepository.update(teamId, {
+      totalMembers: memberCount,
+    });
   }
 }

@@ -55,10 +55,17 @@ export class StatisticsService {
           teamTotals.lenGiaiDoan += data.lenGiaiDoan || 0;
         });
 
+        // Use totalMembers from database, fallback to calculated count if not set
+        const teamUsers = await this.usersService.findAll(team.id);
+        const totalMembers = team.totalMembers !== undefined && team.totalMembers !== null 
+          ? team.totalMembers 
+          : teamUsers.filter(u => u.status === 'active').length;
+        
         return {
           teamId: team.id,
           teamCode: team.teamCode,
           teamName: team.teamName,
+          totalMembers,
           ...teamTotals,
           total: Object.values(teamTotals).reduce((a, b) => a + b, 0),
         };
@@ -134,11 +141,16 @@ export class StatisticsService {
           teamTotals.lenGiaiDoan += data.lenGiaiDoan || 0;
         });
 
+        // Use totalMembers from database, fallback to calculated count if not set
+        const totalMembers = team.totalMembers !== undefined && team.totalMembers !== null 
+          ? team.totalMembers 
+          : teamUsers.filter(u => u.status === 'active').length;
+        
         return {
           teamId: team.id,
           teamCode: team.teamCode,
           teamName: team.teamName,
-          totalMembers: teamUsers.length,
+          totalMembers,
           byUser,
           summary: {
             ...teamTotals,
