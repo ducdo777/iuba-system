@@ -480,21 +480,21 @@ export const UserDataInput: React.FC = () => {
                       <HStack spacing={2}>
                         <Button
                           size="sm"
-                          colorScheme="primary"
+                          colorScheme="blue"
                           onClick={() => handleEdit(item)}
                           isDisabled={!!editingRow}
-                          title="Sửa"
+                          borderRadius="md"
                         >
-                          <i className="fas fa-edit" />
+                          Sửa
                         </Button>
                         <Button
                           size="sm"
                           colorScheme="red"
                           onClick={() => handleDeleteClick(item.id)}
                           isDisabled={!!editingRow}
-                          title="Xóa"
+                          borderRadius="md"
                         >
-                          <i className="fas fa-trash" />
+                          Xóa
                         </Button>
                       </HStack>
                     </Td>

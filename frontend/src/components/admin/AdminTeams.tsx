@@ -187,17 +187,17 @@ export const AdminTeams: React.FC = () => {
                     <HStack spacing={2}>
                       <Button
                         size="sm"
-                        colorScheme="primary"
-                        leftIcon={<i className="fas fa-edit" />}
+                        colorScheme="blue"
                         onClick={() => handleEdit(team)}
+                        borderRadius="md"
                       >
                         Sửa
                       </Button>
                       <Button
                         size="sm"
                         colorScheme="red"
-                        leftIcon={<i className="fas fa-trash" />}
                         onClick={() => handleDeleteClick(team.id)}
+                        borderRadius="md"
                       >
                         Xóa
                       </Button>

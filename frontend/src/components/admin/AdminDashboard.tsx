@@ -21,13 +21,16 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { statisticsService, StatisticsOverview } from '../../services/statistics';
+import { activityPointsService, ActivityPointConfig } from '../../services/activityPoints';
 
 export const AdminDashboard: React.FC = () => {
   const [overview, setOverview] = useState<StatisticsOverview | null>(null);
+  const [pointConfigs, setPointConfigs] = useState<ActivityPointConfig[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadOverview();
+    loadPointConfigs();
   }, []);
 
   const loadOverview = async () => {
@@ -40,6 +43,47 @@ export const AdminDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadPointConfigs = async () => {
+    try {
+      const configs = await activityPointsService.getAll();
+      setPointConfigs(configs);
+    } catch (error) {
+      console.error('Error loading point configs:', error);
+      // Use default values if API fails
+      setPointConfigs([
+        { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
+        { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
+        { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
+        { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
+        { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
+        { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
+      ]);
+    }
+  };
+
+  const getPointPerUnit = (activityType: string): number => {
+    const config = pointConfigs.find(c => c.activityType === activityType);
+    return config?.pointPerUnit || 0;
+  };
+
+  const calculateActivityPoints = (activityType: string, quantity: number): number => {
+    return quantity * getPointPerUnit(activityType);
+  };
+
+  const calculateTotalPoints = (): number => {
+    if (!overview?.summary) return 0;
+    const { summary } = overview;
+    
+    const donThuan = calculateActivityPoints('donThuan', summary.donThuan);
+    const huuHieu = calculateActivityPoints('huuHieu', summary.huuHieu);
+    const baptem = calculateActivityPoints('baptem', summary.baptem);
+    const thoPhuong = calculateActivityPoints('thoPhuong', summary.thoPhuong);
+    const lapCLB = calculateActivityPoints('lapCLB', summary.lapCLB);
+    const lenGiaiDoan = calculateActivityPoints('lenGiaiDoan', summary.lenGiaiDoan);
+
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
   };
 
   if (loading) {
@@ -79,114 +123,6 @@ export const AdminDashboard: React.FC = () => {
           </Heading>
         </Box>
 
-        {/* Top Stats Cards */}
-        <Grid
-          templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-          gap={6}
-        >
-          <Card
-            bgGradient="linear(to-br, blue.500, blue.600)"
-            color="white"
-            borderRadius="2xl"
-            boxShadow="lg"
-            _hover={{ transform: 'scale(1.05)', transition: 'all 0.3s' }}
-          >
-            <CardBody p={6}>
-              <Flex justify="space-between" align="center" mb={4}>
-                <Box
-                  w={16}
-                  h={16}
-                  borderRadius="xl"
-                  bg="whiteAlpha.200"
-                  backdropFilter="blur(10px)"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <i className="fas fa-user-friends" style={{ fontSize: '2rem' }} />
-                </Box>
-                <Text fontSize="sm" color="blue.100" fontWeight="medium">
-                  Teams
-                </Text>
-              </Flex>
-              <Heading size="2xl" mb={1}>
-                {summary.totalTeams}
-              </Heading>
-              <Text fontSize="sm" color="blue.100">
-                Tổng số teams
-              </Text>
-            </CardBody>
-          </Card>
-
-          <Card
-            bgGradient="linear(to-br, green.500, green.600)"
-            color="white"
-            borderRadius="2xl"
-            boxShadow="lg"
-            _hover={{ transform: 'scale(1.05)', transition: 'all 0.3s' }}
-          >
-            <CardBody p={6}>
-              <Flex justify="space-between" align="center" mb={4}>
-                <Box
-                  w={16}
-                  h={16}
-                  borderRadius="xl"
-                  bg="whiteAlpha.200"
-                  backdropFilter="blur(10px)"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <i className="fas fa-users" style={{ fontSize: '2rem' }} />
-                </Box>
-                <Text fontSize="sm" color="green.100" fontWeight="medium">
-                  Người dùng
-                </Text>
-              </Flex>
-              <Heading size="2xl" mb={1}>
-                {summary.totalUsers}
-              </Heading>
-              <Text fontSize="sm" color="green.100">
-                Tổng số người dùng
-              </Text>
-            </CardBody>
-          </Card>
-
-          <Card
-            bgGradient="linear(to-br, amber.500, amber.600)"
-            color="white"
-            borderRadius="2xl"
-            boxShadow="lg"
-            _hover={{ transform: 'scale(1.05)', transition: 'all 0.3s' }}
-          >
-            <CardBody p={6}>
-              <Flex justify="space-between" align="center" mb={4}>
-                <Box
-                  w={16}
-                  h={16}
-                  borderRadius="xl"
-                  bg="whiteAlpha.200"
-                  backdropFilter="blur(10px)"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <i className="fas fa-list" style={{ fontSize: '2rem' }} />
-                </Box>
-                <Text fontSize="sm" color="amber.100" fontWeight="medium">
-                  Bản ghi
-                </Text>
-              </Flex>
-              <Heading size="2xl" mb={1}>
-                {summary.totalRecords}
-              </Heading>
-              <Text fontSize="sm" color="amber.100">
-                Tổng số bản ghi
-              </Text>
-            </CardBody>
-          </Card>
-        </Grid>
-
         {/* Data Summary */}
         <VStack spacing={6} align="stretch">
           <HStack spacing={3}>
@@ -206,44 +142,86 @@ export const AdminDashboard: React.FC = () => {
             gap={4}
           >
             {[
-              { value: summary.donThuan, label: 'Đơn thuần', icon: 'fas fa-hand-holding-heart', color: 'pink' },
-              { value: summary.huuHieu, label: 'Hữu hiệu', icon: 'fas fa-check-circle', color: 'green' },
-              { value: summary.baptem, label: 'Baptem', icon: 'fas fa-water', color: 'blue' },
-              { value: summary.thoPhuong, label: 'Thờ phượng', icon: 'fas fa-praying-hands', color: 'purple' },
-              { value: summary.lapCLB, label: 'Lập CLB', icon: 'fas fa-users', color: 'indigo' },
-              { value: summary.lenGiaiDoan, label: 'Lên giai đoạn', icon: 'fas fa-arrow-up', color: 'orange' },
-            ].map((item) => (
-              <Card
-                key={item.label}
-                borderRadius="xl"
-                border="1px"
-                borderColor="gray.200"
-                _hover={{ boxShadow: 'lg', borderColor: `${item.color}.300` }}
-                transition="all 0.3s"
-              >
-                <CardBody p={5}>
-                  <Box
-                    w={12}
-                    h={12}
-                    borderRadius="lg"
-                    bg={`${item.color}.100`}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    color={`${item.color}.600`}
-                    mb={3}
-                  >
-                    <i className={item.icon} style={{ fontSize: '1.25rem' }} />
-                  </Box>
-                  <Heading size="lg" color="gray.900" mb={1}>
-                    {item.value}
-                  </Heading>
-                  <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                    {item.label}
-                  </Text>
-                </CardBody>
-              </Card>
-            ))}
+              { 
+                value: summary.donThuan, 
+                activityType: 'donThuan',
+                label: 'Đơn thuần', 
+                icon: 'fas fa-hand-holding-heart', 
+                color: 'pink' 
+              },
+              { 
+                value: summary.huuHieu, 
+                activityType: 'huuHieu',
+                label: 'Hữu hiệu', 
+                icon: 'fas fa-check-circle', 
+                color: 'green' 
+              },
+              { 
+                value: summary.baptem, 
+                activityType: 'baptem',
+                label: 'Baptem', 
+                icon: 'fas fa-water', 
+                color: 'blue' 
+              },
+              { 
+                value: summary.thoPhuong, 
+                activityType: 'thoPhuong',
+                label: 'Thờ phượng', 
+                icon: 'fas fa-praying-hands', 
+                color: 'purple' 
+              },
+              { 
+                value: summary.lapCLB, 
+                activityType: 'lapCLB',
+                label: 'Lập CLB', 
+                icon: 'fas fa-users', 
+                color: 'indigo' 
+              },
+              { 
+                value: summary.lenGiaiDoan, 
+                activityType: 'lenGiaiDoan',
+                label: 'Lên giai đoạn', 
+                icon: 'fas fa-arrow-up', 
+                color: 'orange' 
+              },
+            ].map((item) => {
+              const points = calculateActivityPoints(item.activityType, item.value);
+              return (
+                <Card
+                  key={item.label}
+                  borderRadius="xl"
+                  border="1px"
+                  borderColor="gray.200"
+                  _hover={{ boxShadow: 'lg', borderColor: `${item.color}.300` }}
+                  transition="all 0.3s"
+                >
+                  <CardBody p={5}>
+                    <Box
+                      w={12}
+                      h={12}
+                      borderRadius="lg"
+                      bg={`${item.color}.100`}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      color={`${item.color}.600`}
+                      mb={3}
+                    >
+                      <i className={item.icon} style={{ fontSize: '1.25rem' }} />
+                    </Box>
+                    <Heading size="lg" color="gray.900" mb={1}>
+                      {item.value.toLocaleString('vi-VN')}
+                    </Heading>
+                    <Text fontSize="xs" color="gray.500" mb={1}>
+                      Tổng điểm: {points.toLocaleString('vi-VN')}
+                    </Text>
+                    <Text fontSize="sm" color="gray.600" fontWeight="medium">
+                      {item.label}
+                    </Text>
+                  </CardBody>
+                </Card>
+              );
+            })}
 
             <Card
               gridColumn={{ base: '1', sm: 'span 2', lg: 'span 2' }}
@@ -268,10 +246,10 @@ export const AdminDashboard: React.FC = () => {
                   <i className="fas fa-chart-line" style={{ fontSize: '2rem' }} />
                 </Box>
                 <Heading size="xl" mb={1}>
-                  {summary.grandTotal}
+                  {calculateTotalPoints().toLocaleString('vi-VN')}
                 </Heading>
                 <Text fontSize="sm" color="primary.100" fontWeight="medium">
-                  Tổng cộng
+                  Tổng điểm
                 </Text>
               </CardBody>
             </Card>
@@ -323,33 +301,43 @@ export const AdminDashboard: React.FC = () => {
                     Lên giai đoạn
                   </Th>
                   <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Tổng
+                    Tổng điểm
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {overview.byTeam.map((team, index) => (
-                  <Tr
-                    key={team.teamId}
-                    bg={index % 2 === 0 ? 'white' : 'gray.50'}
-                    _hover={{ bg: 'gray.100' }}
-                    transition="background 0.2s"
-                  >
-                    <Td fontWeight="semibold" color="gray.900">
-                      {team.teamName}
-                    </Td>
-                    <Td color="gray.700">{team.totalMembers || '-'}</Td>
-                    <Td color="gray.700">{team.donThuan}</Td>
-                    <Td color="gray.700">{team.huuHieu}</Td>
-                    <Td color="gray.700">{team.baptem}</Td>
-                    <Td color="gray.700">{team.thoPhuong}</Td>
-                    <Td color="gray.700">{team.lapCLB}</Td>
-                    <Td color="gray.700">{team.lenGiaiDoan}</Td>
-                    <Td fontWeight="bold" color="primary.600">
-                      {team.total}
-                    </Td>
-                  </Tr>
-                ))}
+                {overview.byTeam.map((team, index) => {
+                  const teamTotalPoints = 
+                    calculateActivityPoints('donThuan', team.donThuan) +
+                    calculateActivityPoints('huuHieu', team.huuHieu) +
+                    calculateActivityPoints('baptem', team.baptem) +
+                    calculateActivityPoints('thoPhuong', team.thoPhuong) +
+                    calculateActivityPoints('lapCLB', team.lapCLB) +
+                    calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan);
+                  
+                  return (
+                    <Tr
+                      key={team.teamId}
+                      bg={index % 2 === 0 ? 'white' : 'gray.50'}
+                      _hover={{ bg: 'gray.100' }}
+                      transition="background 0.2s"
+                    >
+                      <Td fontWeight="semibold" color="gray.900">
+                        {team.teamName}
+                      </Td>
+                      <Td color="gray.700">{team.totalMembers || '-'}</Td>
+                      <Td color="gray.700">{team.donThuan}</Td>
+                      <Td color="gray.700">{team.huuHieu}</Td>
+                      <Td color="gray.700">{team.baptem}</Td>
+                      <Td color="gray.700">{team.thoPhuong}</Td>
+                      <Td color="gray.700">{team.lapCLB}</Td>
+                      <Td color="gray.700">{team.lenGiaiDoan}</Td>
+                      <Td fontWeight="bold" color="primary.600">
+                        {teamTotalPoints.toLocaleString('vi-VN')}
+                      </Td>
+                    </Tr>
+                  );
+                })}
               </Tbody>
             </Table>
           </TableContainer>
