@@ -12,11 +12,9 @@ import {
   useDisclosure,
   Drawer,
   DrawerBody,
-  DrawerOverlay,
   DrawerContent,
   VStack,
   HStack,
-  Icon,
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { useAuth } from '../contexts/AuthContext';
@@ -139,7 +137,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
 
         {/* Mobile Drawer */}
         <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-          <DrawerOverlay />
           <DrawerContent>
             <DrawerBody p={0}>
               <SidebarContent />

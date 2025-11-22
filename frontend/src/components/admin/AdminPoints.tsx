@@ -1,4 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Button,
+  Spinner,
+  Card,
+  CardBody,
+  Grid,
+  Input,
+  Select,
+  Badge,
+  HStack,
+  VStack,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  AlertTitle,
+  useToast,
+} from '@chakra-ui/react';
 import { activityPointsService, ActivityPointConfig, CreateActivityPointConfigDto } from '../../services/activityPoints';
 
 const ACTIVITY_TYPES = [
@@ -20,7 +41,7 @@ export const AdminPoints: React.FC = () => {
     pointPerUnit: 0,
     status: 'active',
   });
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     loadConfigs();
@@ -31,8 +52,7 @@ export const AdminPoints: React.FC = () => {
       setLoading(true);
       const data = await activityPointsService.getAll();
       setConfigs(data);
-      
-      // If no configs exist, initialize defaults
+
       if (data.length === 0) {
         await activityPointsService.initialize();
         const newData = await activityPointsService.getAll();
@@ -40,7 +60,13 @@ export const AdminPoints: React.FC = () => {
       }
     } catch (error) {
       console.error('Error loading point configs:', error);
-      setMessage({ type: 'error', text: 'Không thể tải cấu hình điểm' });
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể tải cấu hình điểm',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -70,223 +96,278 @@ export const AdminPoints: React.FC = () => {
     try {
       if (editingId) {
         await activityPointsService.update(editingId, formData);
-        setMessage({ type: 'success', text: 'Cập nhật điểm thành công!' });
+        toast({
+          title: 'Thành công',
+          description: 'Cập nhật điểm thành công!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       } else {
         await activityPointsService.create(formData);
-        setMessage({ type: 'success', text: 'Tạo cấu hình điểm thành công!' });
+        toast({
+          title: 'Thành công',
+          description: 'Tạo cấu hình điểm thành công!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       }
       await loadConfigs();
       handleCancel();
     } catch (error: any) {
       console.error('Error saving point config:', error);
-      setMessage({ type: 'error', text: error.response?.data?.message || 'Không thể lưu cấu hình điểm' });
+      toast({
+        title: 'Lỗi',
+        description: error.response?.data?.message || 'Không thể lưu cấu hình điểm',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
   const handleQuickUpdate = async (type: string, pointPerUnit: number) => {
     try {
-      const config = configs.find(c => c.activityType === type);
+      const config = configs.find((c) => c.activityType === type);
       if (config) {
         await activityPointsService.updateByType(type, { pointPerUnit });
-        setMessage({ type: 'success', text: 'Cập nhật điểm thành công!' });
+        toast({
+          title: 'Thành công',
+          description: 'Cập nhật điểm thành công!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
         await loadConfigs();
       }
     } catch (error: any) {
       console.error('Error updating point:', error);
-      setMessage({ type: 'error', text: 'Không thể cập nhật điểm' });
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể cập nhật điểm',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-muted-foreground">Đang tải...</p>
-        </div>
-      </div>
+      <Flex minH="400px" align="center" justify="center">
+        <Box textAlign="center">
+          <Spinner size="xl" color="primary.600" thickness="4px" mb={4} />
+          <Text color="gray.600">Đang tải...</Text>
+        </Box>
+      </Flex>
     );
   }
 
   return (
-    <div className="space-y-6 w-full p-4 md:p-6 lg:p-8">
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold text-foreground">⚙️ Cấu hình Điểm Hoạt động</h2>
-        <p className="text-muted-foreground">Thiết lập điểm số cho từng loại hoạt động</p>
-      </div>
+    <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
+      <VStack spacing={6} align="stretch">
+        <Box>
+          <Heading size="lg" color="gray.900" mb={2}>
+            ⚙️ Cấu hình Điểm Hoạt động
+          </Heading>
+          <Text color="gray.600">Thiết lập điểm số cho từng loại hoạt động</Text>
+        </Box>
 
-      {message && (
-        <div className={`p-4 rounded-lg flex items-center justify-between ${
-          message.type === 'success' 
-            ? 'bg-success/10 border border-success/20 text-success' 
-            : 'bg-error/10 border border-error/20 text-error'
-        }`}>
-          <span>{message.text}</span>
-          <button 
-            onClick={() => setMessage(null)}
-            className="ml-4 hover:opacity-70 transition-opacity"
-          >
-            ×
-          </button>
-        </div>
-      )}
+        <Grid
+          templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+          gap={4}
+        >
+          {ACTIVITY_TYPES.map((activity) => {
+            const config = configs.find((c) => c.activityType === activity.type);
+            const isEditing = editingId === config?.id;
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {ACTIVITY_TYPES.map((activity) => {
-          const config = configs.find(c => c.activityType === activity.type);
-          const isEditing = editingId === config?.id;
+            return (
+              <Card key={activity.type} _hover={{ boxShadow: 'md' }} transition="all 0.3s">
+                <CardBody>
+                  <VStack spacing={4} align="stretch">
+                    <Flex justify="space-between" align="center" pb={4} borderBottom="1px" borderColor="gray.200">
+                      <HStack spacing={3}>
+                        <Text fontSize="2xl">{activity.icon}</Text>
+                        <Text fontWeight="semibold" color="gray.900">
+                          {activity.name}
+                        </Text>
+                      </HStack>
+                      {config && (
+                        <Badge
+                          colorScheme={config.status === 'active' ? 'green' : 'red'}
+                          variant="subtle"
+                        >
+                          {config.status === 'active' ? '✓ Hoạt động' : '✗ Tạm dừng'}
+                        </Badge>
+                      )}
+                    </Flex>
 
-          return (
-            <div key={activity.type} className="bg-card rounded-xl border shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{activity.icon}</span>
-                  <h3 className="font-semibold text-foreground">{activity.name}</h3>
-                </div>
-                {config && (
-                  <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-                    config.status === 'active' 
-                      ? 'bg-success/10 text-success' 
-                      : 'bg-error/10 text-error'
-                  }`}>
-                    {config.status === 'active' ? '✓ Hoạt động' : '✗ Tạm dừng'}
-                  </span>
-                )}
-              </div>
-
-              {isEditing ? (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Tên hoạt động:</label>
-                    <input
-                      type="text"
-                      value={formData.activityName}
-                      onChange={(e) => setFormData({ ...formData, activityName: e.target.value })}
-                      placeholder="Nhập tên hoạt động"
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Điểm mỗi đơn vị:</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={formData.pointPerUnit}
-                      onChange={(e) => setFormData({ ...formData, pointPerUnit: parseFloat(e.target.value) || 0 })}
-                      placeholder="0.00"
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Trạng thái:</label>
-                    <select
-                      value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })}
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      <option value="active">Hoạt động</option>
-                      <option value="inactive">Tạm dừng</option>
-                    </select>
-                  </div>
-                  <div className="flex gap-2">
-                    <button 
-                      className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-                      onClick={handleSave}
-                    >
-                      💾 Lưu
-                    </button>
-                    <button 
-                      className="flex-1 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
-                      onClick={handleCancel}
-                    >
-                      ✗ Hủy
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {config ? (
-                    <>
-                      <div className="text-center py-6 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
-                        <div className="space-y-1">
-                          <span className="text-4xl font-bold text-primary">{config.pointPerUnit}</span>
-                          <p className="text-sm text-muted-foreground">điểm/đơn vị</p>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <button
-                          className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center justify-center gap-2"
+                    {isEditing ? (
+                      <VStack spacing={4} align="stretch">
+                        <Box>
+                          <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={2}>
+                            Tên hoạt động:
+                          </Text>
+                          <Input
+                            value={formData.activityName}
+                            onChange={(e) => setFormData({ ...formData, activityName: e.target.value })}
+                            placeholder="Nhập tên hoạt động"
+                          />
+                        </Box>
+                        <Box>
+                          <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={2}>
+                            Điểm mỗi đơn vị:
+                          </Text>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={formData.pointPerUnit}
+                            onChange={(e) =>
+                              setFormData({ ...formData, pointPerUnit: parseFloat(e.target.value) || 0 })
+                            }
+                            placeholder="0.00"
+                          />
+                        </Box>
+                        <Box>
+                          <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={2}>
+                            Trạng thái:
+                          </Text>
+                          <Select
+                            value={formData.status}
+                            onChange={(e) =>
+                              setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })
+                            }
+                          >
+                            <option value="active">Hoạt động</option>
+                            <option value="inactive">Tạm dừng</option>
+                          </Select>
+                        </Box>
+                        <HStack spacing={2}>
+                          <Button flex={1} colorScheme="primary" onClick={handleSave}>
+                            💾 Lưu
+                          </Button>
+                          <Button flex={1} variant="outline" onClick={handleCancel}>
+                            ✗ Hủy
+                          </Button>
+                        </HStack>
+                      </VStack>
+                    ) : config ? (
+                      <VStack spacing={4} align="stretch">
+                        <Box
+                          textAlign="center"
+                          py={6}
+                          bgGradient="linear(to-br, primary.50, primary.100)"
+                          borderRadius="lg"
+                        >
+                          <VStack spacing={1}>
+                            <Text fontSize="4xl" fontWeight="bold" color="primary.600">
+                              {config.pointPerUnit}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              điểm/đơn vị
+                            </Text>
+                          </VStack>
+                        </Box>
+                        <Button
+                          colorScheme="primary"
+                          leftIcon={<i className="fas fa-edit" />}
                           onClick={() => handleEdit(config)}
                         >
                           ✏️ Chỉnh sửa
-                        </button>
-                        <div className="flex gap-2">
-                          <button
-                            className="flex-1 px-3 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors font-bold"
+                        </Button>
+                        <HStack spacing={2}>
+                          <Button
+                            flex={1}
+                            variant="outline"
+                            colorScheme="primary"
                             onClick={() => handleQuickUpdate(config.activityType, config.pointPerUnit + 1)}
                             title="Tăng 1 điểm"
                           >
                             +1
-                          </button>
-                          <button
-                            className="flex-1 px-3 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors font-bold"
-                            onClick={() => handleQuickUpdate(config.activityType, Math.max(0, config.pointPerUnit - 1))}
+                          </Button>
+                          <Button
+                            flex={1}
+                            variant="outline"
+                            colorScheme="primary"
+                            onClick={() =>
+                              handleQuickUpdate(config.activityType, Math.max(0, config.pointPerUnit - 1))
+                            }
                             title="Giảm 1 điểm"
                           >
                             -1
-                          </button>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-center py-8 space-y-4">
-                      <p className="text-muted-foreground">Chưa có cấu hình</p>
-                      <button
-                        className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-                        onClick={() => {
-                          setFormData({
-                            activityType: activity.type as any,
-                            activityName: activity.name,
-                            pointPerUnit: 0,
-                            status: 'active',
-                          });
-                          setEditingId('new');
-                        }}
-                      >
-                        ➕ Tạo cấu hình
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+                          </Button>
+                        </HStack>
+                      </VStack>
+                    ) : (
+                      <VStack spacing={4} py={8}>
+                        <Text color="gray.500">Chưa có cấu hình</Text>
+                        <Button
+                          colorScheme="primary"
+                          onClick={() => {
+                            setFormData({
+                              activityType: activity.type as any,
+                              activityName: activity.name,
+                              pointPerUnit: 0,
+                              status: 'active',
+                            });
+                            setEditingId('new');
+                          }}
+                        >
+                          ➕ Tạo cấu hình
+                        </Button>
+                      </VStack>
+                    )}
+                  </VStack>
+                </CardBody>
+              </Card>
+            );
+          })}
+        </Grid>
 
-      <div className="bg-muted/50 rounded-xl border p-6 space-y-3">
-        <h3 className="text-lg font-semibold text-foreground">ℹ️ Hướng dẫn</h3>
-        <ul className="space-y-2 text-sm text-muted-foreground">
-          <li className="flex items-start gap-2">
-            <span className="text-primary font-bold">•</span>
-            <span>Điểm số sẽ được tính: <strong className="text-foreground">Số lượng × Điểm mỗi đơn vị</strong></span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary font-bold">•</span>
-            <span>Ví dụ: Nếu &quot;Đơn thuần&quot; = 1 điểm/đơn vị, và có 10 đơn vị → Tổng điểm = 10 điểm</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary font-bold">•</span>
-            <span>Bạn có thể tạm dừng một loại hoạt động bằng cách đặt trạng thái &quot;Tạm dừng&quot;</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary font-bold">•</span>
-            <span>Dùng nút +1/-1 để điều chỉnh nhanh điểm số</span>
-          </li>
-        </ul>
-      </div>
-    </div>
+        <Card bg="gray.50" border="1px" borderColor="gray.200">
+          <CardBody>
+            <VStack spacing={3} align="stretch">
+              <Heading size="sm" color="gray.900">
+                ℹ️ Hướng dẫn
+              </Heading>
+              <VStack spacing={2} align="stretch" fontSize="sm" color="gray.600">
+                <HStack align="start" spacing={2}>
+                  <Text color="primary.600" fontWeight="bold">
+                    •
+                  </Text>
+                  <Text>
+                    Điểm số sẽ được tính: <strong color="gray.900">Số lượng × Điểm mỗi đơn vị</strong>
+                  </Text>
+                </HStack>
+                <HStack align="start" spacing={2}>
+                  <Text color="primary.600" fontWeight="bold">
+                    •
+                  </Text>
+                  <Text>
+                    Ví dụ: Nếu &quot;Đơn thuần&quot; = 1 điểm/đơn vị, và có 10 đơn vị → Tổng điểm = 10 điểm
+                  </Text>
+                </HStack>
+                <HStack align="start" spacing={2}>
+                  <Text color="primary.600" fontWeight="bold">
+                    •
+                  </Text>
+                  <Text>
+                    Bạn có thể tạm dừng một loại hoạt động bằng cách đặt trạng thái &quot;Tạm dừng&quot;
+                  </Text>
+                </HStack>
+                <HStack align="start" spacing={2}>
+                  <Text color="primary.600" fontWeight="bold">
+                    •
+                  </Text>
+                  <Text>Dùng nút +1/-1 để điều chỉnh nhanh điểm số</Text>
+                </HStack>
+              </VStack>
+            </VStack>
+          </CardBody>
+        </Card>
+      </VStack>
+    </Box>
   );
 };
-

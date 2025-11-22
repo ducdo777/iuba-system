@@ -1,13 +1,41 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  Spinner,
+  Text,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Badge,
+  HStack,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useToast,
+} from '@chakra-ui/react';
 import { teamsService, Team } from '../../services/teams';
 import { TeamModal } from '../../components/admin/TeamModal';
-
 
 export const AdminTeams: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
+  const [deleteTeamId, setDeleteTeamId] = useState<string | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef<HTMLButtonElement>(null);
+  const toast = useToast();
 
   useEffect(() => {
     loadTeams();
@@ -20,6 +48,13 @@ export const AdminTeams: React.FC = () => {
       setTeams(data);
     } catch (error) {
       console.error('Error loading teams:', error);
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể tải dữ liệu',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -35,14 +70,34 @@ export const AdminTeams: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa team này?')) {
-      try {
-        await teamsService.delete(id);
-        loadTeams();
-      } catch (error) {
-        alert('Lỗi khi xóa team');
-      }
+  const handleDeleteClick = (id: string) => {
+    setDeleteTeamId(id);
+    onOpen();
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTeamId) return;
+    try {
+      await teamsService.delete(deleteTeamId);
+      toast({
+        title: 'Thành công',
+        description: 'Đã xóa team',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      loadTeams();
+    } catch (error) {
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể xóa team',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      onClose();
+      setDeleteTeamId(null);
     }
   };
 
@@ -54,87 +109,133 @@ export const AdminTeams: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-muted-foreground">Đang tải...</p>
-        </div>
-      </div>
+      <Flex minH="400px" align="center" justify="center">
+        <Box textAlign="center">
+          <Spinner size="xl" color="primary.600" thickness="4px" mb={4} />
+          <Text color="gray.600">Đang tải...</Text>
+        </Box>
+      </Flex>
     );
   }
 
   return (
-    <div className="space-y-6 w-full p-4 md:p-6 lg:p-8">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <h2 className="text-3xl font-bold text-foreground">Quản lý Team</h2>
-        <button 
-          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2"
+    <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
+      <Flex
+        direction={{ base: 'column', sm: 'row' }}
+        justify="space-between"
+        align={{ base: 'flex-start', sm: 'center' }}
+        mb={6}
+        gap={4}
+      >
+        <Heading size="lg" color="gray.900">
+          Quản lý Team
+        </Heading>
+        <Button
+          colorScheme="primary"
+          leftIcon={<i className="fas fa-plus" />}
           onClick={handleCreate}
         >
-          <i className="fas fa-plus"></i> Thêm Team
-        </button>
-      </div>
+          Thêm Team
+        </Button>
+      </Flex>
 
-      <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead className="bg-muted">
-              <tr>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Mã Team</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Tên Team</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Mô tả</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Trạng thái</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teams.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-8 text-muted-foreground">
-                    Không có team nào
-                  </td>
-                </tr>
-              ) : (
-                teams.map((team) => (
-                  <tr key={team.id} className="border-b border-gray-200 hover:bg-muted/50 transition-colors">
-                    <td className="py-3 px-4 text-sm text-foreground font-medium">{team.teamCode}</td>
-                    <td className="py-3 px-4 text-sm text-foreground">{team.teamName}</td>
-                    <td className="py-3 px-4 text-sm text-foreground">{team.description || '-'}</td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-                        team.status === 'active' 
-                          ? 'bg-success/10 text-success' 
-                          : 'bg-error/10 text-error'
-                      }`}>
-                        {team.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <button 
-                          className="px-3 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
-                          onClick={() => handleEdit(team)}
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button 
-                          className="px-3 py-1 text-sm bg-error text-white rounded-md hover:bg-error-dark transition-colors"
-                          onClick={() => handleDelete(team.id)}
-                        >
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <TableContainer bg="white" borderRadius="xl" boxShadow="sm" overflow="hidden">
+        <Table variant="simple">
+          <Thead bg="gray.50">
+            <Tr>
+              <Th fontSize="sm" fontWeight="semibold" color="gray.700">
+                Mã Team
+              </Th>
+              <Th fontSize="sm" fontWeight="semibold" color="gray.700">
+                Tên Team
+              </Th>
+              <Th fontSize="sm" fontWeight="semibold" color="gray.700">
+                Mô tả
+              </Th>
+              <Th fontSize="sm" fontWeight="semibold" color="gray.700">
+                Trạng thái
+              </Th>
+              <Th fontSize="sm" fontWeight="semibold" color="gray.700">
+                Thao tác
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {teams.length === 0 ? (
+              <Tr>
+                <Td colSpan={5} textAlign="center" py={8} color="gray.500">
+                  Không có team nào
+                </Td>
+              </Tr>
+            ) : (
+              teams.map((team) => (
+                <Tr key={team.id} _hover={{ bg: 'gray.50' }} transition="background 0.2s">
+                  <Td fontWeight="medium" color="gray.900">
+                    {team.teamCode}
+                  </Td>
+                  <Td color="gray.700">{team.teamName}</Td>
+                  <Td color="gray.700">{team.description || '-'}</Td>
+                  <Td>
+                    <Badge
+                      colorScheme={team.status === 'active' ? 'green' : 'red'}
+                      variant="subtle"
+                    >
+                      {team.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+                    </Badge>
+                  </Td>
+                  <Td>
+                    <HStack spacing={2}>
+                      <Button
+                        size="sm"
+                        colorScheme="primary"
+                        leftIcon={<i className="fas fa-edit" />}
+                        onClick={() => handleEdit(team)}
+                      >
+                        Sửa
+                      </Button>
+                      <Button
+                        size="sm"
+                        colorScheme="red"
+                        leftIcon={<i className="fas fa-trash" />}
+                        onClick={() => handleDeleteClick(team.id)}
+                      >
+                        Xóa
+                      </Button>
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))
+            )}
+          </Tbody>
+        </Table>
+      </TableContainer>
 
       {modalOpen && <TeamModal team={editingTeam} onClose={handleModalClose} />}
-    </div>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Xóa team
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Bạn có chắc chắn muốn xóa team này? Hành động này không thể hoàn tác.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Hủy
+              </Button>
+              <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>
+                Xóa
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </Box>
   );
 };
-

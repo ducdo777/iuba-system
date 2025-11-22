@@ -1,7 +1,35 @@
 import React, { useEffect, useState, useRef } from 'react';
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  Spinner,
+  Text,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Input,
+  HStack,
+  VStack,
+  Card,
+  CardBody,
+  Grid,
+  useToast,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+} from '@chakra-ui/react';
 import { activityDataService, ActivityData, CreateActivityDataDto } from '../../services/activityData';
 import { statisticsService, TeamStatistics } from '../../services/statistics';
-
 
 interface EditableRow extends CreateActivityDataDto {
   id?: string;
@@ -15,7 +43,11 @@ export const UserDataInput: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [editingRow, setEditingRow] = useState<EditableRow | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
-  const tableRef = useRef<HTMLTableElement>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     loadData();
@@ -29,6 +61,13 @@ export const UserDataInput: React.FC = () => {
       setData(dataList);
     } catch (error) {
       console.error('Error loading data:', error);
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể tải dữ liệu',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -56,7 +95,6 @@ export const UserDataInput: React.FC = () => {
       isEditing: true,
     };
     setEditingRow(newRow);
-    // Scroll to bottom to show new row
     setTimeout(() => {
       tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }, 100);
@@ -82,7 +120,13 @@ export const UserDataInput: React.FC = () => {
 
   const handleSave = async (row: EditableRow) => {
     if (!row.date) {
-      alert('Vui lòng chọn ngày');
+      toast({
+        title: 'Lỗi',
+        description: 'Vui lòng chọn ngày',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -99,32 +143,70 @@ export const UserDataInput: React.FC = () => {
       };
 
       if (row.isNew && !row.id) {
-        // Create new
         await activityDataService.create(saveData);
+        toast({
+          title: 'Thành công',
+          description: 'Đã thêm dữ liệu',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       } else if (row.id) {
-        // Update existing
         await activityDataService.update(row.id, saveData);
+        toast({
+          title: 'Thành công',
+          description: 'Đã cập nhật dữ liệu',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       }
 
       setEditingRow(null);
       loadData();
       loadTeamStats();
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Lỗi khi lưu dữ liệu');
+      toast({
+        title: 'Lỗi',
+        description: error.response?.data?.message || 'Lỗi khi lưu dữ liệu',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setSaving(null);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) {
-      try {
-        await activityDataService.delete(id);
-        loadData();
-        loadTeamStats();
-      } catch (error) {
-        alert('Lỗi khi xóa dữ liệu');
-      }
+  const handleDeleteClick = (id: string) => {
+    setDeleteId(id);
+    onOpen();
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteId) return;
+    try {
+      await activityDataService.delete(deleteId);
+      toast({
+        title: 'Thành công',
+        description: 'Đã xóa dữ liệu',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      loadData();
+      loadTeamStats();
+    } catch (error) {
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể xóa dữ liệu',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      onClose();
+      setDeleteId(null);
     }
   };
 
@@ -158,254 +240,290 @@ export const UserDataInput: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Đang tải...</div>;
+    return (
+      <Flex minH="400px" align="center" justify="center">
+        <Box textAlign="center">
+          <Spinner size="xl" color="primary.600" thickness="4px" mb={4} />
+          <Text color="gray.600">Đang tải...</Text>
+        </Box>
+      </Flex>
+    );
   }
 
   return (
-    <div className="user-data-input">
-      <div className="page-header">
-        <h2>Nhập dữ liệu hoạt động</h2>
-        <button 
-          className="btn btn-primary" 
-          onClick={handleAddNew}
-          disabled={!!editingRow}
+    <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
+      <VStack spacing={6} align="stretch">
+        <Flex
+          direction={{ base: 'column', sm: 'row' }}
+          justify="space-between"
+          align={{ base: 'flex-start', sm: 'center' }}
+          gap={4}
         >
-          <i className="fas fa-plus"></i> Thêm dữ liệu
-        </button>
-      </div>
+          <Heading size="lg" color="gray.900">
+            Nhập dữ liệu hoạt động
+          </Heading>
+          <Button
+            colorScheme="primary"
+            leftIcon={<i className="fas fa-plus" />}
+            onClick={handleAddNew}
+            isDisabled={!!editingRow}
+          >
+            Thêm dữ liệu
+          </Button>
+        </Flex>
 
-      <div className="table-container" ref={tableRef}>
-        <table className="inline-edit-table">
-          <thead>
-            <tr>
-              <th>Ngày</th>
-              <th>Đơn thuần</th>
-              <th>Hữu hiệu</th>
-              <th>Baptem</th>
-              <th>Thờ phượng</th>
-              <th>Lập CLB</th>
-              <th>Lên giai đoạn</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* New/Editing Row */}
-            {editingRow && (
-              <tr className={`editing-row ${editingRow.isNew ? 'new-row' : ''}`}>
-                <td>
-                  <input
-                    type="date"
-                    value={editingRow.date}
-                    onChange={(e) => handleFieldChange('date', e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                    className="inline-input"
-                    autoFocus
-                    required
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editingRow.donThuan}
-                    onChange={(e) => handleFieldChange('donThuan', parseInt(e.target.value) || 0)}
-                    onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                    className="inline-input"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editingRow.huuHieu}
-                    onChange={(e) => handleFieldChange('huuHieu', parseInt(e.target.value) || 0)}
-                    onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                    className="inline-input"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editingRow.baptem}
-                    onChange={(e) => handleFieldChange('baptem', parseInt(e.target.value) || 0)}
-                    onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                    className="inline-input"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editingRow.thoPhuong}
-                    onChange={(e) => handleFieldChange('thoPhuong', parseInt(e.target.value) || 0)}
-                    onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                    className="inline-input"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editingRow.lapCLB}
-                    onChange={(e) => handleFieldChange('lapCLB', parseInt(e.target.value) || 0)}
-                    onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                    className="inline-input"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    value={editingRow.lenGiaiDoan}
-                    onChange={(e) => handleFieldChange('lenGiaiDoan', parseInt(e.target.value) || 0)}
-                    onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                    className="inline-input"
-                  />
-                </td>
-                <td>
-                  <div className="btn-group">
-                    <button
-                      className="btn btn-sm btn-success"
-                      onClick={() => handleSave(editingRow)}
-                      disabled={saving === (editingRow.id || 'new')}
-                      title="Lưu (Enter)"
-                    >
-                      {saving === (editingRow.id || 'new') ? (
-                        <i className="fas fa-spinner fa-spin"></i>
-                      ) : (
-                        <i className="fas fa-check"></i>
-                      )}
-                    </button>
-                    <button
-                      className="btn btn-sm btn-secondary"
-                      onClick={handleCancel}
-                      disabled={saving === (editingRow.id || 'new')}
-                      title="Hủy (Esc)"
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            )}
+        <TableContainer bg="white" borderRadius="xl" boxShadow="sm" overflow="hidden" ref={tableRef}>
+          <Table variant="simple" size="sm">
+            <Thead bg="gray.50">
+              <Tr>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Ngày
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Đơn thuần
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Hữu hiệu
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Baptem
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Thờ phượng
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Lập CLB
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Lên giai đoạn
+                </Th>
+                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                  Thao tác
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {editingRow && (
+                <Tr bg={editingRow.isNew ? 'blue.50' : 'yellow.50'}>
+                  <Td>
+                    <Input
+                      type="date"
+                      size="sm"
+                      value={editingRow.date}
+                      onChange={(e) => handleFieldChange('date', e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      autoFocus
+                      required
+                    />
+                  </Td>
+                  <Td>
+                    <Input
+                      type="number"
+                      size="sm"
+                      min="0"
+                      value={editingRow.donThuan}
+                      onChange={(e) => handleFieldChange('donThuan', parseInt(e.target.value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                    />
+                  </Td>
+                  <Td>
+                    <Input
+                      type="number"
+                      size="sm"
+                      min="0"
+                      value={editingRow.huuHieu}
+                      onChange={(e) => handleFieldChange('huuHieu', parseInt(e.target.value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                    />
+                  </Td>
+                  <Td>
+                    <Input
+                      type="number"
+                      size="sm"
+                      min="0"
+                      value={editingRow.baptem}
+                      onChange={(e) => handleFieldChange('baptem', parseInt(e.target.value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                    />
+                  </Td>
+                  <Td>
+                    <Input
+                      type="number"
+                      size="sm"
+                      min="0"
+                      value={editingRow.thoPhuong}
+                      onChange={(e) => handleFieldChange('thoPhuong', parseInt(e.target.value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                    />
+                  </Td>
+                  <Td>
+                    <Input
+                      type="number"
+                      size="sm"
+                      min="0"
+                      value={editingRow.lapCLB}
+                      onChange={(e) => handleFieldChange('lapCLB', parseInt(e.target.value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                    />
+                  </Td>
+                  <Td>
+                    <Input
+                      type="number"
+                      size="sm"
+                      min="0"
+                      value={editingRow.lenGiaiDoan}
+                      onChange={(e) => handleFieldChange('lenGiaiDoan', parseInt(e.target.value) || 0)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                    />
+                  </Td>
+                  <Td>
+                    <HStack spacing={2}>
+                      <Button
+                        size="sm"
+                        colorScheme="green"
+                        onClick={() => handleSave(editingRow)}
+                        isDisabled={saving === (editingRow.id || 'new')}
+                        isLoading={saving === (editingRow.id || 'new')}
+                        title="Lưu (Enter)"
+                      >
+                        <i className="fas fa-check" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleCancel}
+                        isDisabled={saving === (editingRow.id || 'new')}
+                        title="Hủy (Esc)"
+                      >
+                        <i className="fas fa-times" />
+                      </Button>
+                    </HStack>
+                  </Td>
+                </Tr>
+              )}
 
-            {/* Existing Rows */}
-            {data.length === 0 && !editingRow ? (
-              <tr>
-                <td colSpan={8} style={{ textAlign: 'center', padding: '2rem' }}>
-                  <p style={{ color: '#64748b', margin: 0 }}>
+              {data.length === 0 && !editingRow ? (
+                <Tr>
+                  <Td colSpan={8} textAlign="center" py={8} color="gray.500">
                     Chưa có dữ liệu. Click &quot;Thêm dữ liệu&quot; để bắt đầu nhập.
-                  </p>
-                </td>
-              </tr>
-            ) : (
-              data.map((item) => (
-                <tr key={item.id} className={isEditing(item) ? 'hidden' : ''}>
-                  <td>{formatDate(item.date)}</td>
-                  <td>{item.donThuan || 0}</td>
-                  <td>{item.huuHieu || 0}</td>
-                  <td>{item.baptem || 0}</td>
-                  <td>{item.thoPhuong || 0}</td>
-                  <td>{item.lapCLB || 0}</td>
-                  <td>{item.lenGiaiDoan || 0}</td>
-                  <td>
-                    <div className="btn-group">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => handleEdit(item)}
-                        disabled={!!editingRow}
-                        title="Sửa"
-                      >
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => handleDelete(item.id)}
-                        disabled={!!editingRow}
-                        title="Xóa"
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                  </Td>
+                </Tr>
+              ) : (
+                data.map((item) => (
+                  <Tr key={item.id} display={isEditing(item) ? 'none' : 'table-row'} _hover={{ bg: 'gray.50' }}>
+                    <Td>{formatDate(item.date)}</Td>
+                    <Td>{item.donThuan || 0}</Td>
+                    <Td>{item.huuHieu || 0}</Td>
+                    <Td>{item.baptem || 0}</Td>
+                    <Td>{item.thoPhuong || 0}</Td>
+                    <Td>{item.lapCLB || 0}</Td>
+                    <Td>{item.lenGiaiDoan || 0}</Td>
+                    <Td>
+                      <HStack spacing={2}>
+                        <Button
+                          size="sm"
+                          colorScheme="primary"
+                          onClick={() => handleEdit(item)}
+                          isDisabled={!!editingRow}
+                          title="Sửa"
+                        >
+                          <i className="fas fa-edit" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          colorScheme="red"
+                          onClick={() => handleDeleteClick(item.id)}
+                          isDisabled={!!editingRow}
+                          title="Xóa"
+                        >
+                          <i className="fas fa-trash" />
+                        </Button>
+                      </HStack>
+                    </Td>
+                  </Tr>
+                ))
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
 
-      {teamStats && (
-        <div className="team-stats-section">
-          <h3>Thống kê của Team {teamStats.teamName}</h3>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon blue">
-                <i className="fas fa-hand-holding-heart"></i>
-              </div>
-              <div className="stat-info">
-                <h3>{teamStats.summary.donThuan}</h3>
-                <p>Đơn thuần</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon green">
-                <i className="fas fa-check-circle"></i>
-              </div>
-              <div className="stat-info">
-                <h3>{teamStats.summary.huuHieu}</h3>
-                <p>Hữu hiệu</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon orange">
-                <i className="fas fa-water"></i>
-              </div>
-              <div className="stat-info">
-                <h3>{teamStats.summary.baptem}</h3>
-                <p>Baptem</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon purple">
-                <i className="fas fa-praying-hands"></i>
-              </div>
-              <div className="stat-info">
-                <h3>{teamStats.summary.thoPhuong}</h3>
-                <p>Thờ phượng</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon teal">
-                <i className="fas fa-users"></i>
-              </div>
-              <div className="stat-info">
-                <h3>{teamStats.summary.lapCLB}</h3>
-                <p>Lập CLB</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon red">
-                <i className="fas fa-arrow-up"></i>
-              </div>
-              <div className="stat-info">
-                <h3>{teamStats.summary.lenGiaiDoan}</h3>
-                <p>Lên giai đoạn</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon orange">
-                <i className="fas fa-list"></i>
-              </div>
-              <div className="stat-info">
-                <h3>{teamStats.summary.total}</h3>
-                <p>Tổng cộng</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+        {teamStats && (
+          <Box>
+            <Heading size="md" color="gray.900" mb={4}>
+              Thống kê của Team {teamStats.teamName}
+            </Heading>
+            <Grid
+              templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
+              gap={4}
+            >
+              {[
+                { value: teamStats.summary.donThuan, label: 'Đơn thuần', icon: 'fas fa-hand-holding-heart', color: 'pink' },
+                { value: teamStats.summary.huuHieu, label: 'Hữu hiệu', icon: 'fas fa-check-circle', color: 'green' },
+                { value: teamStats.summary.baptem, label: 'Baptem', icon: 'fas fa-water', color: 'blue' },
+                { value: teamStats.summary.thoPhuong, label: 'Thờ phượng', icon: 'fas fa-praying-hands', color: 'purple' },
+                { value: teamStats.summary.lapCLB, label: 'Lập CLB', icon: 'fas fa-users', color: 'indigo' },
+                { value: teamStats.summary.lenGiaiDoan, label: 'Lên giai đoạn', icon: 'fas fa-arrow-up', color: 'orange' },
+                { value: teamStats.summary.total, label: 'Tổng cộng', icon: 'fas fa-list', color: 'primary', colSpan: { base: 1, sm: 2, lg: 2 } },
+              ].map((stat) => (
+                <Card
+                  key={stat.label}
+                  gridColumn={stat.colSpan}
+                  bgGradient={
+                    stat.color === 'primary'
+                      ? 'linear(to-br, primary.500, primary.600)'
+                      : undefined
+                  }
+                  color={stat.color === 'primary' ? 'white' : undefined}
+                >
+                  <CardBody>
+                    <Flex align="center" gap={4}>
+                      <Box
+                        w={12}
+                        h={12}
+                        borderRadius="lg"
+                        bg={stat.color === 'primary' ? 'whiteAlpha.200' : `${stat.color}.100`}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        color={stat.color === 'primary' ? 'white' : `${stat.color}.600`}
+                      >
+                        <i className={stat.icon} style={{ fontSize: '1.5rem' }} />
+                      </Box>
+                      <Box>
+                        <Heading size="lg" color={stat.color === 'primary' ? 'white' : 'gray.900'}>
+                          {stat.value}
+                        </Heading>
+                        <Text fontSize="sm" color={stat.color === 'primary' ? 'primary.100' : 'gray.600'}>
+                          {stat.label}
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </CardBody>
+                </Card>
+              ))}
+            </Grid>
+          </Box>
+        )}
+
+        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Xóa dữ liệu
+              </AlertDialogHeader>
+              <AlertDialogBody>Bạn có chắc chắn muốn xóa dữ liệu này? Hành động này không thể hoàn tác.</AlertDialogBody>
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  Hủy
+                </Button>
+                <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>
+                  Xóa
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      </VStack>
+    </Box>
   );
 };

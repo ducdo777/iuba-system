@@ -1,7 +1,28 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  Spinner,
+  Text,
+  Input,
+  Select,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Card,
+  CardBody,
+  VStack,
+  HStack,
+  Grid,
+} from '@chakra-ui/react';
 import { statisticsService, TeamStatistics } from '../../services/statistics';
 import { teamsService, Team } from '../../services/teams';
-
 
 export const AdminStatistics: React.FC = () => {
   const [stats, setStats] = useState<TeamStatistics[]>([]);
@@ -14,7 +35,11 @@ export const AdminStatistics: React.FC = () => {
   const loadStatistics = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await statisticsService.getByTeam(selectedTeam || undefined, startDate || undefined, endDate || undefined);
+      const data = await statisticsService.getByTeam(
+        selectedTeam || undefined,
+        startDate || undefined,
+        endDate || undefined
+      );
       setStats(Array.isArray(data) ? data : [data]);
     } catch (error) {
       console.error('Error loading statistics:', error);
@@ -37,119 +62,173 @@ export const AdminStatistics: React.FC = () => {
     }
   };
 
-
   const handleFilter = () => {
     loadStatistics();
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-muted-foreground">Đang tải...</p>
-        </div>
-      </div>
+      <Flex minH="400px" align="center" justify="center">
+        <Box textAlign="center">
+          <Spinner size="xl" color="primary.600" thickness="4px" mb={4} />
+          <Text color="gray.600">Đang tải...</Text>
+        </Box>
+      </Flex>
     );
   }
 
   return (
-    <div className="space-y-6 w-full p-4 md:p-6 lg:p-8">
-      <h2 className="text-3xl font-bold text-foreground">Thống kê</h2>
+    <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
+      <VStack spacing={6} align="stretch">
+        <Heading size="lg" color="gray.900">
+          Thống kê
+        </Heading>
 
-      <div className="bg-card rounded-xl border shadow-sm p-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            placeholder="Từ ngày"
-            className="px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            placeholder="Đến ngày"
-            className="px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <select 
-            value={selectedTeam} 
-            onChange={(e) => setSelectedTeam(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">Tất cả Teams</option>
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>
-                {team.teamCode} - {team.teamName}
-              </option>
-            ))}
-          </select>
-          <button 
-            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center justify-center gap-2"
-            onClick={handleFilter}
-          >
-            <i className="fas fa-search"></i> Xem thống kê
-          </button>
-        </div>
-      </div>
+        <Card>
+          <CardBody>
+            <Grid
+              templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }}
+              gap={4}
+            >
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                placeholder="Từ ngày"
+              />
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                placeholder="Đến ngày"
+              />
+              <Select
+                value={selectedTeam}
+                onChange={(e) => setSelectedTeam(e.target.value)}
+                placeholder="Tất cả Teams"
+              >
+                {teams.map((team) => (
+                  <option key={team.id} value={team.id}>
+                    {team.teamCode} - {team.teamName}
+                  </option>
+                ))}
+              </Select>
+              <Button
+                colorScheme="primary"
+                leftIcon={<i className="fas fa-search" />}
+                onClick={handleFilter}
+              >
+                Xem thống kê
+              </Button>
+            </Grid>
+          </CardBody>
+        </Card>
 
-      <div className="space-y-6">
-        {stats.map((teamStat) => (
-          <div key={teamStat.teamId} className="bg-card rounded-xl border shadow-sm p-6 space-y-4">
-            <div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">{teamStat.teamName} ({teamStat.teamCode})</h3>
-              <p className="text-muted-foreground"><strong className="text-foreground">Số thành viên:</strong> {teamStat.totalMembers}</p>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead className="bg-muted">
-                  <tr>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Thành viên</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Đơn thuần</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Hữu hiệu</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Baptem</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Thờ phượng</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Lập CLB</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Lên giai đoạn</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Tổng</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Số bản ghi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {teamStat.byUser.map((user) => (
-                    <tr key={user.userId} className="border-b border-gray-200 hover:bg-muted/50 transition-colors">
-                      <td className="py-3 px-4 text-sm text-foreground font-medium">{user.fullName}</td>
-                      <td className="py-3 px-4 text-sm text-foreground">{user.donThuan}</td>
-                      <td className="py-3 px-4 text-sm text-foreground">{user.huuHieu}</td>
-                      <td className="py-3 px-4 text-sm text-foreground">{user.baptem}</td>
-                      <td className="py-3 px-4 text-sm text-foreground">{user.thoPhuong}</td>
-                      <td className="py-3 px-4 text-sm text-foreground">{user.lapCLB}</td>
-                      <td className="py-3 px-4 text-sm text-foreground">{user.lenGiaiDoan}</td>
-                      <td className="py-3 px-4 text-sm text-foreground font-bold">{user.total}</td>
-                      <td className="py-3 px-4 text-sm text-foreground">{user.recordCount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className="border-t-2 border-primary bg-primary/5">
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">TỔNG</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.donThuan}</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.huuHieu}</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.baptem}</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.thoPhuong}</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.lapCLB}</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.lenGiaiDoan}</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.total}</td>
-                    <td className="py-3 px-4 text-sm text-foreground font-bold">{teamStat.summary.recordCount}</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+        <VStack spacing={6} align="stretch">
+          {stats.map((teamStat) => (
+            <Card key={teamStat.teamId}>
+              <CardBody>
+                <VStack spacing={4} align="stretch">
+                  <Box>
+                    <Heading size="md" color="gray.900" mb={2}>
+                      {teamStat.teamName} ({teamStat.teamCode})
+                    </Heading>
+                    <Text color="gray.600">
+                      <strong>Số thành viên:</strong> {teamStat.totalMembers}
+                    </Text>
+                  </Box>
+
+                  <TableContainer>
+                    <Table variant="simple" size="sm">
+                      <Thead bg="gray.50">
+                        <Tr>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Thành viên
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Đơn thuần
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Hữu hiệu
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Baptem
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Thờ phượng
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Lập CLB
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Lên giai đoạn
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Tổng
+                          </Th>
+                          <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                            Số bản ghi
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {teamStat.byUser.map((user) => (
+                          <Tr key={user.userId} _hover={{ bg: 'gray.50' }}>
+                            <Td fontWeight="medium" color="gray.900">
+                              {user.fullName}
+                            </Td>
+                            <Td color="gray.700">{user.donThuan}</Td>
+                            <Td color="gray.700">{user.huuHieu}</Td>
+                            <Td color="gray.700">{user.baptem}</Td>
+                            <Td color="gray.700">{user.thoPhuong}</Td>
+                            <Td color="gray.700">{user.lapCLB}</Td>
+                            <Td color="gray.700">{user.lenGiaiDoan}</Td>
+                            <Td fontWeight="bold" color="gray.900">
+                              {user.total}
+                            </Td>
+                            <Td color="gray.700">{user.recordCount}</Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                      <Tbody bg="primary.50" borderTop="2px" borderColor="primary.600">
+                        <Tr>
+                          <Td fontWeight="bold" color="gray.900">
+                            TỔNG
+                          </Td>
+                          <Td fontWeight="bold" color="gray.900">
+                            {teamStat.summary.donThuan}
+                          </Td>
+                          <Td fontWeight="bold" color="gray.900">
+                            {teamStat.summary.huuHieu}
+                          </Td>
+                          <Td fontWeight="bold" color="gray.900">
+                            {teamStat.summary.baptem}
+                          </Td>
+                          <Td fontWeight="bold" color="gray.900">
+                            {teamStat.summary.thoPhuong}
+                          </Td>
+                          <Td fontWeight="bold" color="gray.900">
+                            {teamStat.summary.lapCLB}
+                          </Td>
+                          <Td fontWeight="bold" color="gray.900">
+                            {teamStat.summary.lenGiaiDoan}
+                          </Td>
+                          <Td fontWeight="bold" color="primary.600">
+                            {teamStat.summary.total}
+                          </Td>
+                          <Td fontWeight="bold" color="gray.900">
+                            {teamStat.summary.recordCount}
+                          </Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                </VStack>
+              </CardBody>
+            </Card>
+          ))}
+        </VStack>
+      </VStack>
+    </Box>
   );
 };

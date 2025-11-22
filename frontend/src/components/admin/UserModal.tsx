@@ -1,7 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  VStack,
+  Grid,
+  Alert,
+  AlertIcon,
+  useToast,
+} from '@chakra-ui/react';
 import { usersService, User, CreateUserDto } from '../../services/users';
 import { Team } from '../../services/teams';
-
 
 interface UserModalProps {
   user: User | null;
@@ -22,6 +40,7 @@ export const UserModal: React.FC<UserModalProps> = ({ user, teams, onClose }) =>
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const toast = useToast();
 
   useEffect(() => {
     if (user) {
@@ -51,6 +70,13 @@ export const UserModal: React.FC<UserModalProps> = ({ user, teams, onClose }) =>
 
       if (user) {
         await usersService.update(user.id, submitData);
+        toast({
+          title: 'Thành công',
+          description: 'Đã cập nhật tài khoản',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       } else {
         if (!submitData.password) {
           setError('Mật khẩu là bắt buộc khi tạo mới');
@@ -58,120 +84,143 @@ export const UserModal: React.FC<UserModalProps> = ({ user, teams, onClose }) =>
           return;
         }
         await usersService.create(submitData);
+        toast({
+          title: 'Thành công',
+          description: 'Đã tạo tài khoản',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       }
       onClose();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Lỗi khi lưu tài khoản');
+      toast({
+        title: 'Lỗi',
+        description: err.response?.data?.message || 'Lỗi khi lưu tài khoản',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>{user ? 'Sửa Tài khoản' : 'Thêm Tài khoản'}</h3>
-          <button className="modal-close" onClick={onClose}>
-            <i className="fas fa-times"></i>
-          </button>
-        </div>
+    <Modal isOpen={true} onClose={onClose} size="xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{user ? 'Sửa Tài khoản' : 'Thêm Tài khoản'}</ModalHeader>
+        <ModalCloseButton />
         <form onSubmit={handleSubmit}>
-          <div className="modal-body">
-            <div className="form-grid">
-              <div className="form-group form-group-full">
-                <label>Username *</label>
-                <input
-                  type="text"
-                  value={formData.username}
-                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="form-group form-group-full">
-                <label>Họ và tên *</label>
-                <input
-                  type="text"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Password {user ? '(để trống nếu không đổi)' : '*'}</label>
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  required={!user}
-                />
-              </div>
-              <div className="form-group">
-                <label>Vai trò *</label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value as 'admin' | 'user' })}
-                  required
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Team</label>
-                <select
-                  value={formData.teamId}
-                  onChange={(e) => setFormData({ ...formData, teamId: e.target.value })}
-                >
-                  <option value="">-- Không chọn --</option>
-                  {teams.map((team) => (
-                    <option key={team.id} value={team.id}>
-                      {team.teamCode} - {team.teamName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label>Số điện thoại</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label>Trạng thái *</label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })}
-                  required
-                >
-                  <option value="active">Hoạt động</option>
-                  <option value="inactive">Không hoạt động</option>
-                </select>
-              </div>
-            </div>
-            {error && <div className="error-message">{error}</div>}
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+          <ModalBody>
+            <VStack spacing={4} align="stretch">
+              {error && (
+                <Alert status="error" borderRadius="md">
+                  <AlertIcon />
+                  {error}
+                </Alert>
+              )}
+
+              <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
+                <FormControl isRequired gridColumn={{ base: '1', md: 'span 2' }}>
+                  <FormLabel>Username</FormLabel>
+                  <Input
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    required
+                  />
+                </FormControl>
+
+                <FormControl isRequired gridColumn={{ base: '1', md: 'span 2' }}>
+                  <FormLabel>Họ và tên</FormLabel>
+                  <Input
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    required
+                  />
+                </FormControl>
+
+                <FormControl isRequired={!user}>
+                  <FormLabel>Password {user && '(để trống nếu không đổi)'}</FormLabel>
+                  <Input
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required={!user}
+                  />
+                </FormControl>
+
+                <FormControl isRequired>
+                  <FormLabel>Vai trò</FormLabel>
+                  <Select
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value as 'admin' | 'user' })}
+                    required
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </Select>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Team</FormLabel>
+                  <Select
+                    value={formData.teamId}
+                    onChange={(e) => setFormData({ ...formData, teamId: e.target.value })}
+                  >
+                    <option value="">-- Không chọn --</option>
+                    {teams.map((team) => (
+                      <option key={team.id} value={team.id}>
+                        {team.teamCode} - {team.teamName}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Email</FormLabel>
+                  <Input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Số điện thoại</FormLabel>
+                  <Input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  />
+                </FormControl>
+
+                <FormControl isRequired>
+                  <FormLabel>Trạng thái</FormLabel>
+                  <Select
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })}
+                    required
+                  >
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={onClose}>
               Hủy
-            </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            </Button>
+            <Button colorScheme="primary" type="submit" isLoading={loading}>
               {loading ? 'Đang lưu...' : 'Lưu'}
-            </button>
-          </div>
+            </Button>
+          </ModalFooter>
         </form>
-      </div>
-    </div>
+      </ModalContent>
+    </Modal>
   );
 };
-
