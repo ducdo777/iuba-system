@@ -141,18 +141,18 @@ export const Ranking: React.FC = () => {
   }
 
   return (
-    <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack spacing={6} align="stretch">
+    <Box w="full" p={{ base: 2, md: 4, lg: 6 }} maxW="100%" overflowX="hidden">
+      <VStack spacing={4} align="stretch">
         <Box>
-          <Heading size="xl" color="gray.900" mb={2}>
+          <Heading size={{ base: 'lg', md: 'xl' }} color="gray.900" mb={2}>
             Bảng xếp hạng
           </Heading>
-          <Text color="gray.600" fontSize="md">
+          <Text color="gray.600" fontSize={{ base: 'sm', md: 'md' }}>
             Top 10 Teams có tổng điểm cao nhất
           </Text>
         </Box>
 
-        <Card borderRadius="2xl" boxShadow="lg" overflow="hidden">
+        <Card borderRadius="2xl" boxShadow="lg" overflow="hidden" w="full" maxW="100%">
           <Box
             bgGradient="linear(to-r, primary.50, primary.100)"
             px={6}
@@ -167,49 +167,49 @@ export const Ranking: React.FC = () => {
               </Heading>
             </HStack>
           </Box>
-          <TableContainer>
-            <Table variant="simple">
+          <TableContainer overflowX="visible" w="full" maxW="100%">
+            <Table variant="simple" size="sm" whiteSpace="nowrap" w="full" layout="fixed">
               <Thead bg="gray.50">
                 <Tr>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" width="80px">
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" width={{ base: '50px', md: '70px' }} px={{ base: 1, md: 2 }}>
                     Hạng
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }}>
                     Team
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
                     Mã Team
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Thành viên
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    TV
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Đơn thuần
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    Đơn
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Hữu hiệu
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    Hữu
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Baptem
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    Bap
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Thờ phượng
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    Thờ
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Lập CLB
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    CLB
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Lên giai đoạn
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    GĐ
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" isNumeric>
-                    Tổng điểm
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                    Tổng
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {rankings.length === 0 ? (
                   <Tr>
-                    <Td colSpan={11} textAlign="center" py={8} color="gray.500">
+                    <Td colSpan={{ base: 10, md: 11 }} textAlign="center" py={8} color="gray.500">
                       Chưa có dữ liệu xếp hạng
                     </Td>
                   </Tr>
@@ -221,51 +221,51 @@ export const Ranking: React.FC = () => {
                       _hover={{ bg: team.rank <= 3 ? `${getRankBadgeColor(team.rank)}.100` : 'gray.50' }}
                       transition="background 0.2s"
                     >
-                      <Td>
-                        <Flex align="center" gap={2}>
+                      <Td px={{ base: 1, md: 2 }}>
+                        <Flex align="center" gap={{ base: 0.5, md: 2 }} flexWrap="nowrap">
                           {getRankIcon(team.rank) && (
-                            <Text fontSize="xl">{getRankIcon(team.rank)}</Text>
+                            <Text fontSize={{ base: 'md', md: 'xl' }}>{getRankIcon(team.rank)}</Text>
                           )}
                           <Badge
                             colorScheme={getRankBadgeColor(team.rank)}
                             variant="solid"
-                            fontSize="sm"
-                            px={2}
-                            py={1}
+                            fontSize={{ base: '10px', md: 'sm' }}
+                            px={{ base: 1, md: 2 }}
+                            py={{ base: 0.5, md: 1 }}
                             borderRadius="md"
                           >
                             #{team.rank}
                           </Badge>
                         </Flex>
                       </Td>
-                      <Td fontWeight="semibold" color="gray.900">
+                      <Td fontWeight="semibold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.teamName}
                       </Td>
-                      <Td color="gray.700" fontFamily="mono">
+                      <Td color="gray.700" fontFamily="mono" px={{ base: 1, md: 2 }} fontSize={{ base: '10px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
                         {team.teamCode}
                       </Td>
-                      <Td color="gray.700" isNumeric>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.totalMembers || '-'}
                       </Td>
-                      <Td color="gray.700" isNumeric>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.donThuan.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.huuHieu.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.baptem.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.thoPhuong.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.lapCLB.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.lenGiaiDoan.toLocaleString('vi-VN')}
                       </Td>
-                      <Td fontWeight="bold" color="primary.600" fontSize="md" isNumeric>
+                      <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }}>
                         {team.totalPoints.toLocaleString('vi-VN')}
                       </Td>
                     </Tr>
