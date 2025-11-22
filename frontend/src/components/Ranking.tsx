@@ -198,13 +198,13 @@ export const Ranking: React.FC = () => {
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     Thờ
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
                     CLB
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
                     GĐ
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
                     Tổng
                   </Th>
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
@@ -262,13 +262,13 @@ export const Ranking: React.FC = () => {
                       <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.thoPhuong.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
                         {team.lapCLB.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
                         {team.lenGiaiDoan.toLocaleString('vi-VN')}
                       </Td>
-                      <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }}>
+                      <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
                         {team.totalPoints.toLocaleString('vi-VN')}
                       </Td>
                       <Td fontWeight="semibold" color="green.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }}>
