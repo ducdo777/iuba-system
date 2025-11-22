@@ -377,6 +377,7 @@ export const UserDataInput: React.FC = () => {
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
                       maxW="100%"
+                      minW="0"
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
@@ -390,7 +391,9 @@ export const UserDataInput: React.FC = () => {
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
                       maxW="100%"
+                      minW="0"
                       textAlign="right"
+                      px={{ base: 1, md: 2 }}
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
@@ -404,7 +407,9 @@ export const UserDataInput: React.FC = () => {
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
                       maxW="100%"
+                      minW="0"
                       textAlign="right"
+                      px={{ base: 1, md: 2 }}
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
@@ -418,7 +423,9 @@ export const UserDataInput: React.FC = () => {
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
                       maxW="100%"
+                      minW="0"
                       textAlign="right"
+                      px={{ base: 1, md: 2 }}
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
@@ -432,7 +439,9 @@ export const UserDataInput: React.FC = () => {
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
                       maxW="100%"
+                      minW="0"
                       textAlign="right"
+                      px={{ base: 1, md: 2 }}
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
@@ -446,7 +455,9 @@ export const UserDataInput: React.FC = () => {
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
                       maxW="100%"
+                      minW="0"
                       textAlign="right"
+                      px={{ base: 1, md: 2 }}
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
@@ -460,7 +471,9 @@ export const UserDataInput: React.FC = () => {
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"
                       maxW="100%"
+                      minW="0"
                       textAlign="right"
+                      px={{ base: 1, md: 2 }}
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
@@ -469,25 +482,29 @@ export const UserDataInput: React.FC = () => {
                     </Text>
                   </Td>
                   <Td px={{ base: 1, md: 2 }} textAlign="center">
-                    <HStack spacing={{ base: 1, md: 2 }} justify="center">
+                    <HStack spacing={{ base: 1, md: 2 }} justify="center" flexWrap="nowrap">
                       <Button
                         size={{ base: 'xs', md: 'sm' }}
                         colorScheme="green"
                         onClick={() => handleSave(editingRow)}
                         isDisabled={saving === (editingRow.id || 'new')}
                         isLoading={saving === (editingRow.id || 'new')}
-                        title="Lưu (Enter)"
+                        borderRadius="md"
+                        fontSize={{ base: '10px', md: 'sm' }}
+                        px={{ base: 2, md: 3 }}
                       >
-                        <i className="fas fa-check" />
+                        Lưu
                       </Button>
                       <Button
                         size={{ base: 'xs', md: 'sm' }}
                         variant="outline"
                         onClick={handleCancel}
                         isDisabled={saving === (editingRow.id || 'new')}
-                        title="Hủy (Esc)"
+                        borderRadius="md"
+                        fontSize={{ base: '10px', md: 'sm' }}
+                        px={{ base: 2, md: 3 }}
                       >
-                        <i className="fas fa-times" />
+                        Hủy
                       </Button>
                     </HStack>
                   </Td>
