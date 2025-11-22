@@ -12,9 +12,12 @@ export class StatisticsService {
   ) {}
 
   async getOverview(startDate?: string, endDate?: string) {
-    const allTeams = await this.teamsService.findAll();
-    const allUsers = await this.usersService.findAll();
-    const allData = await this.activityDataService.findAll(undefined, undefined, startDate, endDate);
+    // Load data in parallel for better performance
+    const [allTeams, allUsers, allData] = await Promise.all([
+      this.teamsService.findAll(),
+      this.usersService.findAll(),
+      this.activityDataService.findAll(undefined, undefined, startDate, endDate),
+    ]);
 
     const totals = {
       donThuan: 0,
@@ -55,11 +58,10 @@ export class StatisticsService {
           teamTotals.lenGiaiDoan += data.lenGiaiDoan || 0;
         });
 
-        // Use totalMembers from database, fallback to calculated count if not set
-        const teamUsers = await this.usersService.findAll(team.id);
+        // Use totalMembers from database (already loaded with teams)
         const totalMembers = team.totalMembers !== undefined && team.totalMembers !== null 
           ? team.totalMembers 
-          : teamUsers.filter(u => u.status === 'active').length;
+          : allUsers.filter(u => u.teamId === team.id && u.status === 'active').length;
         
         return {
           teamId: team.id,

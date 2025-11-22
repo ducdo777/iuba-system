@@ -35,10 +35,12 @@ const shouldSync = !isProduction || process.env.INIT_DB === 'true' || process.en
             synchronize: shouldSync, // Enable for initial setup
             logging: process.env.NODE_ENV === 'development',
             extra: {
-              connectionLimit: 5,
-              max: 5,
-              idleTimeoutMillis: 30000,
-              connectionTimeoutMillis: 10000,
+              connectionLimit: 10,
+              max: 10,
+              idleTimeoutMillis: 20000,
+              connectionTimeoutMillis: 5000,
+              // Enable connection pooling for better performance
+              poolSize: 10,
             },
           }
         : {
@@ -67,16 +69,22 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    // Wait a bit for database connection to be ready
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Create or update default admin user
+    // Don't wait - let it run asynchronously to avoid blocking startup
+    // This improves cold start time on Vercel
+    this.initializeAdminUser().catch(error => {
+      console.error('Error initializing admin user:', error);
+    });
+  }
+
+  private async initializeAdminUser() {
     try {
+      // Small delay only if needed for database connection
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const admin = await this.userRepository.findOne({ where: { username: 'admin' } });
       const hashedPassword = await bcrypt.hash('admin123', 10);
       
       if (!admin) {
-        // Create new admin user
         const newAdmin = this.userRepository.create({
           username: 'admin',
           password: hashedPassword,
@@ -87,7 +95,6 @@ export class AppModule implements OnModuleInit {
         await this.userRepository.save(newAdmin);
         console.log('Default admin user created: admin/admin123');
       } else {
-        // Update existing admin password to ensure it's correct
         admin.password = hashedPassword;
         admin.fullName = admin.fullName || 'Administrator';
         admin.role = 'admin';
@@ -97,7 +104,6 @@ export class AppModule implements OnModuleInit {
       }
     } catch (error) {
       console.error('Error creating/updating admin user:', error);
-      // If tables don't exist, log a helpful message
       if (error.message && error.message.includes('does not exist')) {
         console.error('Database tables not found. Please set INIT_DB=true or ENABLE_SYNC=true to create tables.');
       }

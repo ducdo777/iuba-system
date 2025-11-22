@@ -2,37 +2,59 @@ import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import express, { Request, Response } from 'express';
+import compression from 'compression';
 import { AppModule } from '../src/app.module';
 
 let cachedApp: express.Application;
+let appInitPromise: Promise<express.Application> | null = null;
 
 async function createNestApp() {
   if (cachedApp) {
     return cachedApp;
   }
 
-  const expressApp = express();
-  const app = await NestFactory.create(
-    AppModule,
-    new ExpressAdapter(expressApp),
-  );
+  // Prevent multiple simultaneous initializations
+  if (appInitPromise) {
+    return appInitPromise;
+  }
 
-  app.enableCors({
-    origin: true,
-    credentials: true,
-  });
+  appInitPromise = (async () => {
+    const expressApp = express();
+    
+    // Enable compression for better performance
+    expressApp.use(compression());
+    
+    const app = await NestFactory.create(
+      AppModule,
+      new ExpressAdapter(expressApp),
+      {
+        logger: process.env.NODE_ENV === 'development' ? ['log', 'error', 'warn'] : ['error'],
+      },
+    );
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    }),
-  );
+    app.enableCors({
+      origin: true,
+      credentials: true,
+    });
 
-  await app.init();
-  cachedApp = expressApp;
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
+    );
 
-  return cachedApp;
+    await app.init();
+    cachedApp = expressApp;
+    appInitPromise = null;
+
+    return cachedApp;
+  })();
+
+  return appInitPromise;
 }
 
 export default async function handler(req: Request, res: Response) {

@@ -6,8 +6,12 @@ const nextConfig = {
   images: {
     unoptimized: true, // Required for static export
   },
-  // Disable server-side features for static export
   reactStrictMode: true,
+  // Optimize build performance
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   // Note: rewrites don't work with static export, API calls should use absolute URLs
 };
 
