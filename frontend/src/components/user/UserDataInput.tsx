@@ -296,15 +296,15 @@ export const UserDataInput: React.FC = () => {
   }
 
   return (
-    <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack spacing={6} align="stretch">
+    <Box w="full" p={{ base: 2, md: 4, lg: 6 }} maxW="100%" overflowX="hidden">
+      <VStack spacing={4} align="stretch">
         <Flex
           direction={{ base: 'column', sm: 'row' }}
           justify="space-between"
           align={{ base: 'flex-start', sm: 'center' }}
           gap={4}
         >
-          <Heading size="lg" color="gray.900">
+          <Heading size={{ base: 'md', md: 'lg' }} color="gray.900">
             Nhập dữ liệu hoạt động
           </Heading>
           <Button
@@ -312,48 +312,49 @@ export const UserDataInput: React.FC = () => {
             leftIcon={<i className="fas fa-plus" />}
             onClick={handleAddNew}
             isDisabled={!!editingRow}
+            size={{ base: 'sm', md: 'md' }}
           >
             Thêm dữ liệu
           </Button>
         </Flex>
 
-        <TableContainer bg="white" borderRadius="xl" boxShadow="sm" overflow="hidden" ref={tableRef}>
-          <Table variant="simple" size="sm">
+        <TableContainer bg="white" borderRadius="xl" boxShadow="sm" overflow="hidden" ref={tableRef} w="full" maxW="100%">
+          <Table variant="simple" size="sm" whiteSpace="nowrap" w="full" layout="fixed">
             <Thead bg="gray.50">
               <Tr>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
                   Ngày
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Đơn thuần
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  Đơn
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Hữu hiệu
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  Hữu
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Baptem
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  Bap
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Thờ phượng
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  Thờ
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Lập CLB
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  CLB
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Lên giai đoạn
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  GĐ
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Tổng điểm
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  Tổng
                 </Th>
-                <Th fontSize="xs" fontWeight="semibold" color="gray.700">
-                  Thao tác
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }}>
+                  Tác
                 </Th>
               </Tr>
             </Thead>
             <Tbody>
               {editingRow && (
                 <Tr bg={editingRow.isNew ? 'blue.50' : 'yellow.50'}>
-                  <Td>
+                  <Td px={{ base: 1, md: 2 }}>
                     <Input
                       type="date"
                       size="sm"
@@ -362,9 +363,10 @@ export const UserDataInput: React.FC = () => {
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       autoFocus
                       required
+                      fontSize={{ base: '11px', md: 'sm' }}
                     />
                   </Td>
-                  <Td>
+                  <Td px={{ base: 1, md: 2 }}>
                     <Input
                       type="number"
                       size="sm"
@@ -372,9 +374,10 @@ export const UserDataInput: React.FC = () => {
                       value={editingRow.donThuan}
                       onChange={(e) => handleFieldChange('donThuan', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      fontSize={{ base: '11px', md: 'sm' }}
                     />
                   </Td>
-                  <Td>
+                  <Td px={{ base: 1, md: 2 }}>
                     <Input
                       type="number"
                       size="sm"
@@ -382,9 +385,10 @@ export const UserDataInput: React.FC = () => {
                       value={editingRow.huuHieu}
                       onChange={(e) => handleFieldChange('huuHieu', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      fontSize={{ base: '11px', md: 'sm' }}
                     />
                   </Td>
-                  <Td>
+                  <Td px={{ base: 1, md: 2 }}>
                     <Input
                       type="number"
                       size="sm"
@@ -392,9 +396,10 @@ export const UserDataInput: React.FC = () => {
                       value={editingRow.baptem}
                       onChange={(e) => handleFieldChange('baptem', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      fontSize={{ base: '11px', md: 'sm' }}
                     />
                   </Td>
-                  <Td>
+                  <Td px={{ base: 1, md: 2 }}>
                     <Input
                       type="number"
                       size="sm"
@@ -402,9 +407,10 @@ export const UserDataInput: React.FC = () => {
                       value={editingRow.thoPhuong}
                       onChange={(e) => handleFieldChange('thoPhuong', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      fontSize={{ base: '11px', md: 'sm' }}
                     />
                   </Td>
-                  <Td>
+                  <Td px={{ base: 1, md: 2 }}>
                     <Input
                       type="number"
                       size="sm"
@@ -412,9 +418,10 @@ export const UserDataInput: React.FC = () => {
                       value={editingRow.lapCLB}
                       onChange={(e) => handleFieldChange('lapCLB', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      fontSize={{ base: '11px', md: 'sm' }}
                     />
                   </Td>
-                  <Td>
+                  <Td px={{ base: 1, md: 2 }}>
                     <Input
                       type="number"
                       size="sm"
@@ -422,17 +429,18 @@ export const UserDataInput: React.FC = () => {
                       value={editingRow.lenGiaiDoan}
                       onChange={(e) => handleFieldChange('lenGiaiDoan', parseInt(e.target.value) || 0)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      fontSize={{ base: '11px', md: 'sm' }}
                     />
                   </Td>
-                  <Td>
-                    <Text fontWeight="semibold" color="primary.600">
+                  <Td px={{ base: 1, md: 2 }}>
+                    <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }}>
                       {calculateTotalPoints(editingRow).toLocaleString('vi-VN')}
                     </Text>
                   </Td>
-                  <Td>
-                    <HStack spacing={2}>
+                  <Td px={{ base: 1, md: 2 }}>
+                    <HStack spacing={{ base: 1, md: 2 }}>
                       <Button
-                        size="sm"
+                        size={{ base: 'xs', md: 'sm' }}
                         colorScheme="green"
                         onClick={() => handleSave(editingRow)}
                         isDisabled={saving === (editingRow.id || 'new')}
@@ -442,7 +450,7 @@ export const UserDataInput: React.FC = () => {
                         <i className="fas fa-check" />
                       </Button>
                       <Button
-                        size="sm"
+                        size={{ base: 'xs', md: 'sm' }}
                         variant="outline"
                         onClick={handleCancel}
                         isDisabled={saving === (editingRow.id || 'new')}
@@ -464,22 +472,22 @@ export const UserDataInput: React.FC = () => {
               ) : (
                 data.map((item) => (
                   <Tr key={item.id} display={isEditing(item) ? 'none' : 'table-row'} _hover={{ bg: 'gray.50' }}>
-                    <Td>{formatDate(item.date)}</Td>
-                    <Td>{item.donThuan || 0}</Td>
-                    <Td>{item.huuHieu || 0}</Td>
-                    <Td>{item.baptem || 0}</Td>
-                    <Td>{item.thoPhuong || 0}</Td>
-                    <Td>{item.lapCLB || 0}</Td>
-                    <Td>{item.lenGiaiDoan || 0}</Td>
-                    <Td>
-                      <Text fontWeight="semibold" color="primary.600">
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{formatDate(item.date)}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.donThuan || 0}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.huuHieu || 0}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.baptem || 0}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.thoPhuong || 0}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.lapCLB || 0}</Td>
+                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>{item.lenGiaiDoan || 0}</Td>
+                    <Td px={{ base: 1, md: 2 }}>
+                      <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }}>
                         {calculateTotalPoints(item).toLocaleString('vi-VN')}
                       </Text>
                     </Td>
-                    <Td>
-                      <HStack spacing={2}>
+                    <Td px={{ base: 1, md: 2 }}>
+                      <HStack spacing={{ base: 1, md: 2 }}>
                         <Button
-                          size="sm"
+                          size={{ base: 'xs', md: 'sm' }}
                           colorScheme="blue"
                           onClick={() => handleEdit(item)}
                           isDisabled={!!editingRow}
@@ -488,7 +496,7 @@ export const UserDataInput: React.FC = () => {
                           Sửa
                         </Button>
                         <Button
-                          size="sm"
+                          size={{ base: 'xs', md: 'sm' }}
                           colorScheme="red"
                           onClick={() => handleDeleteClick(item.id)}
                           isDisabled={!!editingRow}
@@ -507,31 +515,31 @@ export const UserDataInput: React.FC = () => {
               return (
                 <Tfoot bg="gray.100">
                   <Tr>
-                    <Th fontSize="xs" fontWeight="bold" color="gray.900">
+                    <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }}>
                       TỔNG KẾT
                     </Th>
-                    <Td fontWeight="bold" color="gray.900">
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                       {totals.donThuan.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900">
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                       {totals.huuHieu.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900">
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                       {totals.baptem.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900">
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                       {totals.thoPhuong.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900">
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                       {totals.lapCLB.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="gray.900">
+                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                       {totals.lenGiaiDoan.toLocaleString('vi-VN')}
                     </Td>
-                    <Td fontWeight="bold" color="primary.600" fontSize="md">
+                    <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} px={{ base: 1, md: 2 }}>
                       {totals.totalPoints.toLocaleString('vi-VN')}
                     </Td>
-                    <Td></Td>
+                    <Td px={{ base: 1, md: 2 }}></Td>
                   </Tr>
                 </Tfoot>
               );
