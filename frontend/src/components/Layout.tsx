@@ -10,12 +10,14 @@ import {
   Button,
   Text,
   useDisclosure,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
   VStack,
   HStack,
   useBreakpointValue,
+  IconButton,
 } from '@chakra-ui/react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -140,13 +142,37 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
         </Box>
 
         {/* Mobile Drawer */}
-        <Drawer open={open} placement="left" onClose={onClose}>
-          <DrawerContent>
-            <DrawerBody p={0}>
-              <SidebarContent />
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
+        <Modal isOpen={open} onClose={onClose} size="xs" placement="left">
+          <ModalOverlay />
+          <ModalContent
+            position="fixed"
+            left={0}
+            top={0}
+            bottom={0}
+            right="auto"
+            maxW="16rem"
+            m={0}
+            borderRadius={0}
+            h="100vh"
+          >
+            <ModalBody p={0}>
+              <Box position="relative" h="full">
+                <IconButton
+                  aria-label="Close menu"
+                  icon={<i className="fas fa-times" />}
+                  position="absolute"
+                  top={4}
+                  right={4}
+                  zIndex={10}
+                  onClick={onClose}
+                  variant="ghost"
+                  size="sm"
+                />
+                <SidebarContent />
+              </Box>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
 
         {/* Main Content */}
         <Box

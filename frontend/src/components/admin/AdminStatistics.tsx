@@ -70,7 +70,7 @@ export const AdminStatistics: React.FC = () => {
     return (
       <Flex minH="400px" align="center" justify="center">
         <Box textAlign="center">
-          <Spinner size="xl" color="primary.600" thickness="4px" mb={4} />
+          <Spinner size="xl" color="primary.600"  mb={4} />
           <Text color="gray.600">Đang tải...</Text>
         </Box>
       </Flex>

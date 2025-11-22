@@ -8,15 +8,7 @@ import {
   Card,
   CardBody,
   Spinner,
-  Alert,
-  AlertIcon,
   Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
   HStack,
   VStack,
 } from '@chakra-ui/react';
@@ -46,7 +38,7 @@ export const AdminDashboard: React.FC = () => {
     return (
       <Flex minH="400px" align="center" justify="center">
         <Box textAlign="center">
-          <Spinner size="xl" color="primary.600" thickness="4px" mb={4} />
+          <Spinner size="xl" color="primary.600" mb={4} />
           <Text color="gray.600">Đang tải...</Text>
         </Box>
       </Flex>
@@ -56,10 +48,9 @@ export const AdminDashboard: React.FC = () => {
   if (!overview) {
     return (
       <Flex minH="400px" align="center" justify="center">
-        <Alert status="error" borderRadius="md" maxW="md">
-          <AlertIcon />
-          <Text fontWeight="medium">Không thể tải dữ liệu</Text>
-        </Alert>
+        <Box bg="red.50" border="1px" borderColor="red.200" borderRadius="md" p={4} maxW="md">
+          <Text fontWeight="medium" color="red.700">Không thể tải dữ liệu</Text>
+        </Box>
       </Flex>
     );
   }
@@ -294,65 +285,66 @@ export const AdminDashboard: React.FC = () => {
               </Heading>
             </HStack>
           </Box>
-          <TableContainer>
+          <Box overflowX="auto">
             <Table variant="simple">
-              <Thead bg="gray.50">
-                <Tr>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+              <Box as="thead" bg="gray.50">
+                <Box as="tr">
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Team
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Số thành viên
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Đơn thuần
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Hữu hiệu
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Baptem
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Thờ phượng
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Lập CLB
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Lên giai đoạn
-                  </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                  </Box>
+                  <Box as="th" textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700" py={4} px={6} textAlign="left">
                     Tổng
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
+                  </Box>
+                </Box>
+              </Box>
+              <Box as="tbody">
                 {overview.byTeam.map((team, index) => (
-                  <Tr
+                  <Box
+                    as="tr"
                     key={team.teamId}
                     bg={index % 2 === 0 ? 'white' : 'gray.50'}
                     _hover={{ bg: 'gray.100' }}
                     transition="background 0.2s"
                   >
-                    <Td fontWeight="semibold" color="gray.900">
+                    <Box as="td" fontWeight="semibold" color="gray.900" py={4} px={6}>
                       {team.teamName}
-                    </Td>
-                    <Td color="gray.700">{team.totalMembers || '-'}</Td>
-                    <Td color="gray.700">{team.donThuan}</Td>
-                    <Td color="gray.700">{team.huuHieu}</Td>
-                    <Td color="gray.700">{team.baptem}</Td>
-                    <Td color="gray.700">{team.thoPhuong}</Td>
-                    <Td color="gray.700">{team.lapCLB}</Td>
-                    <Td color="gray.700">{team.lenGiaiDoan}</Td>
-                    <Td fontWeight="bold" color="primary.600">
+                    </Box>
+                    <Box as="td" color="gray.700" py={4} px={6}>{team.totalMembers || '-'}</Box>
+                    <Box as="td" color="gray.700" py={4} px={6}>{team.donThuan}</Box>
+                    <Box as="td" color="gray.700" py={4} px={6}>{team.huuHieu}</Box>
+                    <Box as="td" color="gray.700" py={4} px={6}>{team.baptem}</Box>
+                    <Box as="td" color="gray.700" py={4} px={6}>{team.thoPhuong}</Box>
+                    <Box as="td" color="gray.700" py={4} px={6}>{team.lapCLB}</Box>
+                    <Box as="td" color="gray.700" py={4} px={6}>{team.lenGiaiDoan}</Box>
+                    <Box as="td" fontWeight="bold" color="primary.600" py={4} px={6}>
                       {team.total}
-                    </Td>
-                  </Tr>
+                    </Box>
+                  </Box>
                 ))}
-              </Tbody>
+              </Box>
             </Table>
-          </TableContainer>
+          </Box>
         </Card>
       </VStack>
     </Box>
