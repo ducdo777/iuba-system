@@ -3,8 +3,23 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  Text,
+  useDisclosure,
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  VStack,
+  HStack,
+  Icon,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 import { useAuth } from '../contexts/AuthContext';
-
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,7 +30,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const handleLogout = () => {
     logout();
@@ -23,7 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   };
 
   const isActive = (path: string) => {
-    return pathname === path ? 'active' : '';
+    return pathname === path;
   };
 
   const adminMenu = [
@@ -40,81 +56,109 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
 
   const menu = role === 'admin' ? adminMenu : userMenu;
 
-  return (
-    <div className="flex flex-col h-screen overflow-hidden bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-6 h-16 bg-primary text-white shadow-md backdrop-blur-sm bg-opacity-95">
-        <div className="flex items-center gap-4">
-          <button
-            className="md:hidden p-2 rounded-md hover:bg-white/10 transition-colors"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle menu"
+  const SidebarContent = () => (
+    <VStack spacing={1} align="stretch" p={4} h="full" overflowY="auto">
+      {menu.map((item) => (
+        <Link key={item.path} href={item.path} onClick={onClose}>
+          <Button
+            leftIcon={<i className={item.icon} />}
+            justifyContent="flex-start"
+            w="full"
+            variant={isActive(item.path) ? 'solid' : 'ghost'}
+            colorScheme={isActive(item.path) ? 'primary' : 'gray'}
+            bg={isActive(item.path) ? 'primary.600' : 'transparent'}
+            color={isActive(item.path) ? 'white' : 'gray.700'}
+            _hover={{
+              bg: isActive(item.path) ? 'primary.700' : 'gray.100',
+            }}
           >
-            <i className="fas fa-bars text-xl"></i>
-          </button>
-          <h1 className="text-xl font-semibold">IUBA System</h1>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="hidden md:flex items-center gap-2 text-sm">
-            <i className="fas fa-user"></i>
-            {user?.fullName || user?.username}
-          </span>
-          <button
-            className="px-4 py-2 text-sm rounded-md bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-2"
-            onClick={handleLogout}
-          >
-            <i className="fas fa-sign-out-alt"></i>
-            <span className="hidden sm:inline">Đăng xuất</span>
-          </button>
-        </div>
-      </header>
+            {item.label}
+          </Button>
+        </Link>
+      ))}
+    </VStack>
+  );
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside
-          className={`
-            fixed md:static top-16 md:top-0 left-0 h-[calc(100vh-4rem)] md:h-full
-            w-64 bg-card border-r border-gray-200
-            transform transition-transform duration-300 ease-in-out z-40
-            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-          `}
+  return (
+    <Flex direction="column" h="100vh" overflow="hidden">
+      {/* Header */}
+      <Box
+        as="header"
+        position="sticky"
+        top={0}
+        zIndex={50}
+        bg="primary.600"
+        color="white"
+        px={{ base: 4, md: 6 }}
+        py={4}
+        shadow="md"
+      >
+        <Flex justify="space-between" align="center">
+          <HStack spacing={4}>
+            <Button
+              display={{ base: 'block', md: 'none' }}
+              variant="ghost"
+              colorScheme="whiteAlpha"
+              onClick={onOpen}
+              aria-label="Toggle menu"
+            >
+              <i className="fas fa-bars" />
+            </Button>
+            <Heading size="md">IUBA System</Heading>
+          </HStack>
+          <HStack spacing={3}>
+            <Text display={{ base: 'none', md: 'flex' }} fontSize="sm">
+              <i className="fas fa-user" style={{ marginRight: '8px' }} />
+              {user?.fullName || user?.username}
+            </Text>
+            <Button
+              size="sm"
+              variant="ghost"
+              colorScheme="whiteAlpha"
+              leftIcon={<i className="fas fa-sign-out-alt" />}
+              onClick={handleLogout}
+            >
+              <Text display={{ base: 'none', sm: 'inline' }}>Đăng xuất</Text>
+            </Button>
+          </HStack>
+        </Flex>
+      </Box>
+
+      <Flex flex={1} overflow="hidden">
+        {/* Desktop Sidebar */}
+        <Box
+          display={{ base: 'none', md: 'block' }}
+          w="64"
+          bg="white"
+          borderRight="1px"
+          borderColor="gray.200"
+          h="full"
         >
-          <nav className="p-4 space-y-1 h-full overflow-y-auto">
-            {menu.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded-lg
-                  transition-colors duration-200
-                  ${
-                    isActive(item.path)
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'text-foreground hover:bg-muted hover:text-primary'
-                  }
-                `}
-                onClick={() => setSidebarOpen(false)}
-              >
-                <i className={`${item.icon} w-5 text-center`}></i>
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            ))}
-          </nav>
-        </aside>
+          <SidebarContent />
+        </Box>
+
+        {/* Mobile Drawer */}
+        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerBody p={0}>
+              <SidebarContent />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-muted/30 w-full min-w-0">
+        <Box
+          as="main"
+          flex={1}
+          overflowY="auto"
+          bg="gray.50"
+          w="full"
+          minW={0}
+        >
           {children}
-        </main>
-      </div>
-
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )}
-    </div>
+        </Box>
+      </Flex>
+    </Flex>
   );
 };

@@ -2,8 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Input,
+  Button,
+  FormControl,
+  FormLabel,
+  VStack,
+  Alert,
+  AlertIcon,
+  Icon,
+} from '@chakra-ui/react';
 import { useAuth } from '../contexts/AuthContext';
-import { LoginIcon, ShieldCheckIcon } from '../components/ui/Icons';
+import { ShieldCheckIcon } from '../components/ui/Icons';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -40,66 +54,91 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-lg">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <ShieldCheckIcon className="w-16 h-16 text-primary-600" />
-          </div>
-          <h1 className="text-3xl font-extrabold text-gray-900">
-            Hệ Thống Thi Đua
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Đăng nhập để tiếp tục
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label htmlFor="username" className="sr-only">Tên đăng nhập</label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder="Tên đăng nhập"
-                disabled={loading}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Mật khẩu</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder="Mật khẩu"
-                disabled={loading}
-              />
-            </div>
-          </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <LoginIcon className="h-5 w-5 text-primary-500 group-hover:text-primary-400" />
-              </span>
-              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <Flex
+      minH="100vh"
+      align="center"
+      justify="center"
+      bg="gray.100"
+      px={{ base: 4, md: 0 }}
+    >
+      <Box
+        w="full"
+        maxW="md"
+        p={8}
+        bg="white"
+        borderRadius="2xl"
+        boxShadow="lg"
+      >
+        <VStack spacing={8} align="stretch">
+          <Box textAlign="center">
+            <Flex justify="center" mb={4}>
+              <Box color="primary.600" fontSize="4xl">
+                <i className="fas fa-shield-alt" />
+              </Box>
+            </Flex>
+            <Heading size="xl" color="gray.900" mb={2}>
+              Hệ Thống Thi Đua
+            </Heading>
+            <Text color="gray.600">Đăng nhập để tiếp tục</Text>
+          </Box>
+
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={4} align="stretch">
+              <FormControl isRequired>
+                <FormLabel htmlFor="username" srOnly>
+                  Tên đăng nhập
+                </FormLabel>
+                <Input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="Tên đăng nhập"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  isDisabled={loading}
+                  size="lg"
+                />
+              </FormControl>
+
+              <FormControl isRequired>
+                <FormLabel htmlFor="password" srOnly>
+                  Mật khẩu
+                </FormLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Mật khẩu"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  isDisabled={loading}
+                  size="lg"
+                />
+              </FormControl>
+
+              {error && (
+                <Alert status="error" borderRadius="md">
+                  <AlertIcon />
+                  {error}
+                </Alert>
+              )}
+
+              <Button
+                type="submit"
+                colorScheme="primary"
+                size="lg"
+                w="full"
+                isLoading={loading}
+                loadingText="Đang đăng nhập..."
+                leftIcon={<i className="fas fa-sign-in-alt" />}
+              >
+                Đăng nhập
+              </Button>
+            </VStack>
+          </form>
+        </VStack>
+      </Box>
+    </Flex>
   );
 }
 

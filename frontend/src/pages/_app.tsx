@@ -1,29 +1,37 @@
 'use client';
 
 import React from 'react';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { AuthProvider } from '../contexts/AuthContext';
-import '../index.css';
-import '../App.css';
-// Responsive design system
-import '../styles/responsive.css';
-// Global CSS imports
-import '../components/Layout.css';
-import '../components/LoginPage.css';
-import '../components/admin/AdminDashboard.css';
-import '../components/admin/AdminUsers.css';
-import '../components/admin/AdminTeams.css';
-import '../components/admin/AdminStatistics.css';
-import '../components/admin/AdminPoints.css';
-import '../components/admin/TableResponsive.css';
-import '../components/user/UserDataInput.css';
-import '../components/admin/Modal.css';
-import '../components/user/Modal.css';
+
+const theme = extendTheme({
+  colors: {
+    primary: {
+      50: '#eff6ff',
+      100: '#dbeafe',
+      200: '#bfdbfe',
+      300: '#93c5fd',
+      400: '#60a5fa',
+      500: '#3b82f6',
+      600: '#2563eb',
+      700: '#1d4ed8',
+      800: '#1e40af',
+      900: '#1e3a8a',
+    },
+  },
+  config: {
+    initialColorMode: 'light',
+    useSystemColorMode: false,
+  },
+});
 
 export default function App({ Component, pageProps }: { Component: any; pageProps: any }) {
   return (
-    <AuthProvider>
-      <Component {...pageProps} />
-    </AuthProvider>
+    <ChakraProvider theme={theme}>
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
+    </ChakraProvider>
   );
 }
 
