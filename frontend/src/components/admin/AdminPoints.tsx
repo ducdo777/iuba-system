@@ -109,7 +109,7 @@ export const AdminPoints: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 w-full p-4 md:p-6 lg:p-8">
       <div className="space-y-2">
         <h2 className="text-3xl font-bold text-foreground">⚙️ Cấu hình Điểm Hoạt động</h2>
         <p className="text-muted-foreground">Thiết lập điểm số cho từng loại hoạt động</p>

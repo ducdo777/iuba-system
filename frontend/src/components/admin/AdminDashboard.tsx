@@ -47,7 +47,7 @@ export const AdminDashboard: React.FC = () => {
   const { summary } = overview;
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto px-4 py-6">
+    <div className="space-y-8 w-full p-4 md:p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-2">IUBA System</h1>

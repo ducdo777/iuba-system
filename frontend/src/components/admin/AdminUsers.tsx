@@ -70,7 +70,7 @@ export const AdminUsers: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 w-full p-4 md:p-6 lg:p-8">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h2 className="text-3xl font-bold text-foreground">Quản lý Tài khoản</h2>
         <button 
