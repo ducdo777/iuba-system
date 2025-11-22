@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, memo } from 'react';
 import {
   Box,
   Flex,
@@ -34,6 +34,156 @@ interface EditableRow extends CreateActivityDataDto {
   isNew?: boolean;
   isEditing?: boolean;
 }
+
+// Memoized Data Row Component
+interface DataRowProps {
+  item: ActivityData;
+  onEdit: (item: ActivityData) => void;
+  onDelete: (id: string) => void;
+  calculateTotalPoints: (item: ActivityData) => number;
+  isEditing: (item: ActivityData) => boolean;
+  editingRow: EditableRow | null;
+  formatDate: (dateString: string) => string;
+}
+
+const DataRow = memo<DataRowProps>(({ 
+  item, 
+  onEdit, 
+  onDelete, 
+  calculateTotalPoints, 
+  isEditing,
+  editingRow,
+  formatDate,
+}) => {
+  return (
+    <Tr display={isEditing(item) ? 'none' : 'table-row'} _hover={{ bg: 'gray.50' }}>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} textAlign="left">
+        {formatDate(item.date)}
+      </Td>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+        {(item.donThuan || 0).toLocaleString('vi-VN')}
+      </Td>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+        {(item.huuHieu || 0).toLocaleString('vi-VN')}
+      </Td>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+        {(item.baptem || 0).toLocaleString('vi-VN')}
+      </Td>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+        {(item.thoPhuong || 0).toLocaleString('vi-VN')}
+      </Td>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+        {(item.lapCLB || 0).toLocaleString('vi-VN')}
+      </Td>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+        {(item.lenGiaiDoan || 0).toLocaleString('vi-VN')}
+      </Td>
+      <Td px={{ base: 1, md: 2 }} isNumeric>
+        <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} textAlign="right">
+          {calculateTotalPoints(item).toLocaleString('vi-VN')}
+        </Text>
+      </Td>
+      <Td px={{ base: 1, md: 2 }} textAlign="center">
+        <HStack spacing={{ base: 1, md: 2 }} justify="center">
+          <Button
+            size={{ base: 'xs', md: 'sm' }}
+            colorScheme="blue"
+            onClick={() => onEdit(item)}
+            isDisabled={!!editingRow}
+            borderRadius="md"
+          >
+            Sửa
+          </Button>
+          <Button
+            size={{ base: 'xs', md: 'sm' }}
+            colorScheme="red"
+            onClick={() => onDelete(item.id)}
+            isDisabled={!!editingRow}
+            borderRadius="md"
+          >
+            Xóa
+          </Button>
+        </HStack>
+      </Td>
+    </Tr>
+  );
+}, (prevProps, nextProps) => {
+  // Custom comparison function for better performance
+  return (
+    prevProps.item.id === nextProps.item.id &&
+    prevProps.item.date === nextProps.item.date &&
+    prevProps.item.donThuan === nextProps.item.donThuan &&
+    prevProps.item.huuHieu === nextProps.item.huuHieu &&
+    prevProps.item.baptem === nextProps.item.baptem &&
+    prevProps.item.thoPhuong === nextProps.item.thoPhuong &&
+    prevProps.item.lapCLB === nextProps.item.lapCLB &&
+    prevProps.item.lenGiaiDoan === nextProps.item.lenGiaiDoan &&
+    prevProps.calculateTotalPoints(prevProps.item) === nextProps.calculateTotalPoints(nextProps.item) &&
+    prevProps.isEditing(prevProps.item) === nextProps.isEditing(nextProps.item) &&
+    prevProps.editingRow?.id === nextProps.editingRow?.id
+  );
+});
+
+DataRow.displayName = 'DataRow';
+
+// Memoized Summary Row Component
+interface SummaryRowProps {
+  totals: {
+    donThuan: number;
+    huuHieu: number;
+    baptem: number;
+    thoPhuong: number;
+    lapCLB: number;
+    lenGiaiDoan: number;
+    totalPoints: number;
+  };
+}
+
+const SummaryRow = memo<SummaryRowProps>(({ totals }) => {
+  return (
+    <Tfoot bg="gray.100">
+      <Tr>
+        <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} textAlign="left">
+          TỔNG KẾT
+        </Th>
+        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+          {totals.donThuan.toLocaleString('vi-VN')}
+        </Td>
+        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+          {totals.huuHieu.toLocaleString('vi-VN')}
+        </Td>
+        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+          {totals.baptem.toLocaleString('vi-VN')}
+        </Td>
+        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+          {totals.thoPhuong.toLocaleString('vi-VN')}
+        </Td>
+        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+          {totals.lapCLB.toLocaleString('vi-VN')}
+        </Td>
+        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+          {totals.lenGiaiDoan.toLocaleString('vi-VN')}
+        </Td>
+        <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} px={{ base: 1, md: 2 }} isNumeric>
+          {totals.totalPoints.toLocaleString('vi-VN')}
+        </Td>
+        <Td px={{ base: 1, md: 2 }}></Td>
+      </Tr>
+    </Tfoot>
+  );
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.totals.donThuan === nextProps.totals.donThuan &&
+    prevProps.totals.huuHieu === nextProps.totals.huuHieu &&
+    prevProps.totals.baptem === nextProps.totals.baptem &&
+    prevProps.totals.thoPhuong === nextProps.totals.thoPhuong &&
+    prevProps.totals.lapCLB === nextProps.totals.lapCLB &&
+    prevProps.totals.lenGiaiDoan === nextProps.totals.lenGiaiDoan &&
+    prevProps.totals.totalPoints === nextProps.totals.totalPoints
+  );
+});
+
+SummaryRow.displayName = 'SummaryRow';
 
 export const UserDataInput: React.FC = () => {
   const [data, setData] = useState<ActivityData[]>([]);
@@ -102,7 +252,7 @@ export const UserDataInput: React.FC = () => {
     return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
   }, [getPointPerUnit]);
 
-  const calculateTotals = () => {
+  const calculateTotals = useCallback(() => {
     const totals = {
       donThuan: 0,
       huuHieu: 0,
@@ -124,7 +274,7 @@ export const UserDataInput: React.FC = () => {
     });
 
     return totals;
-  };
+  }, [data, calculateTotalPoints]);
 
   const handleAddNew = () => {
     const newRow: EditableRow = {
@@ -516,79 +666,22 @@ export const UserDataInput: React.FC = () => {
                 </Tr>
               ) : (
                 data.map((item) => (
-                  <Tr key={item.id} display={isEditing(item) ? 'none' : 'table-row'} _hover={{ bg: 'gray.50' }}>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} textAlign="left">{formatDate(item.date)}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.donThuan || 0).toLocaleString('vi-VN')}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.huuHieu || 0).toLocaleString('vi-VN')}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.baptem || 0).toLocaleString('vi-VN')}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.thoPhuong || 0).toLocaleString('vi-VN')}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.lapCLB || 0).toLocaleString('vi-VN')}</Td>
-                    <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>{(item.lenGiaiDoan || 0).toLocaleString('vi-VN')}</Td>
-                    <Td px={{ base: 1, md: 2 }} isNumeric>
-                      <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} textAlign="right">
-                        {calculateTotalPoints(item).toLocaleString('vi-VN')}
-                      </Text>
-                    </Td>
-                    <Td px={{ base: 1, md: 2 }} textAlign="center">
-                      <HStack spacing={{ base: 1, md: 2 }} justify="center">
-                        <Button
-                          size={{ base: 'xs', md: 'sm' }}
-                          colorScheme="blue"
-                          onClick={() => handleEdit(item)}
-                          isDisabled={!!editingRow}
-                          borderRadius="md"
-                        >
-                          Sửa
-                        </Button>
-                        <Button
-                          size={{ base: 'xs', md: 'sm' }}
-                          colorScheme="red"
-                          onClick={() => handleDeleteClick(item.id)}
-                          isDisabled={!!editingRow}
-                          borderRadius="md"
-                        >
-                          Xóa
-                        </Button>
-                      </HStack>
-                    </Td>
-                  </Tr>
+                  <DataRow
+                    key={item.id}
+                    item={item}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteClick}
+                    calculateTotalPoints={calculateTotalPoints}
+                    isEditing={isEditing}
+                    editingRow={editingRow}
+                    formatDate={formatDate}
+                  />
                 ))
               )}
             </Tbody>
-            {data.length > 0 && (() => {
-              const totals = calculateTotals();
-              return (
-                <Tfoot bg="gray.100">
-                  <Tr>
-                    <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} textAlign="left">
-                      TỔNG KẾT
-                    </Th>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-                      {totals.donThuan.toLocaleString('vi-VN')}
-                    </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-                      {totals.huuHieu.toLocaleString('vi-VN')}
-                    </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-                      {totals.baptem.toLocaleString('vi-VN')}
-                    </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-                      {totals.thoPhuong.toLocaleString('vi-VN')}
-                    </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-                      {totals.lapCLB.toLocaleString('vi-VN')}
-                    </Td>
-                    <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-                      {totals.lenGiaiDoan.toLocaleString('vi-VN')}
-                    </Td>
-                    <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} px={{ base: 1, md: 2 }} isNumeric>
-                      {totals.totalPoints.toLocaleString('vi-VN')}
-                    </Td>
-                    <Td px={{ base: 1, md: 2 }}></Td>
-                  </Tr>
-                </Tfoot>
-              );
-            })()}
+            {data.length > 0 && (
+              <SummaryRow totals={calculateTotals()} />
+            )}
           </Table>
         </TableContainer>
 
