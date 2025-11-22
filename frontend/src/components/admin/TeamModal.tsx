@@ -96,7 +96,7 @@ export const TeamModal: React.FC<TeamModalProps> = ({ team, onClose }) => {
         <ModalCloseButton />
         <form onSubmit={handleSubmit}>
           <ModalBody>
-            <VStack spacing={4} align="stretch">
+            <VStack gap={4} align="stretch">
               {error && (
                 <Alert status="error" borderRadius="md">
                   <AlertIcon />

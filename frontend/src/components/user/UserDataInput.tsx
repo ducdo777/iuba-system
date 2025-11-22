@@ -252,7 +252,7 @@ export const UserDataInput: React.FC = () => {
 
   return (
     <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack spacing={6} align="stretch">
+      <VStack gap={6} align="stretch">
         <Flex
           direction={{ base: 'column', sm: 'row' }}
           justify="space-between"
@@ -377,7 +377,7 @@ export const UserDataInput: React.FC = () => {
                     />
                   </Td>
                   <Td>
-                    <HStack spacing={2}>
+                    <HStack gap={2}>
                       <Button
                         size="sm"
                         colorScheme="green"
@@ -419,7 +419,7 @@ export const UserDataInput: React.FC = () => {
                     <Td>{item.lapCLB || 0}</Td>
                     <Td>{item.lenGiaiDoan || 0}</Td>
                     <Td>
-                      <HStack spacing={2}>
+                      <HStack gap={2}>
                         <Button
                           size="sm"
                           colorScheme="primary"

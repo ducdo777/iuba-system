@@ -68,7 +68,7 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <Box w="full" p={{ base: 4, md: 6, lg: 8 }}>
-      <VStack spacing={8} align="stretch">
+      <VStack gap={8} align="stretch">
         {/* Header */}
         <Box mb={8}>
           <Heading size="2xl" color="gray.900" mb={2}>
@@ -188,8 +188,8 @@ export const AdminDashboard: React.FC = () => {
         </Grid>
 
         {/* Data Summary */}
-        <VStack spacing={6} align="stretch">
-          <HStack spacing={3}>
+        <VStack gap={6} align="stretch">
+          <HStack gap={3}>
             <Box h={1} w={12} bgGradient="linear(to-r, primary.600, primary.400)" borderRadius="full" />
             <Heading size="lg" color="gray.800">
               Tổng kết dữ liệu
@@ -287,7 +287,7 @@ export const AdminDashboard: React.FC = () => {
             borderBottom="1px"
             borderColor="gray.200"
           >
-            <HStack spacing={3}>
+            <HStack gap={3}>
               <Box h={1} w={12} bgGradient="linear(to-r, primary.600, primary.400)" borderRadius="full" />
               <Heading size="md" color="gray.800">
                 Thống kê theo Team

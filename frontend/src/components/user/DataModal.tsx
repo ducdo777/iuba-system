@@ -100,7 +100,7 @@ export const DataModal: React.FC<DataModalProps> = ({ data, onClose }) => {
         <ModalCloseButton />
         <form onSubmit={handleSubmit}>
           <ModalBody>
-            <VStack spacing={4} align="stretch">
+            <VStack gap={4} align="stretch">
               {error && (
                 <Alert status="error" borderRadius="md">
                   <AlertIcon />

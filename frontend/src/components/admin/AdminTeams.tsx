@@ -184,7 +184,7 @@ export const AdminTeams: React.FC = () => {
                     </Badge>
                   </Td>
                   <Td>
-                    <HStack spacing={2}>
+                    <HStack gap={2}>
                       <Button
                         size="sm"
                         colorScheme="primary"

@@ -55,7 +55,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   const menu = role === 'admin' ? adminMenu : userMenu;
 
   const SidebarContent = () => (
-    <VStack spacing={1} align="stretch" p={4} h="full" overflowY="auto">
+    <VStack gap={1} align="stretch" p={4} h="full" overflowY="auto">
       {menu.map((item) => (
         <Link key={item.path} href={item.path} onClick={onClose}>
           <Button
@@ -92,7 +92,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
         shadow="md"
       >
         <Flex justify="space-between" align="center">
-          <HStack spacing={4}>
+          <HStack gap={4}>
             <Button
               display={{ base: 'block', md: 'none' }}
               variant="ghost"
@@ -104,7 +104,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
             </Button>
             <Heading size="md">IUBA System</Heading>
           </HStack>
-          <HStack spacing={3}>
+          <HStack gap={3}>
             <Text display={{ base: 'none', md: 'flex' }} fontSize="sm">
               <i className="fas fa-user" style={{ marginRight: '8px' }} />
               {user?.fullName || user?.username}
