@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Box,
   Flex,
@@ -28,40 +28,36 @@ export const AdminDashboard: React.FC = () => {
   const [pointConfigs, setPointConfigs] = useState<ActivityPointConfig[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadOverview();
-    loadPointConfigs();
-  }, []);
+  const getDefaultConfigs = useCallback((): ActivityPointConfig[] => [
+    { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
+    { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
+    { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
+  ], []);
 
-  const loadOverview = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await statisticsService.getOverview();
-      setOverview(data);
+      // Load both APIs in parallel for better performance
+      const [overviewData, configs] = await Promise.all([
+        statisticsService.getOverview(),
+        activityPointsService.getAll().catch(() => []),
+      ]);
+      setOverview(overviewData);
+      setPointConfigs(configs.length > 0 ? configs : getDefaultConfigs());
     } catch (error) {
-      console.error('Error loading overview:', error);
+      console.error('Error loading data:', error);
+      setPointConfigs(getDefaultConfigs());
     } finally {
       setLoading(false);
     }
-  };
+  }, [getDefaultConfigs]);
 
-  const loadPointConfigs = async () => {
-    try {
-      const configs = await activityPointsService.getAll();
-      setPointConfigs(configs);
-    } catch (error) {
-      console.error('Error loading point configs:', error);
-      // Use default values if API fails
-      setPointConfigs([
-        { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
-        { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
-        { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
-        { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
-        { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
-        { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
-      ]);
-    }
-  };
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const getPointPerUnit = (activityType: string): number => {
     const config = pointConfigs.find(c => c.activityType === activityType);

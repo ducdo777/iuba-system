@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Box,
   Flex,
@@ -37,11 +37,7 @@ export const AdminTeams: React.FC = () => {
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
 
-  useEffect(() => {
-    loadTeams();
-  }, []);
-
-  const loadTeams = async () => {
+  const loadTeams = useCallback(async () => {
     try {
       setLoading(true);
       const data = await teamsService.getAll();
@@ -58,7 +54,11 @@ export const AdminTeams: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadTeams();
+  }, [loadTeams]);
 
   const handleCreate = () => {
     setEditingTeam(null);

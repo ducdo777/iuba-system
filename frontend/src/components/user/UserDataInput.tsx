@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Box,
   Flex,
@@ -47,16 +47,25 @@ export const UserDataInput: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    loadData();
-    loadPointConfigs();
-  }, []);
+  const getDefaultConfigs = useCallback((): ActivityPointConfig[] => [
+    { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
+    { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
+    { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
+  ], []);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const dataList = await activityDataService.getAll();
+      // Load both APIs in parallel for better performance
+      const [dataList, configs] = await Promise.all([
+        activityDataService.getAll(),
+        activityPointsService.getAll().catch(() => []),
+      ]);
       setData(dataList);
+      setPointConfigs(configs.length > 0 ? configs : getDefaultConfigs());
     } catch (error) {
       console.error('Error loading data:', error);
       toast({
@@ -66,35 +75,23 @@ export const UserDataInput: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+      // Set default configs on error
+      setPointConfigs(getDefaultConfigs());
     } finally {
       setLoading(false);
     }
-  };
+  }, [getDefaultConfigs, toast]);
 
-  const loadPointConfigs = async () => {
-    try {
-      const configs = await activityPointsService.getAll();
-      setPointConfigs(configs);
-    } catch (error) {
-      console.error('Error loading point configs:', error);
-      // Use default values if API fails
-      setPointConfigs([
-        { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
-        { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
-        { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
-        { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
-        { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
-        { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
-      ]);
-    }
-  };
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
-  const calculateTotalPoints = (item: ActivityData | EditableRow): number => {
-    const getPointPerUnit = (activityType: string): number => {
-      const config = pointConfigs.find(c => c.activityType === activityType);
-      return config?.pointPerUnit || 0;
-    };
+  const getPointPerUnit = useCallback((activityType: string): number => {
+    const config = pointConfigs.find(c => c.activityType === activityType);
+    return config?.pointPerUnit || 0;
+  }, [pointConfigs]);
 
+  const calculateTotalPoints = useCallback((item: ActivityData | EditableRow): number => {
     const donThuan = (item.donThuan || 0) * getPointPerUnit('donThuan');
     const huuHieu = (item.huuHieu || 0) * getPointPerUnit('huuHieu');
     const baptem = (item.baptem || 0) * getPointPerUnit('baptem');
@@ -103,7 +100,7 @@ export const UserDataInput: React.FC = () => {
     const lenGiaiDoan = (item.lenGiaiDoan || 0) * getPointPerUnit('lenGiaiDoan');
 
     return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
-  };
+  }, [getPointPerUnit]);
 
   const calculateTotals = () => {
     const totals = {
