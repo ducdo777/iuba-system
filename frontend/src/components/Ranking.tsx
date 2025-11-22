@@ -183,9 +183,6 @@ export const Ranking: React.FC = () => {
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }}>
                     Team
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
-                    Mã Team
-                  </Th>
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     TV
                   </Th>
@@ -218,7 +215,7 @@ export const Ranking: React.FC = () => {
               <Tbody>
                 {rankings.length === 0 ? (
                   <Tr>
-                    <Td colSpan={12} textAlign="center" py={8} color="gray.500">
+                    <Td colSpan={11} textAlign="center" py={8} color="gray.500">
                       Chưa có dữ liệu xếp hạng
                     </Td>
                   </Tr>
@@ -249,9 +246,6 @@ export const Ranking: React.FC = () => {
                       </Td>
                       <Td fontWeight="semibold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.teamName}
-                      </Td>
-                      <Td color="gray.700" fontFamily="mono" px={{ base: 1, md: 2 }} fontSize={{ base: '10px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
-                        {team.teamCode}
                       </Td>
                       <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.totalMembers || '-'}
