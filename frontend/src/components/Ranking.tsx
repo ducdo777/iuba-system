@@ -32,6 +32,7 @@ interface TeamRanking {
   thoPhuong: number;
   lapCLB: number;
   lenGiaiDoan: number;
+  hiepCauNguyenSang: number;
   totalPoints: number;
   averagePoints: number;
   rank: number;
@@ -64,13 +65,13 @@ export const Ranking: React.FC = () => {
   }, [loadData]);
 
   const getDefaultConfigs = (): ActivityPointConfig[] => [
-    { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
-    { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
-    { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
-    { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
-    { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
-    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
-    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as ActivityPointConfig,
+    { activityType: 'donThuan', pointPerUnit: 1 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'huuHieu', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'baptem', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'thoPhuong', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'lapCLB', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
   ];
 
   const getPointPerUnit = useCallback((activityType: string): number => {
@@ -107,6 +108,7 @@ export const Ranking: React.FC = () => {
             thoPhuong: team.thoPhuong,
             lapCLB: team.lapCLB,
             lenGiaiDoan: team.lenGiaiDoan,
+            hiepCauNguyenSang: team.hiepCauNguyenSang || 0,
             totalPoints,
             averagePoints,
             rank: 0,

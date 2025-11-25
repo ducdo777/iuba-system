@@ -11,6 +11,7 @@ export interface StatisticsOverview {
     thoPhuong: number;
     lapCLB: number;
     lenGiaiDoan: number;
+    hiepCauNguyenSang: number;
     grandTotal: number;
   };
   byTeam: Array<{
@@ -24,6 +25,7 @@ export interface StatisticsOverview {
     thoPhuong: number;
     lapCLB: number;
     lenGiaiDoan: number;
+    hiepCauNguyenSang: number;
     total: number;
   }>;
 }
@@ -43,6 +45,7 @@ export interface TeamStatistics {
     thoPhuong: number;
     lapCLB: number;
     lenGiaiDoan: number;
+    hiepCauNguyenSang: number;
     total: number;
     recordCount: number;
   }>;
@@ -53,6 +56,7 @@ export interface TeamStatistics {
     thoPhuong: number;
     lapCLB: number;
     lenGiaiDoan: number;
+    hiepCauNguyenSang: number;
     total: number;
     recordCount: number;
   };

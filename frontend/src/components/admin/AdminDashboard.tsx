@@ -29,13 +29,13 @@ export const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const getDefaultConfigs = useCallback((): ActivityPointConfig[] => [
-    { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
-    { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
-    { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
-    { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
-    { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
-    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
-    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as ActivityPointConfig,
+    { activityType: 'donThuan', pointPerUnit: 1 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'huuHieu', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'baptem', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'thoPhuong', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'lapCLB', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
   ], []);
 
   const loadData = useCallback(async () => {
