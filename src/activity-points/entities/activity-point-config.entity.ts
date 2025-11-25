@@ -6,7 +6,7 @@ export class ActivityPointConfig {
   id: string;
 
   @Column({ type: 'varchar', unique: true })
-  activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan';
+  activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' | 'hiepCauNguyenSang';
 
   @Column({ type: 'varchar' })
   activityName: string;

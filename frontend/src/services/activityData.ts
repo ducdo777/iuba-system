@@ -11,6 +11,7 @@ export interface ActivityData {
   thoPhuong: number;
   lapCLB: number;
   lenGiaiDoan: number;
+  hiepCauNguyenSang: number;
   team?: {
     id: string;
     teamName: string;
@@ -31,6 +32,7 @@ export interface CreateActivityDataDto {
   thoPhuong: number;
   lapCLB: number;
   lenGiaiDoan: number;
+  hiepCauNguyenSang: number;
 }
 
 export const activityDataService = {

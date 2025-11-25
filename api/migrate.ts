@@ -87,7 +87,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Initialize default activity point configs
     const pointConfigRepository = dataSource.getRepository(ActivityPointConfig);
     const defaultConfigs: Array<{
-      activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan';
+      activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' | 'hiepCauNguyenSang';
       activityName: string;
       pointPerUnit: number;
     }> = [
@@ -97,6 +97,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { activityType: 'thoPhuong', activityName: 'Thờ phượng', pointPerUnit: 3 },
       { activityType: 'lapCLB', activityName: 'Lập CLB', pointPerUnit: 10 },
       { activityType: 'lenGiaiDoan', activityName: 'Lên giai đoạn', pointPerUnit: 15 },
+      { activityType: 'hiepCauNguyenSang', activityName: 'Nhóm Hiệp Cầu Nguyện Sáng', pointPerUnit: 10 },
     ];
 
     for (const config of defaultConfigs) {

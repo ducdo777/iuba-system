@@ -51,6 +51,11 @@ INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "poin
 SELECT gen_random_uuid(), 'lenGiaiDoan', 'Lên giai đoạn', 1000.00, 'active', now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = 'lenGiaiDoan');
 
+-- Nhóm Hiệp Cầu Nguyện Sáng
+INSERT INTO "activity_point_config" ("id", "activityType", "activityName", "pointPerUnit", "status", "createdAt", "updatedAt")
+SELECT gen_random_uuid(), 'hiepCauNguyenSang', 'Nhóm Hiệp Cầu Nguyện Sáng', 10.00, 'active', now(), now()
+WHERE NOT EXISTS (SELECT 1 FROM "activity_point_config" WHERE "activityType" = 'hiepCauNguyenSang');
+
 -- Hiển thị kết quả
 SELECT 
     "activityType" as "Loại hoạt động",

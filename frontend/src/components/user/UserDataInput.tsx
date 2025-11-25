@@ -78,6 +78,9 @@ const DataRow = memo<DataRowProps>(({
       <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
         {(item.lenGiaiDoan || 0).toLocaleString('vi-VN')}
       </Td>
+      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+        {(item.hiepCauNguyenSang || 0).toLocaleString('vi-VN')}
+      </Td>
       <Td px={{ base: 1, md: 2 }} isNumeric>
         <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} textAlign="right">
           {calculateTotalPoints(item).toLocaleString('vi-VN')}
@@ -118,6 +121,7 @@ const DataRow = memo<DataRowProps>(({
     prevProps.item.thoPhuong === nextProps.item.thoPhuong &&
     prevProps.item.lapCLB === nextProps.item.lapCLB &&
     prevProps.item.lenGiaiDoan === nextProps.item.lenGiaiDoan &&
+    prevProps.item.hiepCauNguyenSang === nextProps.item.hiepCauNguyenSang &&
     prevProps.calculateTotalPoints(prevProps.item) === nextProps.calculateTotalPoints(nextProps.item) &&
     prevProps.isEditing(prevProps.item) === nextProps.isEditing(nextProps.item) &&
     prevProps.editingRow?.id === nextProps.editingRow?.id
@@ -135,6 +139,7 @@ interface SummaryRowProps {
     thoPhuong: number;
     lapCLB: number;
     lenGiaiDoan: number;
+    hiepCauNguyenSang: number;
     totalPoints: number;
   };
 }
@@ -164,6 +169,9 @@ const SummaryRow = memo<SummaryRowProps>(({ totals }) => {
         <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
           {totals.lenGiaiDoan.toLocaleString('vi-VN')}
         </Td>
+        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
+          {totals.hiepCauNguyenSang.toLocaleString('vi-VN')}
+        </Td>
         <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} px={{ base: 1, md: 2 }} isNumeric>
           {totals.totalPoints.toLocaleString('vi-VN')}
         </Td>
@@ -179,6 +187,7 @@ const SummaryRow = memo<SummaryRowProps>(({ totals }) => {
     prevProps.totals.thoPhuong === nextProps.totals.thoPhuong &&
     prevProps.totals.lapCLB === nextProps.totals.lapCLB &&
     prevProps.totals.lenGiaiDoan === nextProps.totals.lenGiaiDoan &&
+    prevProps.totals.hiepCauNguyenSang === nextProps.totals.hiepCauNguyenSang &&
     prevProps.totals.totalPoints === nextProps.totals.totalPoints
   );
 });
@@ -204,6 +213,7 @@ export const UserDataInput: React.FC = () => {
     { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
     { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
     { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as ActivityPointConfig,
   ], []);
 
   const loadData = useCallback(async () => {
@@ -248,8 +258,9 @@ export const UserDataInput: React.FC = () => {
     const thoPhuong = (item.thoPhuong || 0) * getPointPerUnit('thoPhuong');
     const lapCLB = (item.lapCLB || 0) * getPointPerUnit('lapCLB');
     const lenGiaiDoan = (item.lenGiaiDoan || 0) * getPointPerUnit('lenGiaiDoan');
+    const hiepCauNguyenSang = (item.hiepCauNguyenSang || 0) * getPointPerUnit('hiepCauNguyenSang');
 
-    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan + hiepCauNguyenSang;
   }, [getPointPerUnit]);
 
   const calculateTotals = useCallback(() => {
@@ -260,6 +271,7 @@ export const UserDataInput: React.FC = () => {
       thoPhuong: 0,
       lapCLB: 0,
       lenGiaiDoan: 0,
+      hiepCauNguyenSang: 0,
       totalPoints: 0,
     };
 
@@ -270,6 +282,7 @@ export const UserDataInput: React.FC = () => {
       totals.thoPhuong += item.thoPhuong || 0;
       totals.lapCLB += item.lapCLB || 0;
       totals.lenGiaiDoan += item.lenGiaiDoan || 0;
+      totals.hiepCauNguyenSang += item.hiepCauNguyenSang || 0;
       totals.totalPoints += calculateTotalPoints(item);
     });
 
@@ -285,6 +298,7 @@ export const UserDataInput: React.FC = () => {
       thoPhuong: 0,
       lapCLB: 0,
       lenGiaiDoan: 0,
+      hiepCauNguyenSang: 0,
       isNew: true,
       isEditing: true,
     };
@@ -304,6 +318,7 @@ export const UserDataInput: React.FC = () => {
       thoPhuong: item.thoPhuong || 0,
       lapCLB: item.lapCLB || 0,
       lenGiaiDoan: item.lenGiaiDoan || 0,
+      hiepCauNguyenSang: item.hiepCauNguyenSang || 0,
       isEditing: true,
     });
   };
@@ -335,6 +350,7 @@ export const UserDataInput: React.FC = () => {
       thoPhuong: row.thoPhuong || 0,
       lapCLB: row.lapCLB || 0,
       lenGiaiDoan: row.lenGiaiDoan || 0,
+      hiepCauNguyenSang: row.hiepCauNguyenSang || 0,
     };
 
     // Create optimistic data entry
@@ -557,6 +573,9 @@ export const UserDataInput: React.FC = () => {
                 <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   GĐ
                 </Th>
+                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
+                  NHCN
+                </Th>
                 <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '70px', md: '90px' }}>
                   Tổng
                 </Th>
@@ -670,6 +689,22 @@ export const UserDataInput: React.FC = () => {
                       min="0"
                       value={editingRow.lenGiaiDoan ?? 0}
                       onChange={(e) => handleNumberChange('lenGiaiDoan', e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
+                      fontSize={{ base: '11px', md: 'sm' }}
+                      w="full"
+                      maxW="100%"
+                      minW="0"
+                      textAlign="right"
+                      px={{ base: 1, md: 2 }}
+                    />
+                  </Td>
+                  <Td px={{ base: 1, md: 2 }} isNumeric>
+                    <Input
+                      type="number"
+                      size="sm"
+                      min="0"
+                      value={editingRow.hiepCauNguyenSang ?? 0}
+                      onChange={(e) => handleNumberChange('hiepCauNguyenSang', e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, editingRow)}
                       fontSize={{ base: '11px', md: 'sm' }}
                       w="full"

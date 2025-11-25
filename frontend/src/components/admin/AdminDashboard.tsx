@@ -35,6 +35,7 @@ export const AdminDashboard: React.FC = () => {
     { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
     { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
     { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as ActivityPointConfig,
   ], []);
 
   const loadData = useCallback(async () => {
@@ -78,8 +79,9 @@ export const AdminDashboard: React.FC = () => {
     const thoPhuong = calculateActivityPoints('thoPhuong', summary.thoPhuong);
     const lapCLB = calculateActivityPoints('lapCLB', summary.lapCLB);
     const lenGiaiDoan = calculateActivityPoints('lenGiaiDoan', summary.lenGiaiDoan);
+    const hiepCauNguyenSang = calculateActivityPoints('hiepCauNguyenSang', summary.hiepCauNguyenSang || 0);
 
-    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan + hiepCauNguyenSang;
   };
 
   if (loading) {
@@ -312,7 +314,8 @@ export const AdminDashboard: React.FC = () => {
                     calculateActivityPoints('baptem', team.baptem) +
                     calculateActivityPoints('thoPhuong', team.thoPhuong) +
                     calculateActivityPoints('lapCLB', team.lapCLB) +
-                    calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan);
+                    calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan) +
+                    calculateActivityPoints('hiepCauNguyenSang', team.hiepCauNguyenSang || 0);
                   const averagePoints = team.totalMembers > 0 ? teamTotalPoints / team.totalMembers : 0;
                   
                   return (

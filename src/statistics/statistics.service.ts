@@ -26,6 +26,7 @@ export class StatisticsService {
       thoPhuong: 0,
       lapCLB: 0,
       lenGiaiDoan: 0,
+      hiepCauNguyenSang: 0,
     };
 
     allData.forEach(data => {
@@ -35,6 +36,7 @@ export class StatisticsService {
       totals.thoPhuong += data.thoPhuong || 0;
       totals.lapCLB += data.lapCLB || 0;
       totals.lenGiaiDoan += data.lenGiaiDoan || 0;
+      totals.hiepCauNguyenSang += data.hiepCauNguyenSang || 0;
     });
 
     const byTeam = await Promise.all(
@@ -47,6 +49,7 @@ export class StatisticsService {
           thoPhuong: 0,
           lapCLB: 0,
           lenGiaiDoan: 0,
+          hiepCauNguyenSang: 0,
         };
 
         teamData.forEach(data => {
@@ -56,6 +59,7 @@ export class StatisticsService {
           teamTotals.thoPhuong += data.thoPhuong || 0;
           teamTotals.lapCLB += data.lapCLB || 0;
           teamTotals.lenGiaiDoan += data.lenGiaiDoan || 0;
+          teamTotals.hiepCauNguyenSang += data.hiepCauNguyenSang || 0;
         });
 
         // Use totalMembers from database (already loaded with teams)
@@ -104,6 +108,7 @@ export class StatisticsService {
             thoPhuong: 0,
             lapCLB: 0,
             lenGiaiDoan: 0,
+            hiepCauNguyenSang: 0,
           };
 
           userData.forEach(data => {
@@ -113,6 +118,7 @@ export class StatisticsService {
             userTotals.thoPhuong += data.thoPhuong || 0;
             userTotals.lapCLB += data.lapCLB || 0;
             userTotals.lenGiaiDoan += data.lenGiaiDoan || 0;
+            userTotals.hiepCauNguyenSang += data.hiepCauNguyenSang || 0;
           });
 
           return {
@@ -132,6 +138,7 @@ export class StatisticsService {
           thoPhuong: 0,
           lapCLB: 0,
           lenGiaiDoan: 0,
+          hiepCauNguyenSang: 0,
         };
 
         teamData.forEach(data => {
@@ -141,6 +148,7 @@ export class StatisticsService {
           teamTotals.thoPhuong += data.thoPhuong || 0;
           teamTotals.lapCLB += data.lapCLB || 0;
           teamTotals.lenGiaiDoan += data.lenGiaiDoan || 0;
+          teamTotals.hiepCauNguyenSang += data.hiepCauNguyenSang || 0;
         });
 
         // Use totalMembers from database, fallback to calculated count if not set

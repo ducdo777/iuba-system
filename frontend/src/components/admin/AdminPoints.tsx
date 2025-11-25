@@ -28,6 +28,7 @@ const ACTIVITY_TYPES = [
   { type: 'thoPhuong', name: 'Thờ phượng', icon: '🙏' },
   { type: 'lapCLB', name: 'Lập CLB', icon: '👥' },
   { type: 'lenGiaiDoan', name: 'Lên giai đoạn', icon: '📈' },
+  { type: 'hiepCauNguyenSang', name: 'Nhóm Hiệp Cầu Nguyện Sáng', icon: '🌅' },
 ];
 
 export const AdminPoints: React.FC = () => {

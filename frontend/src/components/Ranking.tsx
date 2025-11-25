@@ -70,6 +70,7 @@ export const Ranking: React.FC = () => {
     { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
     { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
     { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as ActivityPointConfig,
   ];
 
   const getPointPerUnit = useCallback((activityType: string): number => {
@@ -84,8 +85,9 @@ export const Ranking: React.FC = () => {
     const thoPhuong = team.thoPhuong * getPointPerUnit('thoPhuong');
     const lapCLB = team.lapCLB * getPointPerUnit('lapCLB');
     const lenGiaiDoan = team.lenGiaiDoan * getPointPerUnit('lenGiaiDoan');
+    const hiepCauNguyenSang = (team.hiepCauNguyenSang || 0) * getPointPerUnit('hiepCauNguyenSang');
 
-    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan + hiepCauNguyenSang;
   }, [getPointPerUnit]);
 
   useEffect(() => {
