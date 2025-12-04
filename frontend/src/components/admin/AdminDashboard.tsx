@@ -299,6 +299,9 @@ export const AdminDashboard: React.FC = () => {
                   <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Tổng điểm
                   </Th>
+                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
+                    Điểm TB
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -311,6 +314,10 @@ export const AdminDashboard: React.FC = () => {
                     calculateActivityPoints('lapCLB', team.lapCLB) +
                     calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan);
                   
+                  const averagePoints = team.totalMembers > 0 
+                    ? teamTotalPoints / team.totalMembers 
+                    : 0;
+                  
                   return (
                     <Tr
                       key={team.teamId}
@@ -321,15 +328,18 @@ export const AdminDashboard: React.FC = () => {
                       <Td fontWeight="semibold" color="gray.900">
                         {team.teamName}
                       </Td>
-                      <Td color="gray.700">{team.totalMembers || '-'}</Td>
-                      <Td color="gray.700">{team.donThuan}</Td>
-                      <Td color="gray.700">{team.huuHieu}</Td>
-                      <Td color="gray.700">{team.baptem}</Td>
-                      <Td color="gray.700">{team.thoPhuong}</Td>
-                      <Td color="gray.700">{team.lapCLB}</Td>
-                      <Td color="gray.700">{team.lenGiaiDoan}</Td>
-                      <Td fontWeight="bold" color="primary.600">
+                      <Td color="gray.700" isNumeric>{team.totalMembers || 0}</Td>
+                      <Td color="gray.700" isNumeric>{team.donThuan}</Td>
+                      <Td color="gray.700" isNumeric>{team.huuHieu}</Td>
+                      <Td color="gray.700" isNumeric>{team.baptem}</Td>
+                      <Td color="gray.700" isNumeric>{team.thoPhuong}</Td>
+                      <Td color="gray.700" isNumeric>{team.lapCLB}</Td>
+                      <Td color="gray.700" isNumeric>{team.lenGiaiDoan}</Td>
+                      <Td fontWeight="bold" color="primary.600" isNumeric>
                         {teamTotalPoints.toLocaleString('vi-VN')}
+                      </Td>
+                      <Td fontWeight="bold" color="primary.700" isNumeric>
+                        {averagePoints.toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </Td>
                     </Tr>
                   );
