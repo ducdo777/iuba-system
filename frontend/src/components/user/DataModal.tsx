@@ -33,7 +33,6 @@ export const DataModal: React.FC<DataModalProps> = ({ data, onClose }) => {
     thoPhuong: 0,
     lapCLB: 0,
     lenGiaiDoan: 0,
-    hiepCauNguyenSang: 0,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -49,7 +48,6 @@ export const DataModal: React.FC<DataModalProps> = ({ data, onClose }) => {
         thoPhuong: data.thoPhuong || 0,
         lapCLB: data.lapCLB || 0,
         lenGiaiDoan: data.lenGiaiDoan || 0,
-        hiepCauNguyenSang: data.hiepCauNguyenSang || 0,
       });
     }
   }, [data]);
@@ -183,17 +181,6 @@ export const DataModal: React.FC<DataModalProps> = ({ data, onClose }) => {
                     min="0"
                     value={formData.lenGiaiDoan}
                     onChange={(e) => setFormData({ ...formData, lenGiaiDoan: parseInt(e.target.value) || 0 })}
-                    required
-                  />
-                </FormControl>
-
-                <FormControl isRequired>
-                  <FormLabel>Nhóm Hiệp Cầu Nguyện Sáng</FormLabel>
-                  <Input
-                    type="number"
-                    min="0"
-                    value={formData.hiepCauNguyenSang}
-                    onChange={(e) => setFormData({ ...formData, hiepCauNguyenSang: parseInt(e.target.value) || 0 })}
                     required
                   />
                 </FormControl>

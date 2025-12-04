@@ -32,7 +32,6 @@ interface TeamRanking {
   thoPhuong: number;
   lapCLB: number;
   lenGiaiDoan: number;
-  hiepCauNguyenSang: number;
   totalPoints: number;
   averagePoints: number;
   rank: number;
@@ -65,13 +64,12 @@ export const Ranking: React.FC = () => {
   }, [loadData]);
 
   const getDefaultConfigs = (): ActivityPointConfig[] => [
-    { activityType: 'donThuan', pointPerUnit: 1 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'huuHieu', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'baptem', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'thoPhuong', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'lapCLB', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
+    { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
+    { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
   ];
 
   const getPointPerUnit = useCallback((activityType: string): number => {
@@ -86,9 +84,8 @@ export const Ranking: React.FC = () => {
     const thoPhuong = team.thoPhuong * getPointPerUnit('thoPhuong');
     const lapCLB = team.lapCLB * getPointPerUnit('lapCLB');
     const lenGiaiDoan = team.lenGiaiDoan * getPointPerUnit('lenGiaiDoan');
-    const hiepCauNguyenSang = (team.hiepCauNguyenSang || 0) * getPointPerUnit('hiepCauNguyenSang');
 
-    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan + hiepCauNguyenSang;
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
   }, [getPointPerUnit]);
 
   useEffect(() => {
@@ -108,13 +105,12 @@ export const Ranking: React.FC = () => {
             thoPhuong: team.thoPhuong,
             lapCLB: team.lapCLB,
             lenGiaiDoan: team.lenGiaiDoan,
-            hiepCauNguyenSang: team.hiepCauNguyenSang || 0,
-            totalPoints,
-            averagePoints,
+            totalPoints: totalPoints,
+            averagePoints: averagePoints,
             rank: 0,
           };
         })
-        .sort((a, b) => b.totalPoints - a.totalPoints)
+        .sort((a, b) => b.averagePoints - a.averagePoints)
         .slice(0, 10)
         .map((team, index) => ({
           ...team,
@@ -158,7 +154,7 @@ export const Ranking: React.FC = () => {
             Bảng xếp hạng
           </Heading>
           <Text color="gray.600" fontSize={{ base: 'sm', md: 'md' }}>
-            Top 10 Teams có tổng điểm cao nhất (Điểm TB = Tổng điểm / Số thành viên)
+            Top 10 Teams có điểm trung bình cao nhất
           </Text>
         </Box>
 
@@ -178,16 +174,19 @@ export const Ranking: React.FC = () => {
             </HStack>
           </Box>
           <TableContainer overflowX="visible" w="full" maxW="100%">
-            <Table variant="simple" size="sm" w="full" layout="fixed">
+            <Table variant="simple" size="sm" whiteSpace="nowrap" w="full" layout="fixed">
               <Thead bg="gray.50">
                 <Tr>
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" width={{ base: '50px', md: '70px' }} px={{ base: 1, md: 2 }}>
                     Hạng
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }} whiteSpace="normal">
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }}>
                     Team
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
+                    Mã Team
+                  </Th>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     TV
                   </Th>
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
@@ -202,14 +201,11 @@ export const Ranking: React.FC = () => {
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     Thờ
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     CLB
                   </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
+                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     GĐ
-                  </Th>
-                  <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
-                    Tổng
                   </Th>
                   <Th textTransform="uppercase" fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="bold" color="gray.700" isNumeric px={{ base: 1, md: 2 }}>
                     Điểm TB
@@ -248,10 +244,13 @@ export const Ranking: React.FC = () => {
                           </Badge>
                         </Flex>
                       </Td>
-                      <Td fontWeight="semibold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} whiteSpace="normal" wordBreak="break-word">
+                      <Td fontWeight="semibold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.teamName}
                       </Td>
-                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
+                      <Td color="gray.700" fontFamily="mono" px={{ base: 1, md: 2 }} fontSize={{ base: '10px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
+                        {team.teamCode}
+                      </Td>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.totalMembers || '-'}
                       </Td>
                       <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
@@ -266,17 +265,14 @@ export const Ranking: React.FC = () => {
                       <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.thoPhuong.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.lapCLB.toLocaleString('vi-VN')}
                       </Td>
-                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} display={{ base: 'none', md: 'table-cell' }}>
+                      <Td color="gray.700" isNumeric px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }}>
                         {team.lenGiaiDoan.toLocaleString('vi-VN')}
                       </Td>
-                      <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }} display={{ base: 'none', md: 'table-cell' }}>
-                        {team.totalPoints.toLocaleString('vi-VN')}
-                      </Td>
-                      <Td fontWeight="semibold" color="green.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }}>
-                        {team.averagePoints > 0 ? team.averagePoints.toLocaleString('vi-VN', { maximumFractionDigits: 2 }) : '-'}
+                      <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} isNumeric px={{ base: 1, md: 2 }}>
+                        {team.averagePoints.toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </Td>
                     </Tr>
                   ))

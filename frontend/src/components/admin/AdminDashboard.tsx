@@ -29,13 +29,12 @@ export const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const getDefaultConfigs = useCallback((): ActivityPointConfig[] => [
-    { activityType: 'donThuan', pointPerUnit: 1 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'huuHieu', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'baptem', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'thoPhuong', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'lapCLB', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
+    { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
+    { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
   ], []);
 
   const loadData = useCallback(async () => {
@@ -79,9 +78,8 @@ export const AdminDashboard: React.FC = () => {
     const thoPhuong = calculateActivityPoints('thoPhuong', summary.thoPhuong);
     const lapCLB = calculateActivityPoints('lapCLB', summary.lapCLB);
     const lenGiaiDoan = calculateActivityPoints('lenGiaiDoan', summary.lenGiaiDoan);
-    const hiepCauNguyenSang = calculateActivityPoints('hiepCauNguyenSang', summary.hiepCauNguyenSang || 0);
 
-    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan + hiepCauNguyenSang;
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
   };
 
   if (loading) {
@@ -301,9 +299,6 @@ export const AdminDashboard: React.FC = () => {
                   <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Tổng điểm
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Điểm TB
-                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -314,9 +309,7 @@ export const AdminDashboard: React.FC = () => {
                     calculateActivityPoints('baptem', team.baptem) +
                     calculateActivityPoints('thoPhuong', team.thoPhuong) +
                     calculateActivityPoints('lapCLB', team.lapCLB) +
-                    calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan) +
-                    calculateActivityPoints('hiepCauNguyenSang', team.hiepCauNguyenSang || 0);
-                  const averagePoints = team.totalMembers > 0 ? teamTotalPoints / team.totalMembers : 0;
+                    calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan);
                   
                   return (
                     <Tr
@@ -337,9 +330,6 @@ export const AdminDashboard: React.FC = () => {
                       <Td color="gray.700">{team.lenGiaiDoan}</Td>
                       <Td fontWeight="bold" color="primary.600">
                         {teamTotalPoints.toLocaleString('vi-VN')}
-                      </Td>
-                      <Td fontWeight="semibold" color="green.600">
-                        {averagePoints > 0 ? averagePoints.toLocaleString('vi-VN', { maximumFractionDigits: 2 }) : '-'}
                       </Td>
                     </Tr>
                   );

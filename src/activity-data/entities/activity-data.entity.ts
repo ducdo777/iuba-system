@@ -42,9 +42,6 @@ export class ActivityData {
   @Column({ type: 'int', default: 0 })
   lenGiaiDoan: number;
 
-  @Column({ type: 'int', default: 0 })
-  hiepCauNguyenSang: number;
-
   @CreateDateColumn()
   createdAt: Date;
 

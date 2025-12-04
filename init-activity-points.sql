@@ -25,8 +25,7 @@ VALUES
     (gen_random_uuid(), 'baptem', 'Baptem', 500.00, 'active', now(), now()),
     (gen_random_uuid(), 'thoPhuong', 'Thờ phượng', 1000.00, 'active', now(), now()),
     (gen_random_uuid(), 'lapCLB', 'Lập CLB', 500.00, 'active', now(), now()),
-    (gen_random_uuid(), 'lenGiaiDoan', 'Lên giai đoạn', 1000.00, 'active', now(), now()),
-    (gen_random_uuid(), 'hiepCauNguyenSang', 'Nhóm Hiệp Cầu Nguyện Sáng', 10.00, 'active', now(), now())
+    (gen_random_uuid(), 'lenGiaiDoan', 'Lên giai đoạn', 1000.00, 'active', now(), now())
 ON CONFLICT ("activityType") DO NOTHING;
 
 -- Kiểm tra dữ liệu đã được chèn

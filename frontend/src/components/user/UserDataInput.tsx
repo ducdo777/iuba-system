@@ -78,9 +78,6 @@ const DataRow = memo<DataRowProps>(({
       <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
         {(item.lenGiaiDoan || 0).toLocaleString('vi-VN')}
       </Td>
-      <Td px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-        {(item.hiepCauNguyenSang || 0).toLocaleString('vi-VN')}
-      </Td>
       <Td px={{ base: 1, md: 2 }} isNumeric>
         <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} textAlign="right">
           {calculateTotalPoints(item).toLocaleString('vi-VN')}
@@ -121,7 +118,6 @@ const DataRow = memo<DataRowProps>(({
     prevProps.item.thoPhuong === nextProps.item.thoPhuong &&
     prevProps.item.lapCLB === nextProps.item.lapCLB &&
     prevProps.item.lenGiaiDoan === nextProps.item.lenGiaiDoan &&
-    prevProps.item.hiepCauNguyenSang === nextProps.item.hiepCauNguyenSang &&
     prevProps.calculateTotalPoints(prevProps.item) === nextProps.calculateTotalPoints(nextProps.item) &&
     prevProps.isEditing(prevProps.item) === nextProps.isEditing(nextProps.item) &&
     prevProps.editingRow?.id === nextProps.editingRow?.id
@@ -139,7 +135,6 @@ interface SummaryRowProps {
     thoPhuong: number;
     lapCLB: number;
     lenGiaiDoan: number;
-    hiepCauNguyenSang: number;
     totalPoints: number;
   };
 }
@@ -169,9 +164,6 @@ const SummaryRow = memo<SummaryRowProps>(({ totals }) => {
         <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
           {totals.lenGiaiDoan.toLocaleString('vi-VN')}
         </Td>
-        <Td fontWeight="bold" color="gray.900" px={{ base: 1, md: 2 }} fontSize={{ base: '11px', md: 'sm' }} isNumeric>
-          {totals.hiepCauNguyenSang.toLocaleString('vi-VN')}
-        </Td>
         <Td fontWeight="bold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} px={{ base: 1, md: 2 }} isNumeric>
           {totals.totalPoints.toLocaleString('vi-VN')}
         </Td>
@@ -187,7 +179,6 @@ const SummaryRow = memo<SummaryRowProps>(({ totals }) => {
     prevProps.totals.thoPhuong === nextProps.totals.thoPhuong &&
     prevProps.totals.lapCLB === nextProps.totals.lapCLB &&
     prevProps.totals.lenGiaiDoan === nextProps.totals.lenGiaiDoan &&
-    prevProps.totals.hiepCauNguyenSang === nextProps.totals.hiepCauNguyenSang &&
     prevProps.totals.totalPoints === nextProps.totals.totalPoints
   );
 });
@@ -207,13 +198,12 @@ export const UserDataInput: React.FC = () => {
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   const getDefaultConfigs = useCallback((): ActivityPointConfig[] => [
-    { activityType: 'donThuan', pointPerUnit: 1 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'huuHieu', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'baptem', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'thoPhuong', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'lapCLB', pointPerUnit: 500 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as Partial<ActivityPointConfig> as ActivityPointConfig,
-    { activityType: 'hiepCauNguyenSang', pointPerUnit: 10 } as Partial<ActivityPointConfig> as ActivityPointConfig,
+    { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
+    { activityType: 'huuHieu', pointPerUnit: 10 } as ActivityPointConfig,
+    { activityType: 'baptem', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'thoPhuong', pointPerUnit: 1000 } as ActivityPointConfig,
+    { activityType: 'lapCLB', pointPerUnit: 500 } as ActivityPointConfig,
+    { activityType: 'lenGiaiDoan', pointPerUnit: 1000 } as ActivityPointConfig,
   ], []);
 
   const loadData = useCallback(async () => {
@@ -258,9 +248,8 @@ export const UserDataInput: React.FC = () => {
     const thoPhuong = (item.thoPhuong || 0) * getPointPerUnit('thoPhuong');
     const lapCLB = (item.lapCLB || 0) * getPointPerUnit('lapCLB');
     const lenGiaiDoan = (item.lenGiaiDoan || 0) * getPointPerUnit('lenGiaiDoan');
-    const hiepCauNguyenSang = (item.hiepCauNguyenSang || 0) * getPointPerUnit('hiepCauNguyenSang');
 
-    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan + hiepCauNguyenSang;
+    return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
   }, [getPointPerUnit]);
 
   const calculateTotals = useCallback(() => {
@@ -271,7 +260,6 @@ export const UserDataInput: React.FC = () => {
       thoPhuong: 0,
       lapCLB: 0,
       lenGiaiDoan: 0,
-      hiepCauNguyenSang: 0,
       totalPoints: 0,
     };
 
@@ -282,7 +270,6 @@ export const UserDataInput: React.FC = () => {
       totals.thoPhuong += item.thoPhuong || 0;
       totals.lapCLB += item.lapCLB || 0;
       totals.lenGiaiDoan += item.lenGiaiDoan || 0;
-      totals.hiepCauNguyenSang += item.hiepCauNguyenSang || 0;
       totals.totalPoints += calculateTotalPoints(item);
     });
 
@@ -298,7 +285,6 @@ export const UserDataInput: React.FC = () => {
       thoPhuong: 0,
       lapCLB: 0,
       lenGiaiDoan: 0,
-      hiepCauNguyenSang: 0,
       isNew: true,
       isEditing: true,
     };
@@ -318,7 +304,6 @@ export const UserDataInput: React.FC = () => {
       thoPhuong: item.thoPhuong || 0,
       lapCLB: item.lapCLB || 0,
       lenGiaiDoan: item.lenGiaiDoan || 0,
-      hiepCauNguyenSang: item.hiepCauNguyenSang || 0,
       isEditing: true,
     });
   };
@@ -340,75 +325,40 @@ export const UserDataInput: React.FC = () => {
     }
 
     setSaving(row.id || 'new');
-    
-    // Optimistic update: Update UI immediately
-    const saveData: CreateActivityDataDto = {
-      date: row.date,
-      donThuan: row.donThuan || 0,
-      huuHieu: row.huuHieu || 0,
-      baptem: row.baptem || 0,
-      thoPhuong: row.thoPhuong || 0,
-      lapCLB: row.lapCLB || 0,
-      lenGiaiDoan: row.lenGiaiDoan || 0,
-      hiepCauNguyenSang: row.hiepCauNguyenSang || 0,
-    };
-
-    // Create optimistic data entry
-    const optimisticEntry: ActivityData = {
-      id: row.id || `temp-${Date.now()}`,
-      ...saveData,
-      team: undefined,
-      user: undefined,
-    };
-
     try {
+      const saveData: CreateActivityDataDto = {
+        date: row.date,
+        donThuan: row.donThuan || 0,
+        huuHieu: row.huuHieu || 0,
+        baptem: row.baptem || 0,
+        thoPhuong: row.thoPhuong || 0,
+        lapCLB: row.lapCLB || 0,
+        lenGiaiDoan: row.lenGiaiDoan || 0,
+      };
+
       if (row.isNew && !row.id) {
-        // Optimistic: Add to list immediately
-        setData(prev => [...prev, optimisticEntry]);
-        setEditingRow(null);
-        
-        // Then save to server
-        const saved = await activityDataService.create(saveData);
-        
-        // Replace temp with real data
-        setData(prev => prev.map(item => 
-          item.id === optimisticEntry.id ? saved : item
-        ));
-        
+        await activityDataService.create(saveData);
         toast({
           title: 'Thành công',
           description: 'Đã thêm dữ liệu',
           status: 'success',
-          duration: 2000,
+          duration: 3000,
           isClosable: true,
         });
       } else if (row.id) {
-        // Optimistic: Update in list immediately
-        setData(prev => prev.map(item => 
-          item.id === row.id ? { ...item, ...saveData } : item
-        ));
-        setEditingRow(null);
-        
-        // Then save to server
         await activityDataService.update(row.id, saveData);
-        
         toast({
           title: 'Thành công',
           description: 'Đã cập nhật dữ liệu',
           status: 'success',
-          duration: 2000,
+          duration: 3000,
           isClosable: true,
         });
       }
-      
-      // Reload to ensure consistency (in background)
-      loadData().catch(() => {
-        // Silent fail - optimistic update already shown
-      });
-    } catch (error: any) {
-      // Rollback optimistic update on error
+
+      setEditingRow(null);
       loadData();
-      
+    } catch (error: any) {
       toast({
         title: 'Lỗi',
         description: error.response?.data?.message || 'Lỗi khi lưu dữ liệu',
@@ -428,35 +378,17 @@ export const UserDataInput: React.FC = () => {
 
   const handleDeleteConfirm = async () => {
     if (!deleteId) return;
-    
-    // Optimistic update: Remove from UI immediately
-    const deletedItem = data.find(item => item.id === deleteId);
-    setData(prev => prev.filter(item => item.id !== deleteId));
-    onClose();
-    setDeleteId(null);
-    
     try {
       await activityDataService.delete(deleteId);
       toast({
         title: 'Thành công',
         description: 'Đã xóa dữ liệu',
         status: 'success',
-        duration: 2000,
+        duration: 3000,
         isClosable: true,
       });
-      
-      // Reload to ensure consistency (in background)
-      loadData().catch(() => {
-        // Silent fail - optimistic update already shown
-      });
+      loadData();
     } catch (error) {
-      // Rollback optimistic update on error
-      if (deletedItem) {
-        setData(prev => [...prev, deletedItem].sort((a, b) => 
-          new Date(b.date).getTime() - new Date(a.date).getTime()
-        ));
-      }
-      
       toast({
         title: 'Lỗi',
         description: 'Không thể xóa dữ liệu',
@@ -464,6 +396,9 @@ export const UserDataInput: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      onClose();
+      setDeleteId(null);
     }
   };
 
@@ -501,18 +436,11 @@ export const UserDataInput: React.FC = () => {
     return new Date(dateString).toLocaleDateString('vi-VN');
   };
 
-  const isEditing = (item: ActivityData | EditableRow): boolean => {
+  const isEditing = (item: ActivityData | EditableRow) => {
     if ('isEditing' in item && item.isEditing) return true;
     if ('id' in item && editingRow?.id === item.id) return true;
-    return !!(editingRow?.isNew && !item.id);
+    return editingRow?.isNew && !item.id;
   };
-
-  // Wrapper function for DataRow that only accepts ActivityData
-  const isEditingDataRow = useCallback((item: ActivityData): boolean => {
-    if ('isEditing' in item && item.isEditing) return true;
-    if ('id' in item && editingRow?.id === item.id) return true;
-    return !!(editingRow?.isNew && !item.id);
-  }, [editingRow]);
 
   if (loading) {
     return (
@@ -572,9 +500,6 @@ export const UserDataInput: React.FC = () => {
                 </Th>
                 <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
                   GĐ
-                </Th>
-                <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '50px', md: '60px' }}>
-                  NHCN
                 </Th>
                 <Th fontSize={{ base: '10px', md: '11px', lg: '12px' }} fontWeight="semibold" color="gray.700" px={{ base: 1, md: 2 }} isNumeric width={{ base: '70px', md: '90px' }}>
                   Tổng
@@ -699,22 +624,6 @@ export const UserDataInput: React.FC = () => {
                     />
                   </Td>
                   <Td px={{ base: 1, md: 2 }} isNumeric>
-                    <Input
-                      type="number"
-                      size="sm"
-                      min="0"
-                      value={editingRow.hiepCauNguyenSang ?? 0}
-                      onChange={(e) => handleNumberChange('hiepCauNguyenSang', e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, editingRow)}
-                      fontSize={{ base: '11px', md: 'sm' }}
-                      w="full"
-                      maxW="100%"
-                      minW="0"
-                      textAlign="right"
-                      px={{ base: 1, md: 2 }}
-                    />
-                  </Td>
-                  <Td px={{ base: 1, md: 2 }} isNumeric>
                     <Text fontWeight="semibold" color="primary.600" fontSize={{ base: '11px', md: 'sm' }} textAlign="right">
                       {calculateTotalPoints(editingRow).toLocaleString('vi-VN')}
                     </Text>
@@ -763,7 +672,7 @@ export const UserDataInput: React.FC = () => {
                     onEdit={handleEdit}
                     onDelete={handleDeleteClick}
                     calculateTotalPoints={calculateTotalPoints}
-                    isEditing={isEditingDataRow}
+                    isEditing={isEditing}
                     editingRow={editingRow}
                     formatDate={formatDate}
                   />

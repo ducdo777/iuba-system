@@ -2,7 +2,7 @@ import api from './api';
 
 export interface ActivityPointConfig {
   id: string;
-  activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' | 'hiepCauNguyenSang';
+  activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan';
   activityName: string;
   pointPerUnit: number;
   status: 'active' | 'inactive';
@@ -11,7 +11,7 @@ export interface ActivityPointConfig {
 }
 
 export interface CreateActivityPointConfigDto {
-  activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' | 'hiepCauNguyenSang';
+  activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan';
   activityName: string;
   pointPerUnit: number;
   status?: 'active' | 'inactive';

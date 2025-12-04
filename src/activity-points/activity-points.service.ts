@@ -27,14 +27,14 @@ export class ActivityPointsService {
 
   async findByType(activityType: string): Promise<ActivityPointConfig | null> {
     return this.configRepository.findOne({ 
-      where: { activityType: activityType as 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' | 'hiepCauNguyenSang' } 
+      where: { activityType: activityType as 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' } 
     });
   }
 
   async create(createDto: any): Promise<ActivityPointConfig> {
     // Check if activity type already exists
     const existing = await this.configRepository.findOne({
-      where: { activityType: createDto.activityType as 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' | 'hiepCauNguyenSang' },
+      where: { activityType: createDto.activityType as 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' },
     });
     if (existing) {
       // Update instead of create
@@ -81,7 +81,6 @@ export class ActivityPointsService {
       { activityType: 'thoPhuong', activityName: 'Thờ phượng', pointPerUnit: 1000 },
       { activityType: 'lapCLB', activityName: 'Lập CLB', pointPerUnit: 500 },
       { activityType: 'lenGiaiDoan', activityName: 'Lên giai đoạn', pointPerUnit: 1000 },
-      { activityType: 'hiepCauNguyenSang', activityName: 'Nhóm Hiệp Cầu Nguyện Sáng', pointPerUnit: 10 },
     ];
 
     for (const defaultConfig of defaults) {

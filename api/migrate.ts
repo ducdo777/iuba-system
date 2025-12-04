@@ -61,8 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const existingAdmin = await userRepository.findOne({ where: { username: 'admin' } });
 
     if (!existingAdmin) {
-      // Chỉ tạo admin mới nếu chưa tồn tại với password mặc định
-      const hashedPassword = await bcrypt.hash('animo2025@', 10);
+      const hashedPassword = await bcrypt.hash('admin123', 10);
       const admin = userRepository.create({
         id: uuidv4(),
         username: 'admin',
@@ -73,44 +72,37 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
       await userRepository.save(admin);
       console.log('✅ Default admin user created');
-      console.log('   Username: admin');
-      console.log('   Password: animo2025@');
     } else {
-      // Chỉ cập nhật các field khác, KHÔNG reset password để giữ nguyên password đã đổi
+      // Reset password to ensure it's correct
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      existingAdmin.password = hashedPassword;
       existingAdmin.fullName = existingAdmin.fullName || 'Administrator';
       existingAdmin.role = 'admin';
       existingAdmin.status = 'active';
       await userRepository.save(existingAdmin);
-      console.log('ℹ️  Admin user already exists - password preserved');
+      console.log('✅ Admin user password reset');
     }
 
     // Initialize default activity point configs
     const pointConfigRepository = dataSource.getRepository(ActivityPointConfig);
-    const defaultConfigs: Array<{
-      activityType: 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'lapCLB' | 'lenGiaiDoan' | 'hiepCauNguyenSang';
-      activityName: string;
-      pointPerUnit: number;
-    }> = [
+    const defaultConfigs = [
       { activityType: 'donThuan', activityName: 'Đơn thuần', pointPerUnit: 1 },
       { activityType: 'huuHieu', activityName: 'Hữu hiệu', pointPerUnit: 2 },
       { activityType: 'baptem', activityName: 'Baptem', pointPerUnit: 5 },
       { activityType: 'thoPhuong', activityName: 'Thờ phượng', pointPerUnit: 3 },
       { activityType: 'lapCLB', activityName: 'Lập CLB', pointPerUnit: 10 },
       { activityType: 'lenGiaiDoan', activityName: 'Lên giai đoạn', pointPerUnit: 15 },
-      { activityType: 'hiepCauNguyenSang', activityName: 'Nhóm Hiệp Cầu Nguyện Sáng', pointPerUnit: 10 },
     ];
 
     for (const config of defaultConfigs) {
       const existing = await pointConfigRepository.findOne({
-        where: { activityType: config.activityType },
+        where: { activityType: config.activityType as any },
       });
       if (!existing) {
         const newConfig = pointConfigRepository.create({
           id: uuidv4(),
-          activityType: config.activityType,
-          activityName: config.activityName,
-          pointPerUnit: config.pointPerUnit,
-          status: 'active' as const,
+          ...config,
+          status: 'active',
         });
         await pointConfigRepository.save(newConfig);
         console.log(`✅ Created point config for ${config.activityName}`);
