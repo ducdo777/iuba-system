@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Flex,
@@ -19,14 +19,21 @@ import {
   TableContainer,
   HStack,
   VStack,
+  Icon,
 } from '@chakra-ui/react';
+import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import { statisticsService, StatisticsOverview } from '../../services/statistics';
 import { activityPointsService, ActivityPointConfig } from '../../services/activityPoints';
+
+type SortColumn = 'donThuan' | 'huuHieu' | 'baptem' | 'thoPhuong' | 'totalPoints' | 'averagePoints';
+type SortDirection = 'asc' | 'desc' | null;
 
 export const AdminDashboard: React.FC = () => {
   const [overview, setOverview] = useState<StatisticsOverview | null>(null);
   const [pointConfigs, setPointConfigs] = useState<ActivityPointConfig[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
   const getDefaultConfigs = useCallback((): ActivityPointConfig[] => [
     { activityType: 'donThuan', pointPerUnit: 1 } as ActivityPointConfig,
@@ -81,6 +88,117 @@ export const AdminDashboard: React.FC = () => {
 
     return donThuan + huuHieu + baptem + thoPhuong + lapCLB + lenGiaiDoan;
   };
+
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      // Toggle direction: null -> asc -> desc -> null
+      if (sortDirection === null) {
+        setSortDirection('asc');
+      } else if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else {
+        setSortColumn(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortIcon = (column: SortColumn) => {
+    if (sortColumn !== column) {
+      return <Icon as={FaSort} color="gray.400" ml={1} />;
+    }
+    if (sortDirection === 'asc') {
+      return <Icon as={FaSortUp} color="primary.600" ml={1} />;
+    }
+    if (sortDirection === 'desc') {
+      return <Icon as={FaSortDown} color="primary.600" ml={1} />;
+    }
+    return <Icon as={FaSort} color="gray.400" ml={1} />;
+  };
+
+  const sortedTeams = useMemo(() => {
+    if (!overview) {
+      return [];
+    }
+
+    const getPointPerUnit = (activityType: string): number => {
+      const config = pointConfigs.find(c => c.activityType === activityType);
+      return config?.pointPerUnit || 0;
+    };
+
+    const calculatePoints = (activityType: string, quantity: number): number => {
+      return quantity * getPointPerUnit(activityType);
+    };
+
+    const teams = [...overview.byTeam].map((team) => {
+      const teamTotalPoints = 
+        calculatePoints('donThuan', team.donThuan) +
+        calculatePoints('huuHieu', team.huuHieu) +
+        calculatePoints('baptem', team.baptem) +
+        calculatePoints('thoPhuong', team.thoPhuong) +
+        calculatePoints('lapCLB', team.lapCLB) +
+        calculatePoints('lenGiaiDoan', team.lenGiaiDoan);
+      
+      const averagePoints = team.totalMembers > 0 
+        ? teamTotalPoints / team.totalMembers 
+        : 0;
+
+      return {
+        ...team,
+        teamTotalPoints,
+        averagePoints,
+      };
+    });
+
+    if (!sortColumn || !sortDirection) {
+      return teams;
+    }
+
+    teams.sort((a, b) => {
+      let aValue: number;
+      let bValue: number;
+
+      switch (sortColumn) {
+        case 'donThuan':
+          aValue = a.donThuan;
+          bValue = b.donThuan;
+          break;
+        case 'huuHieu':
+          aValue = a.huuHieu;
+          bValue = b.huuHieu;
+          break;
+        case 'baptem':
+          aValue = a.baptem;
+          bValue = b.baptem;
+          break;
+        case 'thoPhuong':
+          aValue = a.thoPhuong;
+          bValue = b.thoPhuong;
+          break;
+        case 'totalPoints':
+          aValue = a.teamTotalPoints;
+          bValue = b.teamTotalPoints;
+          break;
+        case 'averagePoints':
+          aValue = a.averagePoints;
+          bValue = b.averagePoints;
+          break;
+        default:
+          return 0;
+      }
+
+      if (sortDirection === 'asc') {
+        return aValue - bValue;
+      } else {
+        return bValue - aValue;
+      }
+    });
+
+    return teams;
+  }, [overview, sortColumn, sortDirection, pointConfigs]);
 
   if (loading) {
     return (
@@ -278,17 +396,69 @@ export const AdminDashboard: React.FC = () => {
                   <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Số thành viên
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Đơn thuần
+                  <Th 
+                    textTransform="uppercase" 
+                    fontSize="xs" 
+                    fontWeight="bold" 
+                    color="gray.700"
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => handleSort('donThuan')}
+                    _hover={{ bg: 'gray.100' }}
+                    transition="background 0.2s"
+                  >
+                    <HStack spacing={1} justify="center">
+                      <Text>Đơn thuần</Text>
+                      {getSortIcon('donThuan')}
+                    </HStack>
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Hữu hiệu
+                  <Th 
+                    textTransform="uppercase" 
+                    fontSize="xs" 
+                    fontWeight="bold" 
+                    color="gray.700"
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => handleSort('huuHieu')}
+                    _hover={{ bg: 'gray.100' }}
+                    transition="background 0.2s"
+                  >
+                    <HStack spacing={1} justify="center">
+                      <Text>Hữu hiệu</Text>
+                      {getSortIcon('huuHieu')}
+                    </HStack>
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Baptem
+                  <Th 
+                    textTransform="uppercase" 
+                    fontSize="xs" 
+                    fontWeight="bold" 
+                    color="gray.700"
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => handleSort('baptem')}
+                    _hover={{ bg: 'gray.100' }}
+                    transition="background 0.2s"
+                  >
+                    <HStack spacing={1} justify="center">
+                      <Text>Baptem</Text>
+                      {getSortIcon('baptem')}
+                    </HStack>
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Thờ phượng
+                  <Th 
+                    textTransform="uppercase" 
+                    fontSize="xs" 
+                    fontWeight="bold" 
+                    color="gray.700"
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => handleSort('thoPhuong')}
+                    _hover={{ bg: 'gray.100' }}
+                    transition="background 0.2s"
+                  >
+                    <HStack spacing={1} justify="center">
+                      <Text>Thờ phượng</Text>
+                      {getSortIcon('thoPhuong')}
+                    </HStack>
                   </Th>
                   <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Lập CLB
@@ -296,17 +466,43 @@ export const AdminDashboard: React.FC = () => {
                   <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
                     Lên giai đoạn
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Tổng điểm
+                  <Th 
+                    textTransform="uppercase" 
+                    fontSize="xs" 
+                    fontWeight="bold" 
+                    color="gray.700"
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => handleSort('totalPoints')}
+                    _hover={{ bg: 'gray.100' }}
+                    transition="background 0.2s"
+                  >
+                    <HStack spacing={1} justify="center">
+                      <Text>Tổng điểm</Text>
+                      {getSortIcon('totalPoints')}
+                    </HStack>
                   </Th>
-                  <Th textTransform="uppercase" fontSize="xs" fontWeight="bold" color="gray.700">
-                    Điểm TB
+                  <Th 
+                    textTransform="uppercase" 
+                    fontSize="xs" 
+                    fontWeight="bold" 
+                    color="gray.700"
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => handleSort('averagePoints')}
+                    _hover={{ bg: 'gray.100' }}
+                    transition="background 0.2s"
+                  >
+                    <HStack spacing={1} justify="center">
+                      <Text>Điểm TB</Text>
+                      {getSortIcon('averagePoints')}
+                    </HStack>
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {overview.byTeam.map((team, index) => {
-                  const teamTotalPoints = 
+                {sortedTeams.map((team, index) => {
+                  const teamTotalPoints = team.teamTotalPoints ?? 
                     calculateActivityPoints('donThuan', team.donThuan) +
                     calculateActivityPoints('huuHieu', team.huuHieu) +
                     calculateActivityPoints('baptem', team.baptem) +
@@ -314,9 +510,9 @@ export const AdminDashboard: React.FC = () => {
                     calculateActivityPoints('lapCLB', team.lapCLB) +
                     calculateActivityPoints('lenGiaiDoan', team.lenGiaiDoan);
                   
-                  const averagePoints = team.totalMembers > 0 
+                  const averagePoints = team.averagePoints ?? (team.totalMembers > 0 
                     ? teamTotalPoints / team.totalMembers 
-                    : 0;
+                    : 0);
                   
                   return (
                     <Tr
