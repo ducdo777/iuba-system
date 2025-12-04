@@ -436,10 +436,14 @@ export const UserDataInput: React.FC = () => {
     return new Date(dateString).toLocaleDateString('vi-VN');
   };
 
-  const isEditing = (item: ActivityData | EditableRow) => {
+  const isEditingCheck = (item: ActivityData | EditableRow): boolean => {
     if ('isEditing' in item && item.isEditing) return true;
     if ('id' in item && editingRow?.id === item.id) return true;
-    return editingRow?.isNew && !item.id;
+    return !!(editingRow?.isNew && !item.id);
+  };
+
+  const isEditing = (item: ActivityData): boolean => {
+    return isEditingCheck(item);
   };
 
   if (loading) {
