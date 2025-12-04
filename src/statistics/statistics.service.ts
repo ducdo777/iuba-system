@@ -37,6 +37,7 @@ export class StatisticsService {
     const byTeam = await Promise.all(
       allTeams.map(async (team) => {
         const teamData = await this.activityDataService.findAll(team.id, undefined, startDate, endDate);
+        const teamUsers = allUsers.filter(u => u.teamId === team.id);
         const teamTotals = {
           donThuan: 0,
           huuHieu: 0,
@@ -59,6 +60,7 @@ export class StatisticsService {
           teamId: team.id,
           teamCode: team.teamCode,
           teamName: team.teamName,
+          totalMembers: teamUsers.length,
           ...teamTotals,
           total: Object.values(teamTotals).reduce((a, b) => a + b, 0),
         };
