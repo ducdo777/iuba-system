@@ -1,8 +1,5 @@
-'use client';
-
 import React from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -28,18 +25,18 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   const { user, logout } = useAuth();
-  const pathname = usePathname();
-  const router = useRouter();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
+    navigate('/login');
   };
 
   const isActive = (path: string) => {
-    return pathname === path;
+    return location.pathname === path;
   };
 
   const adminMenu = [
@@ -61,7 +58,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   const SidebarContent = () => (
     <VStack spacing={1} align="stretch" p={4} h="full" overflowY="auto">
       {menu.map((item) => (
-        <Link key={item.path} href={item.path} onClick={onClose}>
+        <Link key={item.path} to={item.path} onClick={onClose} style={{ textDecoration: 'none' }}>
           <Button
             leftIcon={<i className={item.icon} />}
             justifyContent="flex-start"

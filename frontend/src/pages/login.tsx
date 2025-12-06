@@ -1,7 +1,5 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -19,19 +17,19 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { ShieldCheckIcon } from '../components/ui/Icons';
 
-export default function Login() {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, user } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      router.replace(user.role === 'admin' ? '/admin' : '/user');
+      navigate(user.role === 'admin' ? '/admin' : '/user', { replace: true });
     }
-  }, [user, router]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,9 +40,9 @@ export default function Login() {
       await login(username, password);
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
       if (currentUser.role === 'admin') {
-        router.replace('/admin');
+        navigate('/admin', { replace: true });
       } else {
-        router.replace('/user');
+        navigate('/user', { replace: true });
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
@@ -141,4 +139,6 @@ export default function Login() {
     </Flex>
   );
 }
+
+export default Login;
 

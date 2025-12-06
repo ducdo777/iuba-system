@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// For local dev: Use '/api' (Next.js rewrites routes to http://localhost:3002)
+// For local dev: Use '/api' (Vite proxy routes to http://localhost:3002)
 // For production: Use '/api' (Vercel proxy)
-// To use direct URL, set NEXT_PUBLIC_API_BASE_URL in .env.local
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || '/api';
+// To use direct URL, set VITE_API_BASE_URL in .env
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE,
